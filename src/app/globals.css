@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@plugin "daisyui" {
+  themes: emerald, bumblebee;
+}
 
 :root {
   --background: #ffffff;
@@ -24,3 +27,5 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* daisy ui*/

@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <html lang="ko">
+      <html lang="ko" data-theme={"bumblebee"}>
       <body className="min-h-screen flex flex-col bg-gray-100">
       {/* 상단 네비게이션 */}
       <header className="fixed top-0 w-full bg-white shadow-md py-3 px-4 flex justify-between items-center">
