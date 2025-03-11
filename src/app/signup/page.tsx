@@ -1,8 +1,12 @@
 'use client';
+
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useRegisterMutation } from '@/hooks/useAuthMutation';
+import { ROUTES } from '@/lib/constants';
 
 export default function SignupPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
@@ -72,7 +76,12 @@ export default function SignupPage() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate({ email, name, password });
+    mutate(
+      { email, name, password },
+      {
+        onSuccess: () => router.push(ROUTES.HOME),
+      }
+    );
   };
 
   return (

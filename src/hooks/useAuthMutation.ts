@@ -6,6 +6,6 @@ import { triggerToast } from '@/lib/contexts/ToastContext';
 export const useRegisterMutation = () => {
   return useMutation({
     mutationFn: signupUserAPI,
-    onSuccess: () => triggerToast('회원가입에 성공했습니다.'),
+    onSuccess: () => triggerToast('회원가입에 성공했습니다.', 'success'),
   });
 };

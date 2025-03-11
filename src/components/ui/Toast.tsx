@@ -49,7 +49,7 @@ const Toast = ({ text, type, duration = 3000 }: ToastProps) => {
               </div>
             ))
           ) : (
-            <div className={`alert ${alertType()}`}>{text}</div>
+            <div className={`alert ${alertType()} alert-soft`}>{text}</div>
           )}
         </motion.div>
       )}
