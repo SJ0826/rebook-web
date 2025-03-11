@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 import Header from '@/components/layout/Header';
+import { QueryProviders } from '@/lib/contexts/QueryClientProvider';
+import { ToastProvider } from '@/lib/contexts/ToastContext';
 
 const pretendard = localFont({
   src: [
@@ -37,14 +39,17 @@ export default function RootLayout({
   return (
     <html lang="ko" data-theme={'bumblebee'}>
       <body className={`${pretendard.variable} flex flex-col min-h-screen`}>
-        {/* 상단 네비게이션 */}
-        <Header />
-        {/* 메인 콘텐츠 영역 */}
-        <main className="flex-grow container mx-auto px-4 py-8">
-          {children}
-        </main>
-
-        {/* 하단 네비게이션 */}
+        <QueryProviders>
+          <ToastProvider>
+            {/* 상단 네비게이션 */}
+            <Header />
+            {/* 메인 콘텐츠 영역 */}
+            <main className="flex-grow container mx-auto px-4 py-8">
+              {children}
+            </main>
+            {/* 하단 네비게이션 */}
+          </ToastProvider>
+        </QueryProviders>
       </body>
     </html>
   );

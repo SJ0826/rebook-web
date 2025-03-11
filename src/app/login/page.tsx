@@ -1,9 +1,9 @@
 export default function LoginPage() {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-base-200 p-4">
-      <div className="card w-full max-w-sm bg-base-100 shadow-xl p-6">
+    <div className="flex justify-center items-center min-h-screen bg-base-200 my-14 rounded-field">
+      <div className="card w-96 bg-base-100 shadow-xl p-6">
         <h2 className="text-2xl font-bold text-center">로그인</h2>
-        <form className="flex flex-col gap-4 mt-4">
+        <form className="space-y-4 mt-4">
           <label className="form-control w-full">
             <span className="label-text">아이디</span>
             <input
