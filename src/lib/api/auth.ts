@@ -1,6 +1,4 @@
 import { privateAxiosClient, publicAxiosClient } from '@/lib/api/axios.client';
-import { log } from 'console';
-import { cookies } from 'next/headers';
 
 // 회원가입
 export const signupUserAPI = async (payload: {
@@ -23,7 +21,7 @@ export const loginUserAPI = async (payload: {
 
 // 토큰 갱신
 export const refreshTokenAPI = async () => {
-  const response = await privateAxiosClient.post('/auth/refresh');
+  const response = await publicAxiosClient.post('/auth/refresh');
   return response.data;
 };
 
