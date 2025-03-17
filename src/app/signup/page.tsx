@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useRegisterMutation } from '@/hooks/useAuthMutation';
 import { ROUTES } from '@/lib/constants';
+import { useToast } from '@/lib/contexts/ToastContext';
+import axios from 'axios';
 
 interface FormData {
   email: string;
@@ -28,6 +30,7 @@ const VALIDATION = {
 
 export default function SignupPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [formData, setFormData] = useState<FormData>({
     email: '',
     name: '',
@@ -36,7 +39,6 @@ export default function SignupPage() {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const { mutate } = useRegisterMutation();
 
   const validateForm = (): boolean => {
@@ -51,7 +53,8 @@ export default function SignupPage() {
     }
 
     if (!VALIDATION.password.test(formData.password)) {
-      newErrors.password = '비밀번호는 8자 이상, 영문+숫자+특수문자를 포함해야 합니다.';
+      newErrors.password =
+        '비밀번호는 8자 이상, 영문+숫자+특수문자를 포함해야 합니다.';
     }
 
     if (formData.password !== formData.confirmPassword) {
@@ -64,15 +67,15 @@ export default function SignupPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
     // 타이핑시 에러 상태 해제
     if (errors[name as keyof FormErrors]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({ ...prev, [name]: '' }));
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!validateForm()) return;
@@ -83,14 +86,18 @@ export default function SignupPage() {
       {
         email: formData.email,
         name: formData.name,
-        password: formData.password
+        password: formData.password,
       },
       {
         onSuccess: () => router.push(ROUTES.HOME),
         onError: (error) => {
-          console.error('Registration failed:', error);
+          if (axios.isAxiosError(error)) {
+            showToast(error.response?.data?.message, 'error');
+          } else {
+            showToast('알 수 없는 오류가 발생했습니다.', 'error');
+          }
         },
-        onSettled: () => setIsSubmitting(false)
+        onSettled: () => setIsSubmitting(false),
       }
     );
   };
@@ -159,7 +166,9 @@ export default function SignupPage() {
               onChange={handleChange}
             />
             {errors.confirmPassword && (
-              <p className="text-error text-sm mt-1">{errors.confirmPassword}</p>
+              <p className="text-error text-sm mt-1">
+                {errors.confirmPassword}
+              </p>
             )}
           </label>
 

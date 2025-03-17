@@ -18,5 +18,4 @@ export const privateAxiosClient = axios.create({
   },
 });
 
-setupInterceptors(publicAxiosClient);
 setupInterceptors(privateAxiosClient);
