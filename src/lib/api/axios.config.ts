@@ -1,8 +1,22 @@
 import { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { ApiResponse } from '@/types/commons';
 import { triggerToast } from '@/lib/contexts/ToastContext';
+import { useAuthStore } from '@/hooks/useAuth';
 
 export const setupInterceptors = (axiosInstance: AxiosInstance) => {
+  axiosInstance.interceptors.request.use(
+    (config) => {
+      const token = useAuthStore.getState().accessToken;
+      if (token) {
+        const newConfig = { ...config };
+        newConfig.headers.Authorization = `Bearer ${token}`;
+        return newConfig;
+      }
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );
+
   axiosInstance.interceptors.response.use(
     (response: AxiosResponse) => response,
     (error: AxiosError<ApiResponse>) => {

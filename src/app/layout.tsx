@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import './globals.css';
-import Header from '@/components/layout/Header';
 import { QueryProviders } from '@/lib/contexts/QueryClientProvider';
 import { ToastProvider } from '@/lib/contexts/ToastContext';
+import './globals.css';
+import Layout from '@/components/layout/Layout';
+import AuthConfig from '@/components/common/AuthConfig';
 
 const pretendard = localFont({
   src: [
@@ -41,13 +42,9 @@ export default function RootLayout({
       <body className={`${pretendard.variable} flex flex-col min-h-screen`}>
         <QueryProviders>
           <ToastProvider>
-            {/* 상단 네비게이션 */}
-            <Header />
-            {/* 메인 콘텐츠 영역 */}
-            <main className="flex-grow container mx-auto px-4 py-8">
-              {children}
-            </main>
-            {/* 하단 네비게이션 */}
+            <AuthConfig>
+              <Layout>{children}</Layout>
+            </AuthConfig>
           </ToastProvider>
         </QueryProviders>
       </body>

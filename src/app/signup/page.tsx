@@ -103,8 +103,8 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-base-200 p-4">
-      <div className="card w-full max-w-sm bg-base-100 shadow-xl p-6">
+    <div className="flex justify-center items-center min-h-screen bg-base-200 p-4 rounded-field">
+      <div className="card w-full max-w-sm bg-base-100 shadow-xl p-6 ">
         <h2 className="text-2xl font-bold text-center">회원가입</h2>
         <form className="flex flex-col gap-4 mt-4" onSubmit={handleSubmit}>
           <label className="form-control w-full">

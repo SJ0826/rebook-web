@@ -43,7 +43,7 @@ export default function LoginPage() {
     );
   };
   return (
-    <div className="flex justify-center items-center min-h-screen bg-base-200 my-14 rounded-field">
+    <div className="flex justify-center items-center min-h-screen bg-base-200 rounded-field">
       <div className="card w-96 bg-base-100 shadow-xl p-6">
         <h2 className="text-2xl font-bold text-center">로그인</h2>
         <form className="flex flex-col mt-4 gap-4" onSubmit={handleSubmit}>
