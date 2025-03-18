@@ -2,20 +2,11 @@
 
 import React from 'react';
 import dynamic from 'next/dynamic';
+import Header from '@/components/layout/Header';
 
 interface LayoutProps {
   children: React.ReactNode;
 }
-
-const Header = dynamic(() => import('@/components/layout/Header'), {
-  ssr: false,
-  loading: () => (
-    <div
-      className="navbar bg-base-100 shadow-md fixed top-0 w-full z-50"
-      style={{ height: '64px' }}
-    ></div>
-  ),
-});
 
 const Layout = ({ children }: LayoutProps) => {
   return (

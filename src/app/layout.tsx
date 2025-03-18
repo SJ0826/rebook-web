@@ -42,9 +42,9 @@ export default function RootLayout({
       <body className={`${pretendard.variable} flex flex-col min-h-screen`}>
         <QueryProviders>
           <ToastProvider>
-            <AuthConfig>
-              <Layout>{children}</Layout>
-            </AuthConfig>
+            {/*<AuthConfig>*/}
+            <Layout>{children}</Layout>
+            {/*</AuthConfig>*/}
           </ToastProvider>
         </QueryProviders>
       </body>
