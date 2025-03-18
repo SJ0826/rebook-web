@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Header from '@/components/layout/Header';
 import { getRefreshTokenInServer } from '@/app/actions/getRefreshToken';
 import { useAuth } from '@/hooks/useAuth';
@@ -15,7 +15,7 @@ const Layout = ({ children }: LayoutProps) => {
   useEffect(() => {
     async function fetchToken() {
       const isLoggedIn = await getRefreshTokenInServer();
-      console.log(isLoggedIn);
+
       if (!isLoggedIn) {
         setIsLoggedIn(false);
         return;

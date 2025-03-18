@@ -31,6 +31,10 @@ export const refreshTokenAPI = async () => {
 
 // 로그아웃
 export const logoutUserAPI = async () => {
-  const response = await privateAxiosClient.post('/auth/logout');
+  const response = await privateAxiosClient.post(
+    '/auth/logout',
+    {},
+    { withCredentials: true }
+  );
   return response.data;
 };
