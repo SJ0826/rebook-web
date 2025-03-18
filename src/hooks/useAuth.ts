@@ -6,16 +6,16 @@ interface AuthStore {
   login: (token: string) => void;
   logout: () => void;
   refreshToken: () => Promise<void>;
-  isLoggedIn: boolean;
+  isLoggedIn?: boolean;
+  setIsLoggedIn: (loggedIn: boolean) => void;
 }
 
-// 브라우저 환경에서만 localStorage를 읽도록 처리
-const initialIsLoggedIn =
-  typeof window !== 'undefined' &&
-  localStorage.getItem('isLoggedIn') === 'true';
+// const initialIsLoggedIn =
+//   typeof window !== 'undefined' &&
+//   localStorage.getItem('isLoggedIn') === 'true';
 
 export const useAuthStore = create<AuthStore>((set) => ({
-  isLoggedIn: initialIsLoggedIn,
+  isLoggedIn: undefined,
   accessToken: null,
 
   login: (token: string) => {
@@ -35,10 +35,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
   },
 
   refreshToken: async () => {
-    // 브라우저 환경에서만 상태 업데이트
-    if (typeof window !== 'undefined') {
-      set({ isLoggedIn: true });
-    }
     try {
       const newAccessToken = (await refreshTokenAPI()).data.accessToken;
       if (newAccessToken) {
@@ -49,11 +45,24 @@ export const useAuthStore = create<AuthStore>((set) => ({
       set({ accessToken: null, isLoggedIn: false });
     }
   },
+
+  setIsLoggedIn: (loggedIn: boolean) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('isLoggedIn', loggedIn ? 'true' : 'false');
+    }
+    set({ isLoggedIn: loggedIn });
+  },
 }));
 
 export const useAuth = () => {
-  const { accessToken, login, logout, refreshToken, isLoggedIn } =
-    useAuthStore();
+  const {
+    accessToken,
+    login,
+    logout,
+    refreshToken,
+    isLoggedIn,
+    setIsLoggedIn,
+  } = useAuthStore();
 
   return {
     accessToken,
@@ -67,5 +76,6 @@ export const useAuth = () => {
     refreshToken: async () => {
       await refreshToken();
     },
+    setIsLoggedIn,
   };
 };

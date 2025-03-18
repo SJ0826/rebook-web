@@ -11,7 +11,7 @@ import LogoutModal from '@/components/modal/LogoutModal';
 
 export default function Header() {
   const pathname = usePathname();
-  const { isLoggedIn, logout } = useAuth();
+  const { logout, accessToken } = useAuth();
   const hideHeader = [ROUTES.LOGIN, ROUTES.SIGNUP].includes(pathname);
   const [isOpenMobileNav, setIsOpenMobileNav] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -23,14 +23,14 @@ export default function Header() {
   }, []);
 
   const handleLoginRoute = () => {
-    if (isLoggedIn) {
+    if (accessToken) {
       setShowLogoutModal(true);
       return;
     }
     router.push(ROUTES.LOGIN);
   };
 
-  if (hideHeader || !isMounted) return null; // 마운트 전에는 렌더링 안함
+  if (hideHeader || !isMounted) return null;
 
   return (
     <>
@@ -67,7 +67,7 @@ export default function Header() {
             onClick={handleLoginRoute}
             className="w-20 text-center font-semibold"
           >
-            {isLoggedIn ? '로그아웃' : '로그인'}
+            {accessToken ? '로그아웃' : '로그인'}
           </button>
         </nav>
 
@@ -81,7 +81,7 @@ export default function Header() {
         {isOpenMobileNav && (
           <div className="absolute top-16 right-4 w-40 bg-white shadow-lg rounded-md p-3 flex flex-col gap-2 md:hidden">
             <a onClick={handleLoginRoute} className="btn btn-ghost">
-              {isLoggedIn ? '로그아웃' : '로그인'}
+              {accessToken ? '로그아웃' : '로그인'}
             </a>
             <Link
               href={ROUTES.BOOK_REGISTER}
