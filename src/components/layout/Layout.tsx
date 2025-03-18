@@ -23,7 +23,9 @@ const Layout = ({ children }: LayoutProps) => {
       {/* 상단 네비게이션 */}
       <Header />
       {/* 메인 콘텐츠 영역 */}
-      <main className="flex-grow container mx-auto px-4 py-8">{children}</main>
+      <main className="flex-grow container mx-auto px-4 py-8 pt-18">
+        {children}
+      </main>
     </div>
   );
 };
