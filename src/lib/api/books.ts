@@ -9,8 +9,10 @@ export const searchBooksAPI = async (params: {
   status?: string;
   minPrice?: number;
   maxPrice?: number;
+  page?: number;
+  limit?: number;
   sort?: BookSearchSort;
-}): Promise<BookSearchOutDto[]> => {
+}): Promise<{ books: BookSearchOutDto[]; totalPages: number }> => {
   const response = await publicAxiosClient.get(`${BOOKS}/search`, { params });
   return response.data.data;
 };

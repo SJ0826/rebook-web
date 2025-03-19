@@ -2,7 +2,8 @@ export interface SearchParams {
   search?: string;
   minPrice?: number;
   maxPrice?: number;
-  status?: string; // 예: 'Available', 'Sold Out'
+  status?: string;
+  sort?: BookSearchSort;
 }
 
 export enum BookStatus {
