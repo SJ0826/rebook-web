@@ -81,17 +81,22 @@ export default function BookDetail() {
           <div className="mt-6 flex gap-4">
             {!isOwner || !isLoggedIn ? (
               <div className={'w-full flex flex-col gap-4 md:flex-row'}>
-                <button className="btn btn-outline btn-primary w-full md:w-1/2 ">
-                  찜하기
-                </button>
                 <button className="btn btn-primary w-full  md:w-1/2">
                   거래 제안하기
                 </button>
+                <button className="btn btn-outline btn-primary w-full md:w-1/2 ">
+                  찜하기
+                </button>
               </div>
             ) : (
-              <button className="btn btn-secondary w-full max-w-[360px]">
-                받은 제안 보기
-              </button>
+              <div className={'w-full flex flex-col gap-4 md:flex-row'}>
+                <button className="btn  btn-primary w-full md:w-1/2 ">
+                  받은 제안 보기
+                </button>
+                <button className="btn btn-outline btn-primary w-full md:w-1/2 ">
+                  수정하기
+                </button>
+              </div>
             )}
           </div>
         </div>
