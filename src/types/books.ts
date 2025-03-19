@@ -27,6 +27,21 @@ export interface BookSearchOutDto {
   status: BookStatus;
   createdAt: Date;
   updatedAt: Date;
-  // 책의 대표 이미지 URL: bookImage에서 sort가 0인 항목의 imageUrl
   imageUrls?: string;
+}
+
+export interface BookDetail {
+  id: bigint;
+  title: string;
+  author: string;
+  publisher: string;
+  price: number;
+  description: string;
+  status: BookStatus;
+  createdAt: string;
+  seller: {
+    id: bigint;
+    name: string;
+  };
+  bookImages: string[];
 }
