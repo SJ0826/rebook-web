@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { BookSearchSort, BookStatus } from '@/types/books';
 
 interface FilterOptionsProps {
   searchTerm: string;
@@ -9,8 +10,8 @@ interface FilterOptionsProps {
   setPriceFilter: (value: string) => void;
   statusFilter: string;
   setStatusFilter: (value: string) => void;
-  sortOption: string;
-  setSortOption: (value: string) => void;
+  sortOption: BookSearchSort;
+  setSortOption: (value: BookSearchSort) => void;
 }
 
 const FilterOptions: React.FC<FilterOptionsProps> = ({
@@ -57,19 +58,21 @@ const FilterOptions: React.FC<FilterOptionsProps> = ({
           onChange={(e) => setStatusFilter(e.target.value)}
         >
           <option value="">전체 상태</option>
-          <option value="Available">판매 중</option>
-          <option value="Sold Out">판매 완료</option>
+          <option value={BookStatus.NEW}>새책</option>
+          <option value={BookStatus.LIKE_NEW}>거의 새책</option>
+          <option value={BookStatus.GOOD}>양호</option>
+          <option value={BookStatus.ACCEPTABLE}>사용감 있음</option>
         </select>
         {/* 정렬 옵션 */}
         <select
           className="select select-bordered"
           value={sortOption}
-          onChange={(e) => setSortOption(e.target.value)}
+          onChange={(e) => setSortOption(e.target.value as BookSearchSort)}
         >
-          <option value="newest">최신순</option>
-          <option value="highest">높은 가격 순</option>
-          <option value="lowest">낮은 가격 순</option>
-          <option value="oldest">오래된 순</option>
+          <option value={BookSearchSort.NEWEST}>최신순</option>
+          <option value={BookSearchSort.PRICE_HIGH}>높은 가격 순</option>
+          <option value={BookSearchSort.PRICE_LOW}>낮은 가격 순</option>
+          <option value={BookSearchSort.OLDEST}>오래된 순</option>
         </select>
       </div>
     </div>

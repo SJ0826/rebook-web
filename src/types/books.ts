@@ -12,6 +12,12 @@ export enum BookStatus {
   ACCEPTABLE = 'ACCEPTABLE', // 사용감 있음
 }
 
+export enum BookSearchSort {
+  NEWEST = 'newest',
+  OLDEST = 'oldest',
+  PRICE_HIGH = 'price_high',
+  PRICE_LOW = 'price_low',
+}
 export interface BookSearchOutDto {
   id: string;
   title: string;

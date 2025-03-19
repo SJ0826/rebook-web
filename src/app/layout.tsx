@@ -4,7 +4,6 @@ import { QueryProviders } from '@/lib/contexts/QueryClientProvider';
 import { ToastProvider } from '@/lib/contexts/ToastContext';
 import './globals.css';
 import Layout from '@/components/layout/Layout';
-import AuthConfig from '@/components/common/AuthConfig';
 
 const pretendard = localFont({
   src: [
