@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import logoImage from '@public/images/logo.png';
 import { usePathname, useRouter } from 'next/navigation';
@@ -11,7 +11,7 @@ import LogoutModal from '@/components/modal/LogoutModal';
 
 export default function Header() {
   const pathname = usePathname();
-  const { logout, accessToken } = useAuth();
+  const { logout, isLoggedIn } = useAuth();
   const hideHeader = [ROUTES.LOGIN, ROUTES.SIGNUP].includes(pathname);
   const [isOpenMobileNav, setIsOpenMobileNav] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -23,7 +23,7 @@ export default function Header() {
   }, []);
 
   const handleLoginRoute = () => {
-    if (accessToken) {
+    if (isLoggedIn) {
       setShowLogoutModal(true);
       return;
     }
@@ -46,19 +46,19 @@ export default function Header() {
 
         <nav className="hidden md:flex items-center gap-6">
           <Link
-            href={ROUTES.BOOK_REGISTER}
+            href={isLoggedIn ? ROUTES.BOOK_REGISTER : ROUTES.LOGIN}
             className="w-20 text-center font-semibold"
           >
             책 등록
           </Link>
           <Link
-            href={ROUTES.FAVORITES}
+            href={isLoggedIn ? ROUTES.FAVORITES : ROUTES.LOGIN}
             className="w-20 text-center font-semibold"
           >
             찜 목록
           </Link>
           <Link
-            href={ROUTES.PROFILE}
+            href={isLoggedIn ? ROUTES.PROFILE : ROUTES.LOGIN}
             className="w-20 text-center font-semibold"
           >
             내 정보
@@ -67,7 +67,7 @@ export default function Header() {
             onClick={handleLoginRoute}
             className="w-20 text-center font-semibold"
           >
-            {accessToken ? '로그아웃' : '로그인'}
+            {isLoggedIn ? '로그아웃' : '로그인'}
           </button>
         </nav>
 
@@ -81,7 +81,7 @@ export default function Header() {
         {isOpenMobileNav && (
           <div className="absolute top-16 right-4 w-40 bg-white shadow-lg rounded-md p-3 flex flex-col gap-2 md:hidden">
             <a onClick={handleLoginRoute} className="btn btn-ghost">
-              {accessToken ? '로그아웃' : '로그인'}
+              {isLoggedIn ? '로그아웃' : '로그인'}
             </a>
             <Link
               href={ROUTES.BOOK_REGISTER}
