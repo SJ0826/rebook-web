@@ -11,6 +11,7 @@ export default function BookForm() {
     imageFiles,
     handleImageUpload,
     removeImage,
+    resetForm,
     onSubmit,
   } = useBookForm();
 
@@ -147,9 +148,18 @@ export default function BookForm() {
       </label>
 
       {/* 제출 버튼 */}
-      <button type="submit" className="btn btn-primary w-full text-lg">
-        📌 등록하기
-      </button>
+      <div className="flex gap-4">
+        <button
+          type="button"
+          onClick={resetForm}
+          className="btn btn-secondary w-1/2 text-lg"
+        >
+          취소
+        </button>
+        <button type="submit" className="btn btn-primary w-1/2 text-lg">
+          📌 등록하기
+        </button>
+      </div>
     </form>
   );
 }

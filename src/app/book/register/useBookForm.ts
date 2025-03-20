@@ -22,8 +22,7 @@ export const useBookForm = () => {
   const {
     register,
     handleSubmit,
-    watch,
-    setValue,
+    reset, // 폼 리셋 기능 추가
     formState: { errors },
   } = useForm<BookFormData>({
     defaultValues: {
@@ -52,6 +51,17 @@ export const useBookForm = () => {
     setImageFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
+  /** 폼 초기화 (취소 버튼 클릭 시 실행) */
+  const resetForm = () => {
+    const isConfirmed = window.confirm(
+      '정말 취소하시겠습니까? 입력한 내용이 모두 사라집니다.'
+    );
+    if (isConfirmed) {
+      reset(); // 입력 필드 초기화
+      setImageFiles([]); // 이미지 미리보기 초기화
+    }
+  };
+
   /** 폼 제출 */
   const onSubmit = (data: BookFormData) => {
     console.log('📦 Book Data:', data);
@@ -64,6 +74,7 @@ export const useBookForm = () => {
     imageFiles,
     handleImageUpload,
     removeImage,
+    resetForm,
     onSubmit,
   };
 };
