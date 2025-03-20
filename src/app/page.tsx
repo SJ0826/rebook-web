@@ -57,7 +57,7 @@ export default function RebookMain() {
   const totalPages = data?.totalPages ?? 1;
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 bg-base-100">
       {/* 필터 옵션 */}
       <FilterOptions
         searchTerm={searchTerm}
