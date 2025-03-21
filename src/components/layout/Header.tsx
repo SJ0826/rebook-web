@@ -36,7 +36,7 @@ export default function Header() {
     <>
       <header className="navbar bg-base-100 shadow-md fixed top-0 w-full z-50">
         <div className="flex-1">
-          <a className="btn btn-ghost text-xl">
+          <a className="btn btn-ghost text-xl" href={ROUTES.HOME}>
             <Image width={46} height={46} src={logoImage} alt={'Rebook logo'} />
             <span className={'hidden md:flex'}>
               Rebook: 다시 읽고 다시 나누다

@@ -1,5 +1,5 @@
-import { useMutation } from '@tanstack/react-query';
-import { loginUserAPI, signupUserAPI } from '@/lib/api/auth';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { getMyProfile, loginUserAPI, signupUserAPI } from '@/lib/api/auth';
 import { triggerToast } from '@/lib/contexts/ToastContext';
 import { useAuth } from './useAuth';
 import { ApiResponse } from '@/types/commons';
@@ -34,5 +34,16 @@ export const useLoginMutation = () => {
     ) => {
       login(data.data.accessToken);
     },
+  });
+};
+
+export const useMyProfileQuery = () => {
+  const { isLoggedIn } = useAuth();
+  return useQuery({
+    queryKey: ['myProfile'],
+    queryFn: async () => {
+      return await getMyProfile();
+    },
+    enabled: isLoggedIn,
   });
 };

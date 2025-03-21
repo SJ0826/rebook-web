@@ -10,10 +10,6 @@ interface AuthStore {
   setIsLoggedIn: (loggedIn: boolean) => void;
 }
 
-// const initialIsLoggedIn =
-//   typeof window !== 'undefined' &&
-//   localStorage.getItem('isLoggedIn') === 'true';
-
 export const useAuthStore = create<AuthStore>((set) => ({
   isLoggedIn: undefined,
   accessToken: null,

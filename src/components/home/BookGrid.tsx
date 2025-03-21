@@ -3,9 +3,8 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import BookStatusBadge from '@/components/book/BookStatusBadge';
 import { BookSearchOutDto } from '@/types/books';
-import { convertBookStatus } from '@/utils/convertLang';
-import { twMerge } from 'tailwind-merge';
 
 interface BookGridProps {
   books: BookSearchOutDto[];
@@ -41,16 +40,8 @@ const BookGrid: React.FC<BookGridProps> = ({ books }) => {
             <p className="text-[1rem] font-bold text-neutral">
               {book.price.toLocaleString()}원
             </p>
-            <div
-              className={twMerge(
-                'badge badge-neutral absolute top-3 right-3',
-                book.status === 'NEW' && 'badge-primary',
-                book.status === 'GOOD' && 'badge-secondary',
-                book.status === 'LIKE_NEW' && 'badge-accent',
-                book.status === 'ACCEPTABLE' && 'badge-neutral'
-              )}
-            >
-              {convertBookStatus(book.status)}
+            <div className={'absolute top-3 right-3'}>
+              <BookStatusBadge status={book.status} />
             </div>
           </div>
         </div>

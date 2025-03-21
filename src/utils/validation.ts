@@ -10,3 +10,29 @@ export const validatePassword = (password: string) => {
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   return passwordRegex.test(password);
 };
+
+// 이미지 업로드 파일 확장자, 용량 검사
+const MAX_FILE_SIZE = 7 * 1024 * 1024; // 7MB
+const ALLOWED_TYPES = ['image/gif', 'image/jpeg', 'image/png'];
+
+type ValidationResult = { valid: true } | { valid: false; message: string };
+
+export function validateImages(files: File[]): ValidationResult {
+  for (const file of files) {
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      return {
+        valid: false,
+        message: `허용되지 않은 파일 형식입니다: ${file.name}`,
+      };
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      return {
+        valid: false,
+        message: `파일 크기가 7MB를 초과합니다: ${file.name}`,
+      };
+    }
+  }
+
+  return { valid: true };
+}
