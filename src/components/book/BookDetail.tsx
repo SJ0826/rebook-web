@@ -9,6 +9,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { useMyProfileQuery } from '@/hooks/useAuthMutation';
 import { deleteBookAPI, getBookDetailAPI } from '@/lib/api/books';
 import { triggerToast } from '@/lib/contexts/ToastContext';
+import { ROUTES } from '@/lib/constants';
+import { createFavoriteAPI, deleteFavoriteAPI } from '@/lib/api/favorite';
 
 export default function BookDetail() {
   const { id } = useParams();
@@ -22,12 +24,14 @@ export default function BookDetail() {
     data: book,
     isLoading,
     isError,
+    refetch: refetchBook,
   } = useQuery({
     queryKey: ['bookDetail', id],
     queryFn: async () => (await getBookDetailAPI(Number(id))).data,
     enabled: !!id,
   });
 
+  /** 책 삭제 뮤테이션 */
   const { mutate: deleteBook, isPending: isDeleting } = useMutation({
     mutationFn: () => deleteBookAPI(Number(id)),
     onSuccess: () => {
@@ -37,6 +41,24 @@ export default function BookDetail() {
     },
     onError: () => {
       triggerToast('책 삭제에 실패했습니다. 다시 시도해주세요.', 'error');
+    },
+  });
+
+  /** 책장에 추가 (좋아요) 뮤테이션 */
+  const { mutate: createFavorite } = useMutation({
+    mutationFn: () => createFavoriteAPI(book.id),
+    onSuccess: async () => {
+      await refetchBook();
+      triggerToast('내 책장에 추가했어요', 'success');
+    },
+  });
+
+  /** 책장에서 제거 (좋아요 제거) 뮤테이션 */
+  const { mutate: deleteFavorite } = useMutation({
+    mutationFn: () => deleteFavoriteAPI(book.id),
+    onSuccess: async () => {
+      await refetchBook();
+      triggerToast('내 책장에서 제거했어요', 'success');
     },
   });
 
@@ -57,6 +79,21 @@ export default function BookDetail() {
     }
   };
 
+  /** 수정 버튼 클릭 시 */
+  const handleEdit = () => {
+    router.push(`${ROUTES.BOOK_EDIT}/${id}`);
+  };
+
+  /** 책장에 추가 / 책장에서 제거 클릭 시 */
+  const handleFavorite = () => {
+    if (book.isFavorite) {
+      deleteFavorite();
+      return;
+    }
+
+    createFavorite();
+  };
+
   return (
     <div className="container mx-auto p-4">
       <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg p-6">
@@ -64,35 +101,40 @@ export default function BookDetail() {
         <div className="w-full md:w-1/3 flex justify-center items-center">
           {book?.bookImages?.length ? (
             <div className="carousel w-full rounded-lg">
-              {book.bookImages.map((imageUrl: string, index: number) => (
-                <div
-                  key={index}
-                  id={`slide${index}`}
-                  className="carousel-item relative w-full"
-                >
-                  <Image
-                    width={400}
-                    height={400}
-                    src={imageUrl}
-                    alt={`book-image-${index}`}
-                    className="w-full h-auto object-cover rounded-lg"
-                  />
-                  <div className="absolute flex justify-between transform -translate-y-1/2 left-2 right-2 top-1/2">
-                    <a
-                      href={`#slide${(index - 1 + book.bookImages.length) % book.bookImages.length}`}
-                      className="btn btn-circle btn-sm bg-white/70"
-                    >
-                      ❮
-                    </a>
-                    <a
-                      href={`#slide${(index + 1) % book.bookImages.length}`}
-                      className="btn btn-circle btn-sm bg-white/70"
-                    >
-                      ❯
-                    </a>
+              {book.bookImages.map(
+                (
+                  bookImage: { uuid: string; imageUrl: string },
+                  index: number
+                ) => (
+                  <div
+                    key={index}
+                    id={`slide${index}`}
+                    className="carousel-item relative w-full"
+                  >
+                    <Image
+                      width={400}
+                      height={400}
+                      src={bookImage.imageUrl}
+                      alt={`book-image-${index}`}
+                      className="w-full h-auto object-cover rounded-lg"
+                    />
+                    <div className="absolute flex justify-between transform -translate-y-1/2 left-2 right-2 top-1/2">
+                      <a
+                        href={`#slide${(index - 1 + book.bookImages.length) % book.bookImages.length}`}
+                        className="btn btn-circle btn-sm bg-white/70"
+                      >
+                        ❮
+                      </a>
+                      <a
+                        href={`#slide${(index + 1) % book.bookImages.length}`}
+                        className="btn btn-circle btn-sm bg-white/70"
+                      >
+                        ❯
+                      </a>
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              )}
             </div>
           ) : (
             <div className="w-full h-64 bg-gray-200 rounded-lg" />
@@ -132,16 +174,27 @@ export default function BookDetail() {
                 <button className="btn btn-primary w-full md:w-1/2">
                   거래 제안하기
                 </button>
-                <button className="btn btn-outline btn-primary w-full md:w-1/2">
-                  찜하기
-                </button>
+                <div
+                  className={'tooltip  w-full md:w-1/2'}
+                  data-tip={'내 책장은 관심 도서 목록이에요'}
+                >
+                  <button
+                    className="btn btn-outline btn-primary w-full"
+                    onClick={handleFavorite}
+                  >
+                    {book.isFavorite ? '내 책장에서 제거' : '내 책장에 추가'}
+                  </button>
+                </div>
               </div>
             ) : (
               <div className={'w-full flex flex-col gap-3 md:flex-row'}>
                 <button className="btn btn-primary flex-1">
                   받은 제안 보기
                 </button>
-                <button className="btn btn-outline btn-primary flex-1">
+                <button
+                  className="btn btn-outline btn-primary flex-1"
+                  onClick={handleEdit}
+                >
                   수정하기
                 </button>
                 <button

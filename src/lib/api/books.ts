@@ -19,7 +19,7 @@ export const searchBooksAPI = async (params: {
 
 // 책 상세 조회
 export const getBookDetailAPI = async (bookId: number) => {
-  const response = await publicAxiosClient.get(`${BOOKS}/${bookId}`);
+  const response = await privateAxiosClient.get(`${BOOKS}/${bookId}`, {});
   return response.data.data;
 };
 
@@ -32,5 +32,17 @@ export const postNewBookAPI = async (newBook: CreateBookDto) => {
 // 책 삭제
 export const deleteBookAPI = async (bookId: number) => {
   const response = await privateAxiosClient.delete(`${BOOKS}/${bookId}`);
+  return response.data.data;
+};
+
+// 책 수정
+export const updateBookAPI = async (
+  bookId: number,
+  bookForm: CreateBookDto
+) => {
+  const response = await privateAxiosClient.patch(
+    `${BOOKS}/${bookId}`,
+    bookForm
+  );
   return response.data.data;
 };
