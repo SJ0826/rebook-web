@@ -45,3 +45,13 @@ export interface BookDetail {
   };
   bookImages: string[];
 }
+
+export interface CreateBookDto {
+  title: string;
+  author: string;
+  imageUuids: { uuid: string; sort: number }[];
+  publisher: string;
+  price: number;
+  status: BookStatus;
+  description?: string;
+}

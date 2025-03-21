@@ -1,5 +1,5 @@
-import { BookSearchOutDto, BookSearchSort } from '@/types/books';
-import { publicAxiosClient } from '@/lib/api/axios.client';
+import { BookSearchOutDto, BookSearchSort, CreateBookDto } from '@/types/books';
+import { privateAxiosClient, publicAxiosClient } from '@/lib/api/axios.client';
 
 const BOOKS = '/books';
 
@@ -19,6 +19,12 @@ export const searchBooksAPI = async (params: {
 
 // 책 상세 조회
 export const getBookDetailAPI = async (bookId: number) => {
-  const response = await publicAxiosClient.get(`/books/${bookId}`);
+  const response = await publicAxiosClient.get(`${BOOKS}/${bookId}`);
+  return response.data.data;
+};
+
+// 책 등록
+export const postNewBookAPI = async (newBook: CreateBookDto) => {
+  const response = await privateAxiosClient.post(`${BOOKS}`, newBook);
   return response.data.data;
 };

@@ -1,13 +1,13 @@
 'use client';
 
-import { useAuth } from '@/hooks/useAuth';
-import { useQuery } from '@tanstack/react-query';
-import { getBookDetailAPI } from '@/lib/api/books';
+import React from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import BookStatusBadge from '@/components/common/book/BookStatusBadge';
-import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import BookStatusBadge from '@/components/book/BookStatusBadge';
+import { useAuth } from '@/hooks/useAuth';
 import { useMyProfileQuery } from '@/hooks/useAuthMutation';
+import { getBookDetailAPI } from '@/lib/api/books';
 
 export default function BookDetail() {
   const { id } = useParams();
@@ -68,7 +68,9 @@ export default function BookDetail() {
             </p>
 
             <div className="mt-4">
-              <p className="text-gray-700">{book.description}</p>
+              <p className="whitespace-pre-line text-gray-700">
+                {book.description}
+              </p>
             </div>
 
             {/* 상태 및 판매자 정보 */}

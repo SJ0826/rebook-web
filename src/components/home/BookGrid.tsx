@@ -3,8 +3,8 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import BookStatusBadge from '@/components/book/BookStatusBadge';
 import { BookSearchOutDto } from '@/types/books';
-import BookStatusBadge from '@/components/common/book/BookStatusBadge';
 
 interface BookGridProps {
   books: BookSearchOutDto[];

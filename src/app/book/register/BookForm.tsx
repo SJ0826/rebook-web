@@ -13,6 +13,7 @@ export default function BookForm() {
     removeImage,
     resetForm,
     onSubmit,
+    isPending,
   } = useBookForm();
 
   return (
@@ -72,6 +73,7 @@ export default function BookForm() {
               {...register('price', {
                 required: '가격을 입력하세요.',
                 min: { value: 0, message: '가격은 0 이상이어야 합니다.' },
+                valueAsNumber: true,
               })}
             />
             {errors.price && (
@@ -148,7 +150,7 @@ export default function BookForm() {
                     <Image
                       width={200}
                       height={200}
-                      src={URL.createObjectURL(file)}
+                      src={file.imageUrl}
                       alt="책 이미지"
                       className="w-full h-full object-cover rounded-md pointer-events-none" // 👈 추가
                     />
@@ -176,8 +178,12 @@ export default function BookForm() {
         >
           취소
         </button>
-        <button type="submit" className="btn btn-primary w-1/2 text-lg">
-          📌 등록하기
+        <button
+          type="submit"
+          disabled={isPending}
+          className="btn btn-primary w-1/2 text-lg"
+        >
+          {isPending ? '등록중...' : '📌 등록하기'}
         </button>
       </div>
     </form>
