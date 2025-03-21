@@ -28,3 +28,9 @@ export const postNewBookAPI = async (newBook: CreateBookDto) => {
   const response = await privateAxiosClient.post(`${BOOKS}`, newBook);
   return response.data.data;
 };
+
+// 책 삭제
+export const deleteBookAPI = async (bookId: number) => {
+  const response = await privateAxiosClient.delete(`${BOOKS}/${bookId}`);
+  return response.data.data;
+};
