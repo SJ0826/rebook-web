@@ -8,7 +8,7 @@ import BookStatusBadge from '@/components/book/BookStatusBadge';
 import { useAuth } from '@/hooks/useAuth';
 import { useMyProfileQuery } from '@/hooks/useAuthMutation';
 import { deleteBookAPI, getBookDetailAPI } from '@/lib/api/books';
-import { triggerToast } from '@/lib/contexts/ToastContext';
+import { triggerToast, useToast } from '@/lib/contexts/ToastContext';
 import { ROUTES } from '@/lib/constants';
 import { createFavoriteAPI, deleteFavoriteAPI } from '@/lib/api/favorite';
 
@@ -16,6 +16,7 @@ export default function BookDetail() {
   const { id } = useParams();
   const router = useRouter();
   const { isLoggedIn } = useAuth();
+  const { showToast } = useToast();
   const { data: myProfile, isLoading: isMyProfileLoading } =
     useMyProfileQuery();
   const queryClient = useQueryClient();
@@ -49,7 +50,7 @@ export default function BookDetail() {
     mutationFn: () => createFavoriteAPI(book.id),
     onSuccess: async () => {
       await refetchBook();
-      triggerToast('내 책장에 추가했어요', 'success');
+      triggerToast('관심 책장에 추가했어요', 'success');
     },
   });
 
@@ -58,7 +59,7 @@ export default function BookDetail() {
     mutationFn: () => deleteFavoriteAPI(book.id),
     onSuccess: async () => {
       await refetchBook();
-      triggerToast('내 책장에서 제거했어요', 'success');
+      triggerToast('관심 책장에서 제거했어요', 'success');
     },
   });
 
@@ -86,6 +87,11 @@ export default function BookDetail() {
 
   /** 책장에 추가 / 책장에서 제거 클릭 시 */
   const handleFavorite = () => {
+    if (!isLoggedIn) {
+      router.push(ROUTES.LOGIN);
+      showToast('로그인이 필요한 서비스입니다.');
+      return;
+    }
     if (book.isFavorite) {
       deleteFavorite();
       return;
@@ -176,13 +182,15 @@ export default function BookDetail() {
                 </button>
                 <div
                   className={'tooltip  w-full md:w-1/2'}
-                  data-tip={'내 책장은 관심 도서 목록이에요'}
+                  data-tip={'관심 책장은 나의 서재에서 확인할 수 있어요'}
                 >
                   <button
                     className="btn btn-outline btn-primary w-full"
                     onClick={handleFavorite}
                   >
-                    {book.isFavorite ? '내 책장에서 제거' : '내 책장에 추가'}
+                    {book.isFavorite
+                      ? '관심 책장에서 제거'
+                      : '관심 책장에 추가'}
                   </button>
                 </div>
               </div>

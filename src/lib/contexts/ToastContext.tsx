@@ -26,7 +26,7 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
     setTimeout(() => setToast(null), 3000); // 3초 후 자동 닫기
   };
 
-  toastInstance = showToast; // ✅ 전역 변수에 저장
+  toastInstance = showToast;
 
   return (
     <ToastContext.Provider value={{ showToast }}>
@@ -36,7 +36,6 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// ✅ 전역적으로 접근할 수 있는 함수 추가
 export const triggerToast = (
   message: string | string[],
   type: ToastType = 'info'

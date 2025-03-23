@@ -1,8 +1,9 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { getMyProfile, loginUserAPI, signupUserAPI } from '@/lib/api/auth';
+import { loginUserAPI, signupUserAPI } from '@/lib/api/auth';
 import { triggerToast } from '@/lib/contexts/ToastContext';
 import { useAuth } from './useAuth';
 import { ApiResponse } from '@/types/commons';
+import { getMyProfile } from '@/lib/api/my';
 
 // 회원가입
 export const useRegisterMutation = () => {

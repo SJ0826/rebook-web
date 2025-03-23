@@ -39,10 +39,3 @@ export const logoutUserAPI = async () => {
   );
   return response.data;
 };
-
-// 내 프로필 조회
-export const getMyProfile = async () => {
-  const response = await privateAxiosClient.get(`${AUTH}/profile`);
-
-  return response.data.data;
-};

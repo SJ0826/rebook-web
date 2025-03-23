@@ -4,10 +4,10 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import BookStatusBadge from '@/components/book/BookStatusBadge';
-import { BookSearchOutDto } from '@/types/books';
+import { Book } from '@/types/books';
 
 interface BookGridProps {
-  books: BookSearchOutDto[];
+  books: Book[];
 }
 
 const BookGrid: React.FC<BookGridProps> = ({ books }) => {
