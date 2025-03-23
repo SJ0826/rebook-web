@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import SellingBooks from '@/app/my-bookshelf/SellingBooks';
+import SellingBooks from '@/components/bookShelf/SellingBooks';
 
 export default function MyBookshelfPage() {
   const [activeTab, setActiveTab] = useState<

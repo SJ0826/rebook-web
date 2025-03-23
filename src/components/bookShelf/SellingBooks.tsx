@@ -1,20 +1,58 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { getSellingBooks } from '@/lib/api/my';
-import SellingBookGrid from '@/app/my-bookshelf/SellingBookGrid';
-import { BookSaleStatus, BookSearchSort, BookStatus } from '@/types/books';
-import Image from 'next/image';
-import { ROUTES } from '@/lib/constants';
 import { useRouter } from 'next/navigation';
-import emptyImage from '@public/images/empty.png';
+import { useQuery } from '@tanstack/react-query';
+import SellingBookGrid from '@/components/bookShelf/SellingBookGrid';
+import EmptySellingBooks from '@/components/bookShelf/EmptySellingBooks';
+
+import { getSellingBooks } from '@/lib/api/my';
+import { BookSaleStatus, BookSearchSort, BookStatus } from '@/types/books';
 
 const PAGE_SIZE = 8;
 
 interface SellingBooksProps {
   isActive: boolean;
 }
+
+const priceOption = [
+  { value: '', label: '전체 상태' },
+
+  {
+    value: 'low',
+    label: '저가 (8,000원 미만)',
+  },
+  {
+    value: 'mid',
+    label: '중간가 (8,000원 ~ 10,000원)',
+  },
+  {
+    value: 'high',
+    label: '고가 (10,000원 초과)',
+  },
+];
+
+const statusOptions = [
+  { value: '', label: '전체 상태' },
+  { value: BookStatus.NEW, label: '새책' },
+  { value: BookStatus.LIKE_NEW, label: '거의 새책' },
+  { value: BookStatus.GOOD, label: '양호' },
+  { value: BookStatus.ACCEPTABLE, label: '사용감 있음' },
+];
+
+const saleStatusOptions = [
+  { value: '', label: '전체 판매 상태' },
+  { value: BookSaleStatus.FOR_SALE, label: '판매중' },
+  { value: BookSaleStatus.SOLD, label: '판매 완료' },
+];
+
+const sortOptions = [
+  { value: BookSearchSort.NEWEST, label: '최신순' },
+  { value: BookSearchSort.PRICE_HIGH, label: '높은 가격 순' },
+  { value: BookSearchSort.PRICE_LOW, label: '낮은 가격 순' },
+  { value: BookSearchSort.OLDEST, label: '오래된 순' },
+];
+
 const SellingBooks = ({ isActive }: SellingBooksProps) => {
   const router = useRouter();
   const [priceFilter, setPriceFilter] = useState('');
@@ -22,11 +60,11 @@ const SellingBooks = ({ isActive }: SellingBooksProps) => {
   const [saleStatusFilter, setSaleStatusFilter] = useState<BookSaleStatus | ''>(
     ''
   );
-
   const [sortOption, setSortOption] = useState<BookSearchSort>(
     BookSearchSort.NEWEST
   );
   const [currentPage, setCurrentPage] = useState(1);
+
   const { data: sellingBooks } = useQuery({
     queryKey: [
       'sellingBooks',
@@ -61,33 +99,10 @@ const SellingBooks = ({ isActive }: SellingBooksProps) => {
       });
     },
   });
-  if (!isActive) return;
 
+  if (!isActive) return;
   if (!sellingBooks?.books) {
-    return (
-      <div className="flex flex-col items-center justify-center text-center py-20 px-4 space-y-6">
-        <div className="relative w-40 h-40">
-          <Image
-            src={emptyImage}
-            alt="ReBook Logo"
-            fill
-            className="object-contain"
-          />
-        </div>
-        <h2 className="text-2xl font-bold text-neutral-800">
-          판매 중인 책이 없어요
-        </h2>
-        <p className="text-gray-500">
-          등록된 책이 없어요. 지금 바로 첫 책을 등록해보세요!
-        </p>
-        <button
-          onClick={() => router.push(ROUTES.BOOK_REGISTER)}
-          className="px-6 py-3 bg-yellow-400 text-black font-semibold rounded-xl shadow hover:bg-yellow-300 transition"
-        >
-          책 등록하기
-        </button>
-      </div>
-    );
+    return <EmptySellingBooks />;
   }
 
   return (
@@ -102,12 +117,11 @@ const SellingBooks = ({ isActive }: SellingBooksProps) => {
             value={priceFilter}
             onChange={(e) => setPriceFilter(e.target.value)}
           >
-            <option value="" className={'bg-white text-black'}>
-              전체 가격
-            </option>
-            <option value="low">저가 (8,000원 미만)</option>
-            <option value="mid">중간가 (8,000원 ~ 10,000원)</option>
-            <option value="high">고가 (10,000원 초과)</option>
+            {priceOption.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
           </select>
           {/* 책 상태 필터 */}
           <select
@@ -115,11 +129,11 @@ const SellingBooks = ({ isActive }: SellingBooksProps) => {
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as BookStatus | '')}
           >
-            <option value="">전체 상태</option>
-            <option value={BookStatus.NEW}>새책</option>
-            <option value={BookStatus.LIKE_NEW}>거의 새책</option>
-            <option value={BookStatus.GOOD}>양호</option>
-            <option value={BookStatus.ACCEPTABLE}>사용감 있음</option>
+            {statusOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
           </select>
           {/* 책 판매 상태 필터 */}
           <select
@@ -129,9 +143,11 @@ const SellingBooks = ({ isActive }: SellingBooksProps) => {
               setSaleStatusFilter(e.target.value as BookSaleStatus | '')
             }
           >
-            <option value="">전체 판매 상태</option>
-            <option value={BookSaleStatus.FOR_SALE}>판매중</option>
-            <option value={BookSaleStatus.SOLD}>판매 완료</option>
+            {saleStatusOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
           </select>
           {/* 정렬 옵션 */}
           <select
