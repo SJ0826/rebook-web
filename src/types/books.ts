@@ -47,7 +47,7 @@ export interface Book {
   createdAt: Date;
   updatedAt: Date;
   saleStatus: BookSaleStatus;
-  requestCount: number;
+  orderCount: number;
   favoriteCount: number;
 }
 
@@ -57,7 +57,7 @@ export interface Book {
 
 export interface SellingBook extends Book {
   saleStatus: BookSaleStatus;
-  requestCount: number;
+  orderCount: number;
   favoriteCount: number;
 }
 
@@ -79,7 +79,7 @@ export interface BookDetail {
     name: string;
   };
   bookImages: { uuid: string; imageUrl: string }[];
-  requestCount: number;
+  orderCount: number;
   favoriteCount: number;
   isFavorite: boolean;
 }

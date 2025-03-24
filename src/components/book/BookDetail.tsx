@@ -207,7 +207,7 @@ export default function BookDetail() {
                       'badge badge-sm bg-neutral border-neutral text-base-100'
                     }
                   >
-                    {book.requestCount ?? 0}
+                    {book.orderCount ?? 0}
                   </div>
                 </button>
                 <button

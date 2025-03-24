@@ -66,9 +66,7 @@ const BookGrid = ({ books }: SellingBookGridProps) => {
               </div>
               <div className={'flex gap-1 items-center justify-center'}>
                 <ChatBubbleBottomCenterIcon className={'size-4'} />
-                <p className="text-sm text-gray-500">
-                  {book.requestCount ?? 0}
-                </p>
+                <p className="text-sm text-gray-500">{book.orderCount ?? 0}</p>
               </div>
             </div>
           </div>
