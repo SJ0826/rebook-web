@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import SellingBookGrid from '@/components/bookShelf/SellingBookGrid';
-import EmptySellingBooks from '@/components/bookShelf/EmptySellingBooks';
 
 import { getSellingBooks } from '@/lib/api/my';
 import { BookSaleStatus, BookSearchSort, BookStatus } from '@/types/books';
@@ -16,7 +15,7 @@ interface SellingBooksProps {
 }
 
 const priceOption = [
-  { value: '', label: '전체 상태' },
+  { value: '', label: '전체 가격' },
 
   {
     value: 'low',
@@ -101,9 +100,6 @@ const SellingBooks = ({ isActive }: SellingBooksProps) => {
   });
 
   if (!isActive) return;
-  if (!sellingBooks?.books) {
-    return <EmptySellingBooks />;
-  }
 
   return (
     <div className={'flex flex-col  gap-6'}>
@@ -155,10 +151,11 @@ const SellingBooks = ({ isActive }: SellingBooksProps) => {
             value={sortOption}
             onChange={(e) => setSortOption(e.target.value as BookSearchSort)}
           >
-            <option value={BookSearchSort.NEWEST}>최신순</option>
-            <option value={BookSearchSort.PRICE_HIGH}>높은 가격 순</option>
-            <option value={BookSearchSort.PRICE_LOW}>낮은 가격 순</option>
-            <option value={BookSearchSort.OLDEST}>오래된 순</option>
+            {sortOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
           </select>
         </div>
       </div>
@@ -177,7 +174,7 @@ const SellingBooks = ({ isActive }: SellingBooksProps) => {
             «
           </button>
 
-          {Array.from({ length: sellingBooks.totalPages }, (_, i) => (
+          {Array.from({ length: sellingBooks?.totalPages ?? 0 }, (_, i) => (
             <button
               key={i}
               className={`join-item btn ${
@@ -193,10 +190,10 @@ const SellingBooks = ({ isActive }: SellingBooksProps) => {
             className="join-item btn"
             onClick={() =>
               setCurrentPage((prev) =>
-                prev < sellingBooks.totalPages ? prev + 1 : prev
+                prev < (sellingBooks?.totalPages ?? 0) ? prev + 1 : prev
               )
             }
-            disabled={currentPage === sellingBooks.totalPages}
+            disabled={currentPage === sellingBooks?.totalPages}
           >
             »
           </button>

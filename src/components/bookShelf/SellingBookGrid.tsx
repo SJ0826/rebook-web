@@ -1,20 +1,31 @@
-import { BookSaleStatus, SellingBook } from '@/types/books';
+'use client';
+
+import React from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import emptyImage from '@public/images/empty.png';
 import { ChatBubbleBottomCenterIcon } from '@heroicons/react/24/outline';
 import { HeartIcon } from '@heroicons/react/16/solid';
+import EmptySellingBooks from '@/components/bookShelf/EmptySellingBooks';
+import { BookSaleStatus, SellingBook } from '@/types/books';
+import emptyImage from '@public/images/empty.png';
 
 interface SellingBookGridProps {
   books: SellingBook[];
 }
 
 const SellingBookGrid = ({ books }: SellingBookGridProps) => {
+  const router = useRouter();
+  if (!books.length) {
+    return <EmptySellingBooks />;
+  }
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
       {books.map((book) => (
         <div
           key={book.id}
-          className="relative bg-white rounded-xl shadow p-4 space-y-3"
+          className="relative bg-white rounded-xl shadow p-4 space-y-3  cursor-pointer
+                     hover:scale-105 hover:shadow-xl transition-transform duration-300 ease-in-out"
+          onClick={() => router.push(`/book/${book.id}`)}
         >
           <div className="relative w-full h-40">
             <Image

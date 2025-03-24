@@ -1,10 +1,8 @@
 import { privateAxiosClient } from './axios.client';
-import { ApiResponse } from '@/types/commons';
 import {
   BookSaleStatus,
   BookSearchSort,
   BookStatus,
-  SearchBookResponse,
   SearchSellingBookResponse,
 } from '@/types/books';
 

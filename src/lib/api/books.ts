@@ -1,4 +1,4 @@
-import { Book, BookSearchSort, CreateBookDto } from '@/types/books';
+import { Book, BookDetail, BookSearchSort, CreateBookDto } from '@/types/books';
 import { privateAxiosClient, publicAxiosClient } from '@/lib/api/axios.client';
 
 const BOOKS = '/books';
@@ -18,7 +18,7 @@ export const searchBooksAPI = async (params: {
 };
 
 // 책 상세 조회
-export const getBookDetailAPI = async (bookId: number) => {
+export const getBookDetailAPI = async (bookId: number): Promise<BookDetail> => {
   const response = await privateAxiosClient.get(`${BOOKS}/${bookId}`, {});
   return response.data.data;
 };

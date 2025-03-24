@@ -46,6 +46,9 @@ export interface Book {
   imageUrls: string;
   createdAt: Date;
   updatedAt: Date;
+  saleStatus: BookSaleStatus;
+  requestCount: number;
+  favoriteCount: number;
 }
 
 // ---------------------------------------------
@@ -75,7 +78,10 @@ export interface BookDetail {
     id: bigint;
     name: string;
   };
-  bookImages: string[];
+  bookImages: { uuid: string; imageUrl: string }[];
+  requestCount: number;
+  favoriteCount: number;
+  isFavorite: boolean;
 }
 
 // ---------------------------------------------

@@ -14,27 +14,27 @@ export default function MyBookshelfPage() {
 
       {/* 탭 선택 */}
       <div role="tablist" className="tabs tabs-border md:tabs-lg">
-        <a
+        <button
           role="tab"
           className={`tab ${activeTab === 'sellingBooks' ? 'tab-active' : ''}`}
           onClick={() => setActiveTab('sellingBooks')}
         >
           📘 판매 책장
-        </a>
-        <a
+        </button>
+        <button
           role="tab"
           className={`tab ${activeTab === 'buyingBooks' ? 'tab-active' : ''}`}
           onClick={() => setActiveTab('buyingBooks')}
         >
           📗 구매 책장
-        </a>
-        <a
+        </button>
+        <button
           role="tab"
           className={`tab ${activeTab === 'favoriteBooks' ? 'tab-active' : ''}`}
           onClick={() => setActiveTab('favoriteBooks')}
         >
           ❤️ 관심 책장
-        </a>
+        </button>
       </div>
 
       {/* 책장 */}

@@ -28,7 +28,7 @@ export default function BookDetail() {
     refetch: refetchBook,
   } = useQuery({
     queryKey: ['bookDetail', id],
-    queryFn: async () => (await getBookDetailAPI(Number(id))).data,
+    queryFn: async () => await getBookDetailAPI(Number(id)),
     enabled: !!id,
   });
 
@@ -47,7 +47,7 @@ export default function BookDetail() {
 
   /** 책장에 추가 (좋아요) 뮤테이션 */
   const { mutate: createFavorite } = useMutation({
-    mutationFn: () => createFavoriteAPI(book.id),
+    mutationFn: (bookId: bigint) => createFavoriteAPI(bookId),
     onSuccess: async () => {
       await refetchBook();
       triggerToast('관심 책장에 추가했어요', 'success');
@@ -56,7 +56,7 @@ export default function BookDetail() {
 
   /** 책장에서 제거 (좋아요 제거) 뮤테이션 */
   const { mutate: deleteFavorite } = useMutation({
-    mutationFn: () => deleteFavoriteAPI(book.id),
+    mutationFn: (bookId: bigint) => deleteFavoriteAPI(bookId),
     onSuccess: async () => {
       await refetchBook();
       triggerToast('관심 책장에서 제거했어요', 'success');
@@ -92,12 +92,13 @@ export default function BookDetail() {
       showToast('로그인이 필요한 서비스입니다.');
       return;
     }
+
     if (book.isFavorite) {
-      deleteFavorite();
+      deleteFavorite(book.id);
       return;
     }
 
-    createFavorite();
+    createFavorite(book.id);
   };
 
   return (
@@ -192,12 +193,22 @@ export default function BookDetail() {
                       ? '관심 책장에서 제거'
                       : '관심 책장에 추가'}
                   </button>
+                  <p className="text-sm text-gray-500 text-center mt-1">
+                    ❤️ {book.favoriteCount ?? 0}명이 관심 있어요
+                  </p>
                 </div>
               </div>
             ) : (
               <div className={'w-full flex flex-col gap-3 md:flex-row'}>
-                <button className="btn btn-primary flex-1">
-                  받은 제안 보기
+                <button className="btn btn-primary flex-1 flex">
+                  <span>받은 제안</span>
+                  <div
+                    className={
+                      'badge badge-sm bg-neutral border-neutral text-base-100'
+                    }
+                  >
+                    {book.requestCount ?? 0}
+                  </div>
                 </button>
                 <button
                   className="btn btn-outline btn-primary flex-1"

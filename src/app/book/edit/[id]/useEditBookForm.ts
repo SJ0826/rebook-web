@@ -30,7 +30,7 @@ export const useEditBookForm = (bookId: number) => {
     isError,
   } = useQuery({
     queryKey: ['bookDetail', bookId],
-    queryFn: () => getBookDetailAPI(bookId).then((res) => res.data),
+    queryFn: () => getBookDetailAPI(bookId).then((res) => res),
     enabled: !!bookId,
   });
 
@@ -112,7 +112,7 @@ export const useEditBookForm = (bookId: number) => {
         price,
         status,
         description,
-        bookImageUuids,
+        bookImages,
       } = book;
       reset({
         title,
@@ -121,7 +121,7 @@ export const useEditBookForm = (bookId: number) => {
         price,
         status,
         description,
-        imageUuids: bookImageUuids || [],
+        imageUuids: bookImages || [],
       });
     }
 
