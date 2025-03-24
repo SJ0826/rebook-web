@@ -7,10 +7,17 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import BookStatusBadge from '@/components/book/BookStatusBadge';
 import { useAuth } from '@/hooks/useAuth';
 import { useMyProfileQuery } from '@/hooks/useAuthMutation';
-import { deleteBookAPI, getBookDetailAPI } from '@/lib/api/books';
+import {
+  deleteBookAPI,
+  getBookDetailAPI,
+  updateBookSaleStatusAPI,
+} from '@/lib/api/books';
 import { triggerToast, useToast } from '@/lib/contexts/ToastContext';
 import { ROUTES } from '@/lib/constants';
 import { createFavoriteAPI, deleteFavoriteAPI } from '@/lib/api/favorite';
+import { BookSaleStatus } from '@/types/books';
+import { HeartIcon as HeartIconSolid } from '@heroicons/react/16/solid';
+import { HeartIcon as HeartIconOutline } from '@heroicons/react/24/outline';
 
 export default function BookDetail() {
   const { id } = useParams();
@@ -42,6 +49,19 @@ export default function BookDetail() {
     },
     onError: () => {
       triggerToast('책 삭제에 실패했습니다. 다시 시도해주세요.', 'error');
+    },
+  });
+
+  /** 책 판매 상태 변경 뮤테이션 */
+  const { mutate: updateSaleStatus } = useMutation({
+    mutationFn: (saleStatus: BookSaleStatus) =>
+      updateBookSaleStatusAPI(Number(id), saleStatus),
+    onSuccess: async () => {
+      await refetchBook();
+      triggerToast('판매 상태가 변경되었습니다.', 'success');
+    },
+    onError: () => {
+      triggerToast('판매 상태 변경에 실패했습니다.', 'error');
     },
   });
 
@@ -154,6 +174,15 @@ export default function BookDetail() {
             <div className={'flex gap-3 flex-wrap items-center'}>
               <h1 className="text-2xl font-bold">{book.title}</h1>
               <BookStatusBadge status={book?.status || 'NEW'} />
+              <div className="flex items-center gap-1 rounded-full border border-gray-300 px-2 py-[2px] text-sm text-gray-700">
+                {book.isFavorite ? (
+                  <HeartIconSolid className="w-4 h-4 text-red-500" />
+                ) : (
+                  <HeartIconOutline className="w-4 h-4 text-red-500" />
+                )}
+
+                {book?.favoriteCount}
+              </div>
             </div>
 
             <p className="text-gray-600 mt-1">저자: {book.author}</p>
@@ -161,7 +190,6 @@ export default function BookDetail() {
             <p className="text-gray-800 font-semibold mt-2">
               ₩{book?.price?.toLocaleString()} 원
             </p>
-
             <div className="mt-4">
               <p className="whitespace-pre-line text-gray-700">
                 {book.description}
@@ -171,6 +199,21 @@ export default function BookDetail() {
             {/* 상태 및 판매자 정보 */}
             <div className="mt-4">
               <p className="mt-2 text-gray-500">판매자: {book.seller?.name}</p>
+            </div>
+            {/* 판매 상태 드롭다운 */}
+
+            <div className="form-control w-full max-w-xs mt-4">
+              <select
+                className="select select-bordered"
+                value={book.saleStatus}
+                onChange={(e) =>
+                  updateSaleStatus(e.target.value as BookSaleStatus)
+                }
+                disabled={!isOwner}
+              >
+                <option value="FOR_SALE">판매중</option>
+                <option value="SOLD">판매 완료</option>
+              </select>
             </div>
           </div>
 
@@ -193,9 +236,6 @@ export default function BookDetail() {
                       ? '관심 책장에서 제거'
                       : '관심 책장에 추가'}
                   </button>
-                  <p className="text-sm text-gray-500 text-center mt-1">
-                    ❤️ {book.favoriteCount ?? 0}명이 관심 있어요
-                  </p>
                 </div>
               </div>
             ) : (

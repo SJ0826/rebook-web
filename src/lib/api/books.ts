@@ -54,13 +54,13 @@ export const updateBookAPI = async (
 };
 
 // 책 판매 상태 수정
-export const updateBookSaleStateAPI = async (
+export const updateBookSaleStatusAPI = async (
   bookId: number,
-  saleState: BookSaleStatus
+  saleStatus: BookSaleStatus
 ) => {
   const response = await privateAxiosClient.patch(
-    `${BOOKS}/sale/${bookId}`,
-    saleState
+    `${BOOKS}/${bookId}/sale-status`,
+    { saleStatus }
   );
   return response.data.data;
 };

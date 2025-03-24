@@ -82,6 +82,7 @@ export interface BookDetail {
   orderCount: number;
   favoriteCount: number;
   isFavorite: boolean;
+  saleStatus: BookSaleStatus;
 }
 
 // ---------------------------------------------
