@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import SellingBooks from '@/components/bookShelf/SellingBooks';
+import FavoriteBooks from '@/components/bookShelf/FavoriteBooks';
 
 export default function MyBookshelfPage() {
   const [activeTab, setActiveTab] = useState<
@@ -39,6 +40,7 @@ export default function MyBookshelfPage() {
 
       {/* 책장 */}
       <SellingBooks isActive={activeTab === 'sellingBooks'} />
+      <FavoriteBooks isActive={activeTab === 'favoriteBooks'} />
     </div>
   );
 }

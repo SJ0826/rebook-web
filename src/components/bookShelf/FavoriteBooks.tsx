@@ -1,24 +1,24 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import BookListSection from '@/components/bookShelf/BookListSection';
-import { getSellingBooks } from '@/lib/api/my';
+import { getFavoriteBooks } from '@/lib/api/my';
 import { ROUTES } from '@/lib/constants';
 import emptyImage from '@public/images/empty.png';
 
-const SellingBooks = ({ isActive }: { isActive: boolean }) => {
+const FavoriteBooks = ({ isActive }: { isActive: boolean }) => {
   return (
     <BookListSection
       isActive={isActive}
-      fetchBooks={getSellingBooks}
-      queryKeyBase="sellingBooks"
-      EmptyState={EmptySellingBooks}
+      fetchBooks={getFavoriteBooks}
+      queryKeyBase="favoriteBooks"
+      EmptyState={EmptyFavoriteBooks}
     />
   );
 };
 
-export default SellingBooks;
+export default FavoriteBooks;
 
-const EmptySellingBooks = ({ isShow }: { isShow: boolean }) => {
+const EmptyFavoriteBooks = ({ isShow }: { isShow: boolean }) => {
   const router = useRouter();
   if (!isShow) return null;
   return (
@@ -32,16 +32,16 @@ const EmptySellingBooks = ({ isShow }: { isShow: boolean }) => {
         />
       </div>
       <h2 className="text-2xl font-bold text-neutral-800">
-        판매 중인 책이 없어요
+        좋아요한 책이 없어요
       </h2>
       <p className="text-gray-500">
-        등록된 책이 없어요. 지금 바로 첫 책을 등록해보세요!
+        마음에 드는 책을 추가해보세요. 나중에 쉽게 확인할 수 있어요!
       </p>
       <button
-        onClick={() => router.push(ROUTES.BOOK_REGISTER)}
+        onClick={() => router.push(ROUTES.HOME)}
         className="px-6 py-3 bg-yellow-400 text-black font-semibold rounded-xl shadow hover:bg-yellow-300 transition"
       >
-        책 등록하기
+        책 보러가기
       </button>
     </div>
   );

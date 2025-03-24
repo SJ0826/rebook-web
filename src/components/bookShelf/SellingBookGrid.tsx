@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ChatBubbleBottomCenterIcon } from '@heroicons/react/24/outline';
 import { HeartIcon } from '@heroicons/react/16/solid';
-import EmptySellingBooks from '@/components/bookShelf/EmptySellingBooks';
 import { BookSaleStatus, SellingBook } from '@/types/books';
 import emptyImage from '@public/images/empty.png';
 
@@ -15,9 +14,7 @@ interface SellingBookGridProps {
 
 const SellingBookGrid = ({ books }: SellingBookGridProps) => {
   const router = useRouter();
-  if (!books.length) {
-    return <EmptySellingBooks />;
-  }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
       {books.map((book) => (
