@@ -12,7 +12,7 @@ interface SellingBookGridProps {
   books: SellingBook[];
 }
 
-const SellingBookGrid = ({ books }: SellingBookGridProps) => {
+const BookGrid = ({ books }: SellingBookGridProps) => {
   const router = useRouter();
 
   return (
@@ -78,4 +78,4 @@ const SellingBookGrid = ({ books }: SellingBookGridProps) => {
   );
 };
 
-export default SellingBookGrid;
+export default BookGrid;

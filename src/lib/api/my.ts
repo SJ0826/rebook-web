@@ -32,6 +32,23 @@ export const getSellingBooks = async (params: {
   return response.data.data;
 };
 
+// 구매요청 한 책 목록 조회
+export const getBuyingBooks = async (params: {
+  search?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  status?: BookStatus;
+  saleStatus?: BookSaleStatus;
+  page?: number;
+  limit?: number;
+  sort?: BookSearchSort;
+}): Promise<SearchSellingBookResponse> => {
+  const response = await privateAxiosClient.get(`${MY}/books/buying`, {
+    params,
+  });
+  return response.data.data;
+};
+
 // 관심 책장 (좋아요) 책 목록 조회
 export const getFavoriteBooks = async (params: {
   search?: string;

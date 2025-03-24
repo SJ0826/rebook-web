@@ -1,7 +1,8 @@
-// components/bookShelf/BookListSection.tsx
 'use client';
 
 import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import BookGrid from '@/components/home/BookGrid';
 import {
   Book,
   BookSaleStatus,
@@ -14,8 +15,6 @@ import {
   sortOptions,
   statusOptions,
 } from '@/lib/data/options';
-import SellingBookGrid from '@/components/bookShelf/SellingBookGrid';
-import { useQuery } from '@tanstack/react-query';
 
 interface BookListSectionProps {
   isActive: boolean;
@@ -146,7 +145,7 @@ const BookListSection = ({
       </div>
 
       {/* 책 리스트 */}
-      <SellingBookGrid books={data?.books ?? []} />
+      <BookGrid books={data?.books ?? []} />
       <EmptyState isShow={data?.totalCount === 0} />
 
       {/* 페이지네이션 */}
