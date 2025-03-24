@@ -1,4 +1,10 @@
-import { Book, BookDetail, BookSearchSort, CreateBookDto } from '@/types/books';
+import {
+  Book,
+  BookDetail,
+  BookSaleStatus,
+  BookSearchSort,
+  CreateBookDto,
+} from '@/types/books';
 import { privateAxiosClient, publicAxiosClient } from '@/lib/api/axios.client';
 
 const BOOKS = '/books';
@@ -43,6 +49,18 @@ export const updateBookAPI = async (
   const response = await privateAxiosClient.patch(
     `${BOOKS}/${bookId}`,
     bookForm
+  );
+  return response.data.data;
+};
+
+// 책 판매 상태 수정
+export const updateBookSaleStateAPI = async (
+  bookId: number,
+  saleState: BookSaleStatus
+) => {
+  const response = await privateAxiosClient.patch(
+    `${BOOKS}/sale/${bookId}`,
+    saleState
   );
   return response.data.data;
 };

@@ -27,7 +27,7 @@ export const refreshTokenAPI = async () => {
     {},
     { withCredentials: true }
   );
-  return response.data;
+  return response.data.data;
 };
 
 // 로그아웃

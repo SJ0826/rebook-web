@@ -3,6 +3,7 @@ import { create } from 'zustand';
 
 interface AuthStore {
   accessToken: string | null;
+  setAccessToken: (token: string) => void;
   login: (token: string) => void;
   logout: () => void;
   refreshToken: () => Promise<void>;
@@ -32,7 +33,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
   refreshToken: async () => {
     try {
-      const newAccessToken = (await refreshTokenAPI()).data.accessToken;
+      const newAccessToken = (await refreshTokenAPI()).accessToken;
       if (newAccessToken) {
         set({ accessToken: newAccessToken, isLoggedIn: true });
       }
@@ -48,6 +49,10 @@ export const useAuthStore = create<AuthStore>((set) => ({
     }
     set({ isLoggedIn: loggedIn });
   },
+
+  setAccessToken: (token: string) => {
+    set({ accessToken: token });
+  },
 }));
 
 export const useAuth = () => {
@@ -58,6 +63,7 @@ export const useAuth = () => {
     refreshToken,
     isLoggedIn,
     setIsLoggedIn,
+    setAccessToken,
   } = useAuthStore();
 
   return {
@@ -73,5 +79,6 @@ export const useAuth = () => {
       await refreshToken();
     },
     setIsLoggedIn,
+    setAccessToken,
   };
 };
