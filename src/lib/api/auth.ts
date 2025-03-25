@@ -27,7 +27,7 @@ export const refreshTokenAPI = async () => {
     {},
     { withCredentials: true }
   );
-  return response.data;
+  return response.data.data;
 };
 
 // 로그아웃
@@ -38,11 +38,4 @@ export const logoutUserAPI = async () => {
     { withCredentials: true }
   );
   return response.data;
-};
-
-// 내 프로필 조회
-export const getMyProfile = async () => {
-  const response = await privateAxiosClient.get(`${AUTH}/profile`);
-
-  return response.data.data;
 };

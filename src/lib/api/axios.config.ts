@@ -2,6 +2,7 @@ import { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { ApiResponse } from '@/types/commons';
 import { triggerToast } from '@/lib/contexts/ToastContext';
 import { useAuthStore } from '@/hooks/useAuth';
+import { refreshTokenAPI } from '@/lib/api/auth';
 
 export const setupInterceptors = (axiosInstance: AxiosInstance) => {
   axiosInstance.interceptors.request.use(
@@ -19,7 +20,7 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
 
   axiosInstance.interceptors.response.use(
     (response: AxiosResponse) => response,
-    (error: AxiosError<ApiResponse>) => {
+    async (error: AxiosError<ApiResponse>) => {
       if (error.response) {
         // 서버 응답이 있는 경우
         switch (error.response.status) {
@@ -30,19 +31,39 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
             );
             break;
           case 401:
-            alert('인증이 필요합니다. 다시 로그인하세요.');
+            try {
+              const newTokens = await refreshTokenAPI();
+              console.log(newTokens);
+              useAuthStore.getState().setAccessToken(newTokens.accessToken);
+
+              const originalRequest = error.config;
+              if (originalRequest && originalRequest.headers) {
+                originalRequest.headers.Authorization = `Bearer ${newTokens.accessToken}`;
+                return axiosInstance(originalRequest);
+              }
+            } catch {
+              triggerToast(
+                '세션이 만료되었습니다. 다시 로그인해주세요',
+                'warning'
+              );
+              useAuthStore.getState().logout();
+              window.location.href = '/login';
+            }
             break;
           case 403:
-            alert('접근 권한이 없습니다.');
+            triggerToast('접근 권한이 없습니다.', 'warning');
             break;
           case 404:
-            alert('요청한 리소스를 찾을 수 없습니다.');
+            triggerToast('요청한 리소스를 찾을 수 없습니다.', 'warning');
             break;
           case 500:
-            alert('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+            triggerToast(
+              '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+              'error'
+            );
             break;
           default:
-            alert('알 수 없는 오류가 발생했습니다.');
+            triggerToast('알 수 없는 오류가 발생했습니다.', 'error');
         }
       } else if (error.request) {
         // 요청은 전송되었지만 응답을 받지 못한 경우

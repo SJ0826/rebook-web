@@ -8,10 +8,12 @@ import { ROUTES } from '@/lib/constants';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import LogoutModal from '@/components/modal/LogoutModal';
+import { useToast } from '@/lib/contexts/ToastContext';
 
 export default function Header() {
   const pathname = usePathname();
   const { logout, isLoggedIn } = useAuth();
+  const { showToast } = useToast();
   const hideHeader = [ROUTES.LOGIN, ROUTES.SIGNUP].includes(pathname);
   const [isOpenMobileNav, setIsOpenMobileNav] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -30,6 +32,16 @@ export default function Header() {
     router.push(ROUTES.LOGIN);
   };
 
+  // 로그인 여부에 따라 이동 or 토스트
+  const handleRouteWithAuth = (route: string) => {
+    if (isLoggedIn) {
+      router.push(route);
+    } else {
+      showToast('로그인이 필요한 서비스입니다.', 'info');
+      router.push(ROUTES.LOGIN);
+    }
+  };
+
   if (hideHeader || !isMounted) return null;
 
   return (
@@ -46,19 +58,31 @@ export default function Header() {
 
         <nav className="hidden md:flex items-center gap-6">
           <Link
-            href={isLoggedIn ? ROUTES.BOOK_REGISTER : ROUTES.LOGIN}
+            href={'#'}
+            onClick={(e) => {
+              e.preventDefault();
+              handleRouteWithAuth(ROUTES.BOOK_REGISTER);
+            }}
             className="w-20 text-center font-semibold"
           >
             책 등록
           </Link>
           <Link
-            href={isLoggedIn ? ROUTES.FAVORITES : ROUTES.LOGIN}
+            href={'#'}
+            onClick={(e) => {
+              e.preventDefault();
+              handleRouteWithAuth(ROUTES.MY_BOOKSHELF);
+            }}
             className="w-20 text-center font-semibold"
           >
-            찜 목록
+            나의 서재
           </Link>
           <Link
-            href={isLoggedIn ? ROUTES.PROFILE : ROUTES.LOGIN}
+            href={'#'}
+            onClick={(e) => {
+              e.preventDefault();
+              handleRouteWithAuth(ROUTES.PROFILE);
+            }}
             className="w-20 text-center font-semibold"
           >
             내 정보
@@ -84,23 +108,35 @@ export default function Header() {
               {isLoggedIn ? '로그아웃' : '로그인'}
             </a>
             <Link
-              href={ROUTES.BOOK_REGISTER}
+              href={'#'}
               className="btn btn-ghost"
-              onClick={() => setIsOpenMobileNav(false)}
+              onClick={(e) => {
+                e.preventDefault();
+                handleRouteWithAuth(ROUTES.BOOK_REGISTER);
+                setIsOpenMobileNav(false);
+              }}
             >
               책 등록
             </Link>
             <Link
-              href={ROUTES.FAVORITES}
+              href={'#'}
               className="btn btn-ghost"
-              onClick={() => setIsOpenMobileNav(false)}
+              onClick={(e) => {
+                e.preventDefault();
+                handleRouteWithAuth(ROUTES.MY_BOOKSHELF);
+                setIsOpenMobileNav(false);
+              }}
             >
-              찜 목록
+              나의 서재
             </Link>
             <Link
-              href={ROUTES.PROFILE}
+              href={'#'}
               className="btn btn-ghost"
-              onClick={() => setIsOpenMobileNav(false)}
+              onClick={(e) => {
+                e.preventDefault();
+                handleRouteWithAuth(ROUTES.PROFILE);
+                setIsOpenMobileNav(false);
+              }}
             >
               내 정보
             </Link>
