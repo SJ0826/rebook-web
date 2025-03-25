@@ -9,12 +9,13 @@ import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import LogoutModal from '@/components/modal/LogoutModal';
 import { useToast } from '@/lib/contexts/ToastContext';
+import { noAuthRoutes } from '@/lib/data/noAuthRoutes';
 
 export default function Header() {
   const pathname = usePathname();
   const { logout, isLoggedIn } = useAuth();
   const { showToast } = useToast();
-  const hideHeader = [ROUTES.LOGIN, ROUTES.SIGNUP].includes(pathname);
+  const hideHeader = noAuthRoutes.includes(pathname);
   const [isOpenMobileNav, setIsOpenMobileNav] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const router = useRouter();

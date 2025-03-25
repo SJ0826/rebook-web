@@ -11,14 +11,14 @@ export const useRegisterMutation = () => {
 
   return useMutation({
     mutationFn: signupUserAPI,
-    onSuccess: async (
-      data: ApiResponse<{
-        accessToken: string;
-      }>
-    ) => {
-      login(data.data.accessToken);
-      triggerToast('회원가입에 성공했습니다.', 'success');
-    },
+    //   onSuccess: async (
+    //     data: ApiResponse<{
+    //       accessToken: string;
+    //     }>
+    //   ) => {
+    //     login(data.data.accessToken);
+    //     triggerToast('회원가입에 성공했습니다.', 'success');
+    //   },
   });
 };
 

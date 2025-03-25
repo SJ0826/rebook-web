@@ -33,7 +33,6 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
           case 401:
             try {
               const newTokens = await refreshTokenAPI();
-              console.log(newTokens);
               useAuthStore.getState().setAccessToken(newTokens.accessToken);
 
               const originalRequest = error.config;

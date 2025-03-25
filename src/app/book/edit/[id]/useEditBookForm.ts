@@ -65,7 +65,7 @@ export const useEditBookForm = (bookId: number) => {
       reset();
       setImageFiles([]);
 
-      router.push(ROUTES.HOME);
+      router.push(`${ROUTES.BOOK}/${bookId}`);
     },
     onError: () => {
       triggerToast('수정에 실패했습니다.', 'error');
