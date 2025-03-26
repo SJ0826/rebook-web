@@ -11,6 +11,22 @@ export const signupUserAPI = async (payload: {
   return response.data;
 };
 
+// 이메일 인증
+export const verifyEmailAPI = async (
+  token: string
+): Promise<{ accessToken: string }> => {
+  const response = await privateAxiosClient.get(
+    `${AUTH}/email/verify?token=${token}`
+  );
+  return response.data.data;
+};
+
+// 이메일 인증 메일 재전송
+export const resendVerificationEmailAPI = async (body: { email: string }) => {
+  const response = await publicAxiosClient.post(`${AUTH}/email/resend`, body);
+  return response.data.data;
+};
+
 // 로그인
 export const loginUserAPI = async (payload: {
   email: string;

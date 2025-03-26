@@ -4,6 +4,9 @@ import React, { useEffect } from 'react';
 import Header from '@/components/layout/Header';
 import { getRefreshTokenInServer } from '@/app/actions/getRefreshToken';
 import { useAuth } from '@/hooks/useAuth';
+import { usePathname } from 'next/navigation';
+import { ROUTES } from '@/lib/constants';
+import { noAuthRoutes } from '@/lib/data/noAuthRoutes';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -11,15 +14,17 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   const { refreshToken, setIsLoggedIn, isLoggedIn } = useAuth();
+  const pathName = usePathname();
 
   useEffect(() => {
     async function fetchToken() {
       const isLoggedIn = await getRefreshTokenInServer();
 
-      if (!isLoggedIn) {
+      if (!isLoggedIn || noAuthRoutes.includes(pathName)) {
         setIsLoggedIn(false);
         return;
       }
+
       await refreshToken();
       setIsLoggedIn(true);
     }

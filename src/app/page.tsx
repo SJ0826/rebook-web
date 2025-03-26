@@ -55,7 +55,6 @@ export default function RebookMain() {
   });
   const books = data?.books ?? [];
   const totalPages = data?.totalPages ?? 1;
-
   return (
     <div className="container mx-auto p-4 bg-base-100">
       {/* 필터 옵션 */}

@@ -1,12 +1,13 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { useRegisterMutation } from '@/hooks/useAuthMutation';
-import { ROUTES } from '@/lib/constants';
-import { useToast } from '@/lib/contexts/ToastContext';
 import axios from 'axios';
+import Link from 'next/link';
+import {
+  useRegisterMutation,
+  useResendVerificationEmailMutation,
+} from '@/hooks/useAuthMutation';
+import { useToast } from '@/lib/contexts/ToastContext';
 
 interface FormData {
   email: string;
@@ -29,7 +30,6 @@ const VALIDATION = {
 };
 
 export default function SignupPage() {
-  const router = useRouter();
   const { showToast } = useToast();
   const [formData, setFormData] = useState<FormData>({
     email: '',
@@ -39,7 +39,10 @@ export default function SignupPage() {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
   const { mutate } = useRegisterMutation();
+  const { mutate: resendVerificationEmailMutate } =
+    useResendVerificationEmailMutation();
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -89,7 +92,10 @@ export default function SignupPage() {
         password: formData.password,
       },
       {
-        onSuccess: () => router.push(ROUTES.HOME),
+        onSuccess: () => {
+          // router.push(ROUTES.HOME),
+          setShowVerifyModal(true);
+        },
         onError: (error) => {
           if (axios.isAxiosError(error)) {
             showToast(error.response?.data?.message, 'error');
@@ -106,6 +112,9 @@ export default function SignupPage() {
     <div className="flex justify-center items-center min-h-screen bg-base-200 p-4 rounded-field">
       <div className="card w-full max-w-sm bg-base-100 shadow-xl p-6 ">
         <h2 className="text-2xl font-bold text-center">회원가입</h2>
+        <p className="text-sm text-center text-gray-500 mt-2">
+          회원가입 후 이메일로 인증 링크가 전송됩니다.
+        </p>
         <form className="flex flex-col gap-4 mt-4" onSubmit={handleSubmit}>
           <label className="form-control w-full">
             <span className="label-text">이메일</span>
@@ -183,7 +192,7 @@ export default function SignupPage() {
                 처리중...
               </>
             ) : (
-              '회원가입'
+              '회원가입 및 이메일 인증'
             )}
           </button>
         </form>
@@ -195,6 +204,38 @@ export default function SignupPage() {
           </Link>
         </p>
       </div>
+      {showVerifyModal && (
+        <div className="modal modal-open">
+          <div className="modal-box text-center">
+            <h3 className="font-bold text-lg text-primary">이메일 인증 안내</h3>
+            <p className="py-4 text-sm text-gray-700">
+              가입하신 이메일로 인증 링크를 전송했어요.
+              <br />
+              받은 메일함 또는 스팸함을 확인해주세요!
+              <br />
+              <br />
+              이메일 주소를 잘못 입력하셨다면
+              <br /> 고객문의를 통해 이메일 주소 수정을 요청해주세요
+            </p>
+            <p>{`가입 이메일 주소: ${formData.email} `}</p>
+            <div className="flex flex-col gap-2 mt-4">
+              <button
+                onClick={() => resendVerificationEmailMutate(formData.email)}
+                className="btn btn-primary"
+              >
+                인증 메일 다시 보내기
+              </button>
+              <button
+                className="btn btn-outline"
+                onClick={() => setShowVerifyModal(false)}
+              >
+                닫기
+              </button>
+            </div>
+          </div>
+          <div className="modal-backdrop"></div>
+        </div>
+      )}
     </div>
   );
 }
