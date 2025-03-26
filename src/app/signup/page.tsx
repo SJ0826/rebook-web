@@ -3,7 +3,10 @@
 import { FormEvent, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
-import { useRegisterMutation } from '@/hooks/useAuthMutation';
+import {
+  useRegisterMutation,
+  useResendVerificationEmailMutation,
+} from '@/hooks/useAuthMutation';
 import { useToast } from '@/lib/contexts/ToastContext';
 
 interface FormData {
@@ -38,6 +41,8 @@ export default function SignupPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const { mutate } = useRegisterMutation();
+  const { mutate: resendVerificationEmailMutate } =
+    useResendVerificationEmailMutation();
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -214,10 +219,12 @@ export default function SignupPage() {
             </p>
             <p>{`가입 이메일 주소: ${formData.email} `}</p>
             <div className="flex flex-col gap-2 mt-4">
-              {/*<button onClick={() => mutate()} className="btn btn-primary">*/}
-              {/*  인증 메일 다시 보내기*/}
-              {/*</button>*/}
-              {/* TODO: 이메일 인증 요청 재전송*/}
+              <button
+                onClick={() => resendVerificationEmailMutate(formData.email)}
+                className="btn btn-primary"
+              >
+                인증 메일 다시 보내기
+              </button>
               <button
                 className="btn btn-outline"
                 onClick={() => setShowVerifyModal(false)}
