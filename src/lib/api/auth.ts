@@ -38,7 +38,7 @@ export const loginUserAPI = async (payload: {
 
 // 토큰 갱신
 export const refreshTokenAPI = async () => {
-  const response = await publicAxiosClient.post(
+  const response = await privateAxiosClient.post(
     `${AUTH}/refresh`,
     {},
     { withCredentials: true }

@@ -6,7 +6,12 @@ module.exports = {
     './lib/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['var(--font-pretendard)'],
+        pretendard: ['var(--font-pretendard)'],
+      },
+    },
   },
   plugins: [],
 };

@@ -1,11 +1,10 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import { getRefreshTokenInServer } from '@/app/actions/getRefreshToken';
 import { useAuth } from '@/hooks/useAuth';
-import { usePathname } from 'next/navigation';
-import { ROUTES } from '@/lib/constants';
 import { noAuthRoutes } from '@/lib/data/noAuthRoutes';
 
 interface LayoutProps {
@@ -32,7 +31,7 @@ const Layout = ({ children }: LayoutProps) => {
   }, []);
 
   if (isLoggedIn === undefined) {
-    return null; // 로그인 상태가 결정될 때까지 아무것도 렌더링하지 않음
+    return null;
   }
 
   return (

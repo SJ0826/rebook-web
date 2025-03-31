@@ -28,6 +28,8 @@ const EmptyFavoriteBooks = ({ isShow }: { isShow: boolean }) => {
           src={emptyImage}
           alt="ReBook Logo"
           fill
+          sizes={'160px'}
+          priority
           className="object-contain"
         />
       </div>
