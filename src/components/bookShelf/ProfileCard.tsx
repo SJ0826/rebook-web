@@ -9,11 +9,14 @@ import {
 } from '@/hooks/useAuthMutation';
 import { uploadImagesAPI } from '@/lib/api/files';
 import { useToast } from '@/lib/contexts/ToastContext';
+import { twMerge } from 'tailwind-merge';
+import EditNameModal from '@/components/bookShelf/EditNameModal';
 
 const ProfileCard = () => {
   const { data: profileData } = useMyProfileQuery();
   const { mutate: updateProfileMutate } = useMyProfileMutation();
   const { showToast } = useToast();
+  const [showEditNameModal, setShowEditNameModal] = useState(false);
 
   const [currentImageUrl, setCurrentImageUrl] = useState(profileData?.imageUrl);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -41,10 +44,10 @@ const ProfileCard = () => {
   }, [profileData?.imageUrl]);
 
   return (
-    <div className="card w-full bg-base-100 shadow-md border border-base-200">
-      <div className="card-body flex flex-col md:flex-row items-center gap-6">
+    <div className="card bg-base-100 border-base-200 w-full border shadow-md">
+      <div className="card-body flex flex-col items-center gap-6 md:flex-row">
         {/*  프로필 이미지 */}
-        <div className="relative avatar">
+        <div className="avatar relative">
           {currentImageUrl && (
             <Image
               src={currentImageUrl}
@@ -56,12 +59,7 @@ const ProfileCard = () => {
           )}
 
           {/*  수정 버튼 */}
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="absolute right-0 bottom-2 w-7 h-7 bg-white rounded-full border border-gray-400 p-1"
-          >
-            <PencilIcon className="w-4 h-4 text-gray-600" />
-          </button>
+          <EditButton onClick={() => fileInputRef.current?.click()} />
 
           {/* 파일 선택 input (숨김) */}
           <input
@@ -74,15 +72,23 @@ const ProfileCard = () => {
         </div>
 
         {/*  유저 정보 + 버튼 */}
-        <div className="flex flex-col gap-2 flex-1">
-          <span className="text-lg font-semibold text-center md:text-left">
-            {profileData?.name}
-          </span>
-          <span className="text-sm text-gray-500 text-center md:text-left">
+        <div className="flex flex-1 flex-col gap-2">
+          <div className={'bottom-0 flex items-center gap-2'}>
+            <span className="text-center text-lg font-semibold md:text-left">
+              {profileData?.name}
+            </span>
+            <EditButton
+              onClick={() => setShowEditNameModal(true)}
+              className={'relative bottom-0 h-5 w-5'}
+              iconClassName={'w-3 h-3'}
+            />
+          </div>
+
+          <span className="text-center text-sm text-gray-500 md:text-left">
             {profileData?.email}
           </span>
 
-          <div className="flex gap-2 mt-2 justify-center md:justify-start">
+          <div className="mt-2 flex justify-center gap-2 md:justify-start">
             <button className="btn btn-sm btn-outline btn-warning">
               비밀번호 변경
             </button>
@@ -93,8 +99,36 @@ const ProfileCard = () => {
           </div>
         </div>
       </div>
+
+      <EditNameModal
+        showEditModal={showEditNameModal}
+        currentName={profileData?.name ?? ''}
+        onClose={() => setShowEditNameModal(false)}
+      />
     </div>
   );
 };
 
 export default ProfileCard;
+
+const EditButton = ({
+  onClick,
+  className,
+  iconClassName,
+}: {
+  onClick: () => void;
+  className?: string;
+  iconClassName?: string;
+}) => {
+  return (
+    <button
+      onClick={onClick}
+      className={twMerge(
+        'bg-whiteㅎ absolute right-0 bottom-2 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-gray-400',
+        className
+      )}
+    >
+      <PencilIcon className={twMerge('h-4 w-4 text-gray-600', iconClassName)} />
+    </button>
+  );
+};
