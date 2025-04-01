@@ -44,7 +44,7 @@ const Toast = ({ text, type, duration = 3000 }: ToastProps) => {
         >
           {Array.isArray(text) ? (
             text.map((text) => (
-              <div key={text} className={`alert ${alertType()}`}>
+              <div key={text} className={`alert ${alertType()} z-[9999]`}>
                 {text}
               </div>
             ))

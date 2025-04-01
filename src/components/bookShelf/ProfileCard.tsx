@@ -11,15 +11,24 @@ import { uploadImagesAPI } from '@/lib/api/files';
 import { useToast } from '@/lib/contexts/ToastContext';
 import { twMerge } from 'tailwind-merge';
 import EditNameModal from '@/components/bookShelf/EditNameModal';
+import { useAuth } from '@/hooks/useAuth';
+import { useRouter } from 'next/navigation';
+import { ROUTES } from '@/lib/constants';
+import LogoutConfirmModal from '@/components/common/LogoutConfirmModal';
+import ChangePasswordModal from '@/components/bookShelf/ChangePasswordModal';
 
 const ProfileCard = () => {
   const { data: profileData } = useMyProfileQuery();
   const { mutate: updateProfileMutate } = useMyProfileMutation();
   const { showToast } = useToast();
-  const [showEditNameModal, setShowEditNameModal] = useState(false);
-
-  const [currentImageUrl, setCurrentImageUrl] = useState(profileData?.imageUrl);
+  const { logout } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+
+  const [showEditNameModal, setShowEditNameModal] = useState(false);
+  const [currentImageUrl, setCurrentImageUrl] = useState(profileData?.imageUrl);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
   //  이미지 업로드 및 수정 처리
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,10 +98,16 @@ const ProfileCard = () => {
           </span>
 
           <div className="mt-2 flex justify-center gap-2 md:justify-start">
-            <button className="btn btn-sm btn-outline btn-warning">
+            <button
+              className="btn btn-sm btn-outline btn-warning"
+              onClick={() => setShowChangePasswordModal(true)}
+            >
               비밀번호 변경
             </button>
-            <button className="btn btn-sm btn-outline btn-error">
+            <button
+              className="btn btn-sm btn-outline btn-error"
+              onClick={() => setShowLogoutModal(true)}
+            >
               로그아웃
             </button>
             <button className="btn btn-sm btn-outline">회원탈퇴</button>
@@ -105,6 +120,22 @@ const ProfileCard = () => {
         currentName={profileData?.name ?? ''}
         onClose={() => setShowEditNameModal(false)}
       />
+
+      {showLogoutModal && (
+        <LogoutConfirmModal
+          onConfirm={() => {
+            logout();
+            router.push(ROUTES.HOME);
+          }}
+          onCancel={() => setShowLogoutModal(false)}
+        />
+      )}
+
+      {showChangePasswordModal && (
+        <ChangePasswordModal
+          onClose={() => setShowChangePasswordModal(false)}
+        />
+      )}
     </div>
   );
 };
@@ -124,7 +155,7 @@ const EditButton = ({
     <button
       onClick={onClick}
       className={twMerge(
-        'bg-whiteㅎ absolute right-0 bottom-2 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-gray-400',
+        'absolute right-0 bottom-2 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-gray-400 bg-white',
         className
       )}
     >
