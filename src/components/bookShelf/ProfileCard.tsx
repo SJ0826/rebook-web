@@ -115,12 +115,14 @@ const ProfileCard = () => {
         </div>
       </div>
 
+      {/* 이름 변경 모달 */}
       <EditNameModal
         showEditModal={showEditNameModal}
         currentName={profileData?.name ?? ''}
         onClose={() => setShowEditNameModal(false)}
       />
 
+      {/* 로그아웃 모달 */}
       {showLogoutModal && (
         <LogoutConfirmModal
           onConfirm={() => {
@@ -131,6 +133,7 @@ const ProfileCard = () => {
         />
       )}
 
+      {/* 비밀번호 변경 모달 */}
       {showChangePasswordModal && (
         <ChangePasswordModal
           onClose={() => setShowChangePasswordModal(false)}

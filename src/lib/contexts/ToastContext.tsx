@@ -11,7 +11,7 @@ interface ToastContextType {
 
 let toastInstance:
   | ((message: string | string[], type?: ToastType) => void)
-  | null = null; // ✅ 전역 변수 추가
+  | null = null;
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 

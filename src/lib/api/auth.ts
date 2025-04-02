@@ -55,3 +55,19 @@ export const logoutUserAPI = async () => {
   );
   return response.data;
 };
+
+// 비밀번호 변경
+export const changePasswordAPI = async ({
+  currentPassword,
+  newPassword,
+}: {
+  currentPassword: string;
+  newPassword: string;
+}) => {
+  const response = await privateAxiosClient.patch(`${AUTH}/change-password`, {
+    currentPassword,
+    newPassword,
+  });
+
+  return response.data.data;
+};

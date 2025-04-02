@@ -2,29 +2,23 @@
 
 import React, { useState } from 'react';
 import { useToast } from '@/lib/contexts/ToastContext';
+import { validatePassword } from '@/lib/utils/validation';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import { changePasswordAPI } from '@/lib/api/auth';
 
-const ChangePasswordModal = ({ onClose }: { onClose: () => void }) => {
+interface ChangePasswordModalProps {
+  onClose: () => void;
+}
+
+const ChangePasswordModal = ({ onClose }: ChangePasswordModalProps) => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const { showToast } = useToast();
 
   const { mutate: changePassword, isPending } = useMutation({
-    mutationFn: async ({
-      currentPassword,
-      newPassword,
-    }: {
-      currentPassword: string;
-      newPassword: string;
-    }) => {
-      const res = await axios.patch('/api/users/change-password', {
-        currentPassword,
-        newPassword,
-      });
-      return res.data;
-    },
+    mutationFn: changePasswordAPI,
   });
 
   const handleSubmit = () => {
@@ -33,10 +27,20 @@ const ChangePasswordModal = ({ onClose }: { onClose: () => void }) => {
       return;
     }
 
+    const isValid = validatePassword(newPassword);
+    if (!isValid) {
+      setPasswordError(
+        '비밀번호는 8자 이상, 영문/숫자/특수문자를 모두 포함해야 합니다.'
+      );
+      return;
+    }
+
     if (newPassword !== confirmPassword) {
       showToast('새 비밀번호가 일치하지 않습니다.', 'error');
       return;
     }
+
+    setPasswordError('');
 
     changePassword(
       { currentPassword, newPassword },
@@ -53,41 +57,35 @@ const ChangePasswordModal = ({ onClose }: { onClose: () => void }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="z-60 w-96 rounded-lg bg-white p-6 shadow-lg">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50">
+      <div className="z-[110] w-96 rounded-lg bg-white p-6 shadow-lg">
         <h3 className="mb-4 text-lg font-semibold">비밀번호 변경</h3>
 
-        {/* 현재 비밀번호 */}
-        <label className="label">
-          <span className="label-text">현재 비밀번호</span>
-        </label>
-        <input
-          type="password"
-          className="input input-bordered w-full"
+        <PasswordInput
+          label="현재 비밀번호"
           value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
+          onChange={setCurrentPassword}
+          placeholder="현재 비밀번호를 입력해주세요"
         />
 
-        {/* 새 비밀번호 */}
-        <label className="label mt-2">
-          <span className="label-text">새 비밀번호</span>
-        </label>
-        <input
-          type="password"
-          className="input input-bordered w-full"
+        <PasswordInput
+          label="새 비밀번호"
           value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
+          onChange={(val) => {
+            setNewPassword(val);
+            if (passwordError) setPasswordError('');
+          }}
+          placeholder="새로운 비밀번호를 입력해주세요"
         />
+        {passwordError && (
+          <p className="mt-1 text-sm text-red-500">{passwordError}</p>
+        )}
 
-        {/* 새 비밀번호 확인 */}
-        <label className="label mt-2">
-          <span className="label-text">새 비밀번호 확인</span>
-        </label>
-        <input
-          type="password"
-          className="input input-bordered w-full"
+        <PasswordInput
+          label="새 비밀번호 확인"
           value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          onChange={setConfirmPassword}
+          placeholder="새로운 비밀번호를 다시 입력해주세요"
         />
 
         <div className="mt-6 flex justify-end gap-2">
@@ -108,3 +106,28 @@ const ChangePasswordModal = ({ onClose }: { onClose: () => void }) => {
 };
 
 export default ChangePasswordModal;
+
+const PasswordInput = ({
+  label,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (val: string) => void;
+  placeholder?: string;
+}) => (
+  <>
+    <label className="label mt-2">
+      <span className="label-text">{label}</span>
+    </label>
+    <input
+      type="password"
+      className="input input-bordered w-full"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+    />
+  </>
+);

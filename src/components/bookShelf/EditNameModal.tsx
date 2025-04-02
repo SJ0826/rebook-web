@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMyProfileMutation } from '@/hooks/useAuthMutation';
 import { useToast } from '@/lib/contexts/ToastContext';
 import { useQueryClient } from '@tanstack/react-query';
@@ -18,6 +18,10 @@ const EditNameModal = ({
   const { showToast } = useToast();
   const queryClient = useQueryClient();
   const { mutate: updateProfileMutate, isPending } = useMyProfileMutation();
+
+  useEffect(() => {
+    setNewName(currentName);
+  }, [currentName]);
 
   const handleSave = () => {
     if (newName.trim().length === 0) {

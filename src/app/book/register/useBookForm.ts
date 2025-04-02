@@ -9,7 +9,7 @@ import { uploadImagesAPI } from '@/lib/api/files';
 import { triggerToast } from '@/lib/contexts/ToastContext';
 import { postNewBookAPI } from '@/lib/api/books';
 import { ROUTES } from '@/lib/constants';
-import { validateImages } from '@/utils/validation';
+import { validateImages } from '@/lib/utils/validation';
 import { BookStatus, CreateBookDto } from '@/types/books';
 
 export const useBookForm = () => {

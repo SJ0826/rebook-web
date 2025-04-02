@@ -6,7 +6,7 @@ import { CreateBookDto } from '@/types/books';
 import { triggerToast } from '@/lib/contexts/ToastContext';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/lib/constants';
-import { validateImages } from '@/utils/validation';
+import { validateImages } from '@/lib/utils/validation';
 import { uploadImagesAPI } from '@/lib/api/files';
 
 export const useEditBookForm = (bookId: number) => {
