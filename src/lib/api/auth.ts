@@ -38,7 +38,7 @@ export const loginUserAPI = async (payload: {
 
 // 토큰 갱신
 export const refreshTokenAPI = async () => {
-  const response = await publicAxiosClient.post(
+  const response = await privateAxiosClient.post(
     `${AUTH}/refresh`,
     {},
     { withCredentials: true }
@@ -54,4 +54,20 @@ export const logoutUserAPI = async () => {
     { withCredentials: true }
   );
   return response.data;
+};
+
+// 비밀번호 변경
+export const changePasswordAPI = async ({
+  currentPassword,
+  newPassword,
+}: {
+  currentPassword: string;
+  newPassword: string;
+}) => {
+  const response = await privateAxiosClient.patch(`${AUTH}/change-password`, {
+    currentPassword,
+    newPassword,
+  });
+
+  return response.data.data;
 };

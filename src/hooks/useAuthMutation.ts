@@ -7,22 +7,12 @@ import {
 import { triggerToast } from '@/lib/contexts/ToastContext';
 import { useAuth } from './useAuth';
 import { ApiResponse } from '@/types/commons';
-import { getMyProfile } from '@/lib/api/my';
+import { getMyProfile, updateMyProfile } from '@/lib/api/my';
 
 // 회원가입
 export const useRegisterMutation = () => {
-  const { login } = useAuth();
-
   return useMutation({
     mutationFn: signupUserAPI,
-    //   onSuccess: async (
-    //     data: ApiResponse<{
-    //       accessToken: string;
-    //     }>
-    //   ) => {
-    //     login(data.data.accessToken);
-    //     triggerToast('회원가입에 성공했습니다.', 'success');
-    //   },
   });
 };
 
@@ -50,6 +40,19 @@ export const useMyProfileQuery = () => {
       return await getMyProfile();
     },
     enabled: isLoggedIn,
+  });
+};
+
+export const useMyProfileMutation = () => {
+  return useMutation({
+    mutationFn: (form: { name?: string; imageUrl?: string }) =>
+      updateMyProfile(form),
+    onSuccess: () => {
+      triggerToast('이미지 수정이 완료되었어요', 'success');
+    },
+    onError: () => {
+      triggerToast('이미지를 수정하지 못했어요. 다시 시도해주세요', 'error');
+    },
   });
 };
 

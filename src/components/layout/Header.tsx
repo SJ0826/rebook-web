@@ -50,7 +50,13 @@ export default function Header() {
       <header className="navbar bg-base-100 shadow-md fixed top-0 w-full z-50">
         <div className="flex-1">
           <a className="btn btn-ghost text-xl" href={ROUTES.HOME}>
-            <Image width={46} height={46} src={logoImage} alt={'Rebook logo'} />
+            <Image
+              width={46}
+              height={46}
+              src={logoImage}
+              alt={'Rebook logo'}
+              style={{ width: 'auto', height: 'auto' }}
+            />
             <span className={'hidden md:flex'}>
               Rebook: 다시 읽고 다시 나누다
             </span>
@@ -78,16 +84,16 @@ export default function Header() {
           >
             나의 서재
           </Link>
-          <Link
-            href={'#'}
-            onClick={(e) => {
-              e.preventDefault();
-              handleRouteWithAuth(ROUTES.PROFILE);
-            }}
-            className="w-20 text-center font-semibold"
-          >
-            내 정보
-          </Link>
+          {/*<Link*/}
+          {/*  href={'#'}*/}
+          {/*  onClick={(e) => {*/}
+          {/*    e.preventDefault();*/}
+          {/*    handleRouteWithAuth(ROUTES.PROFILE);*/}
+          {/*  }}*/}
+          {/*  className="w-20 text-center font-semibold"*/}
+          {/*>*/}
+          {/*  내 정보*/}
+          {/*</Link>*/}
           <button
             onClick={handleLoginRoute}
             className="w-20 text-center font-semibold"
@@ -130,17 +136,17 @@ export default function Header() {
             >
               나의 서재
             </Link>
-            <Link
-              href={'#'}
-              className="btn btn-ghost"
-              onClick={(e) => {
-                e.preventDefault();
-                handleRouteWithAuth(ROUTES.PROFILE);
-                setIsOpenMobileNav(false);
-              }}
-            >
-              내 정보
-            </Link>
+            {/*<Link*/}
+            {/*  href={'#'}*/}
+            {/*  className="btn btn-ghost"*/}
+            {/*  onClick={(e) => {*/}
+            {/*    e.preventDefault();*/}
+            {/*    handleRouteWithAuth(ROUTES.PROFILE);*/}
+            {/*    setIsOpenMobileNav(false);*/}
+            {/*  }}*/}
+            {/*>*/}
+            {/*  내 정보*/}
+            {/*</Link>*/}
           </div>
         )}
       </header>

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import SellingBooks from '@/components/bookShelf/SellingBooks';
 import FavoriteBooks from '@/components/bookShelf/FavoriteBooks';
 import BuyingBooks from '@/components/bookShelf/BuyingBooks';
+import ProfileCard from '@/components/bookShelf/ProfileCard';
 
 export default function MyBookshelfPage() {
   const [activeTab, setActiveTab] = useState<
@@ -13,8 +14,10 @@ export default function MyBookshelfPage() {
   return (
     <div className="flex flex-col gap-8 p-6">
       <h1 className="text-2xl md:text-3xl font-bold">📚 나의 서재</h1>
+      {/* 프로필 카드 */}
+      <ProfileCard />
 
-      {/* 탭 선택 */}
+      {/*활동 내역*/}
       <div role="tablist" className="tabs tabs-border md:tabs-lg">
         <button
           role="tab"

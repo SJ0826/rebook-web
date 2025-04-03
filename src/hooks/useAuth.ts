@@ -1,5 +1,6 @@
 import { logoutUserAPI, refreshTokenAPI } from '@/lib/api/auth';
 import { create } from 'zustand';
+import { triggerToast } from '@/lib/contexts/ToastContext';
 
 interface AuthStore {
   accessToken: string | null;
@@ -40,6 +41,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
     } catch (error) {
       console.error('Failed to refresh token:', error);
       set({ accessToken: null, isLoggedIn: false });
+      triggerToast('세션이 만료되었습니다. 다시 로그인해주세요', 'warning');
     }
   },
 

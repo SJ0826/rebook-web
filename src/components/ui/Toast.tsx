@@ -40,11 +40,11 @@ const Toast = ({ text, type, duration = 3000 }: ToastProps) => {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 50, opacity: 0 }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="toast toast-center toast-middle"
+          className="fixed top-1/2 left-1/2 z-[9999] -translate-x-1/2"
         >
           {Array.isArray(text) ? (
             text.map((text) => (
-              <div key={text} className={`alert ${alertType()}`}>
+              <div key={text} className={`alert ${alertType()} z-[9999]`}>
                 {text}
               </div>
             ))
