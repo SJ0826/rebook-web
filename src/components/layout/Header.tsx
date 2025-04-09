@@ -47,7 +47,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="navbar bg-base-100 shadow-md fixed top-0 w-full z-50">
+      <header className="navbar bg-base-100 fixed top-0 z-50 w-full shadow-md">
         <div className="flex-1">
           <a className="btn btn-ghost text-xl" href={ROUTES.HOME}>
             <Image
@@ -63,7 +63,7 @@ export default function Header() {
           </a>
         </div>
 
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden items-center gap-6 md:flex">
           <Link
             href={'#'}
             onClick={(e) => {
@@ -84,16 +84,16 @@ export default function Header() {
           >
             나의 서재
           </Link>
-          {/*<Link*/}
-          {/*  href={'#'}*/}
-          {/*  onClick={(e) => {*/}
-          {/*    e.preventDefault();*/}
-          {/*    handleRouteWithAuth(ROUTES.PROFILE);*/}
-          {/*  }}*/}
-          {/*  className="w-20 text-center font-semibold"*/}
-          {/*>*/}
-          {/*  내 정보*/}
-          {/*</Link>*/}
+          <Link
+            href={'#'}
+            onClick={(e) => {
+              e.preventDefault();
+              handleRouteWithAuth(ROUTES.CHAT);
+            }}
+            className="w-20 text-center font-semibold"
+          >
+            채팅
+          </Link>
           <button
             onClick={handleLoginRoute}
             className="w-20 text-center font-semibold"
@@ -101,7 +101,6 @@ export default function Header() {
             {isLoggedIn ? '로그아웃' : '로그인'}
           </button>
         </nav>
-
         <button
           className="btn btn-ghost md:hidden"
           onClick={() => setIsOpenMobileNav((prev) => !prev)}
@@ -110,7 +109,7 @@ export default function Header() {
         </button>
 
         {isOpenMobileNav && (
-          <div className="absolute top-16 right-4 w-40 bg-white shadow-lg rounded-md p-3 flex flex-col gap-2 md:hidden">
+          <div className="absolute top-16 right-4 flex w-40 flex-col gap-2 rounded-md bg-white p-3 shadow-lg md:hidden">
             <a onClick={handleLoginRoute} className="btn btn-ghost">
               {isLoggedIn ? '로그아웃' : '로그인'}
             </a>
