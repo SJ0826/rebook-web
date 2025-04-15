@@ -1,28 +1,22 @@
 'use client';
 
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getChatList } from '@/lib/api/chat';
+import { useToast } from '@/lib/contexts/ToastContext';
 
 export default function ChatPage() {
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
-
-  const chatRooms = [
-    {
-      id: 1,
-      bookTitle: '자바의 정석',
-      lastMessage: '가격 네고 되나요?',
-      unreadCount: 2,
-      opponentName: '홍길동',
-      bookImageUrl: 'https://placehold.co/60x60',
+  const { showToast } = useToast();
+  const { data: chatList, isError: isChatListError } = useQuery({
+    queryKey: ['chatList'],
+    queryFn: async () => {
+      return await getChatList();
     },
-    {
-      id: 2,
-      bookTitle: 'Clean Code',
-      lastMessage: '감사합니다. 내일 뵈어요!',
-      unreadCount: 0,
-      opponentName: '김철수',
-      bookImageUrl: 'https://placehold.co/60x60',
-    },
-  ];
+  });
+  if (isChatListError) {
+    showToast('메세지 목록을 읽어올 수 없습니다', 'error');
+  }
 
   return (
     <div className="bg-base-100 text-base-content flex h-full">
@@ -32,22 +26,24 @@ export default function ChatPage() {
           채팅 목록
         </div>
         <ul className="divide-base-300 divide-y overflow-y-auto">
-          {chatRooms.map((room) => (
+          {chatList?.map((room) => (
             <li
-              key={room.id}
-              onClick={() => setSelectedRoomId(room.id)}
+              key={room.chatRoomId}
+              onClick={() => setSelectedRoomId(room.chatRoomId)}
               className={`hover:bg-base-300 flex cursor-pointer items-center gap-4 px-4 py-3 ${
-                selectedRoomId === room.id ? 'bg-base-300 font-bold' : ''
+                selectedRoomId === room.chatRoomId
+                  ? 'bg-base-300 font-bold'
+                  : ''
               }`}
             >
               <img
-                src={room.bookImageUrl}
+                src={room.bookImage}
                 alt="책 이미지"
                 className="h-12 w-12 rounded"
               />
               <div className="flex-1">
                 <div className="text-base-content font-semibold">
-                  {room.bookTitle}
+                  {room.opponent.name}
                 </div>
                 <div className="text-base-content/70 text-sm">
                   {room.lastMessage}
