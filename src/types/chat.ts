@@ -13,3 +13,17 @@ export interface ChatListItem {
   bookImage: string;
   unreadCount: number;
 }
+
+// 메세지
+export interface ChatMessage {
+  id: number;
+  senderId: number;
+  content: string;
+  createdAt: string;
+  chatRoomId: number;
+  sender: {
+    id: number;
+    name: string;
+    imageUrl: string | null;
+  };
+}
