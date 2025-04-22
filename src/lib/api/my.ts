@@ -8,13 +8,13 @@ import {
 
 const MY = '/my';
 
-type ProfileResponse = {
+export interface ProfileResponse {
   id: number;
   email: string;
   name: string;
   createdAt: string;
   imageUrl: string;
-};
+}
 
 type GetBookListParams = {
   search?: string;

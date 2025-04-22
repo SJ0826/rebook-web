@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
-import { ChatMessage } from '@/types/chat';
+import React from 'react';
 import { useChat } from '@/hooks/useChat';
+import { useQuery } from '@tanstack/react-query';
+import { getMyProfile } from '@/lib/api/my';
 
 const ChatDetail = ({ selectedRoomId }: { selectedRoomId: number | null }) => {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  // 내 정보 조회
+  const myDataQuery = useQuery({
+    queryKey: ['myData'],
+    queryFn: getMyProfile,
+  });
+  const [currentMessage, setCurrentMessage] = React.useState('');
 
-  useChat(selectedRoomId, setMessages);
+  const { messages, sendMessage } = useChat(selectedRoomId, myDataQuery.data);
+  const handleSubmitMessage = () => {
+    if (!currentMessage) return;
+
+    sendMessage(currentMessage);
+    setCurrentMessage('');
+  };
   return (
     <>
       <div className="bg-base-100 flex-1 overflow-y-auto p-4">
@@ -45,8 +57,15 @@ const ChatDetail = ({ selectedRoomId }: { selectedRoomId: number | null }) => {
             type="text"
             placeholder="메시지를 입력하세요"
             className="input input-bordered bg-base-100 flex-1"
+            value={currentMessage}
+            onInput={(value) => setCurrentMessage(value.currentTarget.value)}
           />
-          <button className="btn btn-warning text-white">전송</button>
+          <button
+            className="btn btn-warning text-white"
+            onClick={handleSubmitMessage}
+          >
+            전송
+          </button>
         </div>
       )}
     </>
