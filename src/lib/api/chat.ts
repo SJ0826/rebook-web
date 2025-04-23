@@ -1,6 +1,6 @@
 import { privateAxiosClient } from '@/lib/api/axios.client';
 import { ApiResponse } from '@/types/commons';
-import { ChatListItem } from '@/types/chat';
+import { ChatListItem, ChatMessage } from '@/types/chat';
 
 const CHAT = '/chat';
 
@@ -13,9 +13,21 @@ export const getChatList = async () => {
 };
 
 // 특정 채팅방의 기존 메세지 조회
-export const getChatMessages = async (chatRoomId: number) => {
+export const getChatMessages = async (
+  chatRoomId: number,
+  take: number = 20,
+  before?: string
+) => {
   const url = `${CHAT}/${chatRoomId}/messages`;
-  const response = await privateAxiosClient.get(url);
+  const response = await privateAxiosClient.get<ApiResponse<ChatMessage[]>>(
+    url,
+    {
+      params: {
+        take,
+        ...(before ? { before } : {}),
+      },
+    }
+  );
 
   return response.data.data;
 };

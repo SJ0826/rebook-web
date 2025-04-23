@@ -3,21 +3,21 @@ import { io, Socket } from 'socket.io-client';
 import { ChatMessage } from '@/types/chat';
 import { getChatMessages } from '@/lib/api/chat';
 import { useAuth } from '@/hooks/useAuth';
-import { ProfileResponse } from '@/lib/api/my';
 
-export function useChat(chatRoomId: number | null, sender?: ProfileResponse) {
+export function useChat(chatRoomId: number | null) {
+  const PAGE_SIZE = 20;
   const { accessToken } = useAuth();
   const socketRef = useRef<Socket>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [hasMore, setHasMore] = useState(true);
 
   // -------------------------------
   // 메시지 전송
   // -------------------------------
-  const sendMessage = (content: string) => {
+  const sendMessage = async (content: string) => {
+    console.log('[sendMessage] 보내는 메시지:', content);
     if (!socketRef.current || !chatRoomId) return;
     socketRef.current.emit('message', { chatRoomId, content });
-
-    if (!sender) return;
   };
 
   // -------------------------------
@@ -30,7 +30,7 @@ export function useChat(chatRoomId: number | null, sender?: ProfileResponse) {
     const loadMessages = async () => {
       try {
         const res = await getChatMessages(chatRoomId);
-        setMessages(res.data);
+        setMessages(res.reverse());
       } catch (error) {
         console.log('메세지 조회 실패', error);
       }
@@ -38,7 +38,7 @@ export function useChat(chatRoomId: number | null, sender?: ProfileResponse) {
 
     // 2. 소켓 연결 및 방 입장
     const connectSocket = () => {
-      if (socketRef.current) return; // ✅ 이미 연결된 경우 중복 방지
+      if (socketRef.current) return;
 
       socketRef.current = io('http://localhost:4000', {
         withCredentials: true,
@@ -72,8 +72,24 @@ export function useChat(chatRoomId: number | null, sender?: ProfileResponse) {
     };
   }, [chatRoomId]);
 
+  // -----------------------------------
+  // 과거 메세지 조회 (페이지네이션)
+  // -----------------------------------
+  const loadMoreMessages = async () => {
+    if (!chatRoomId) return;
+    const oldest = messages[0];
+    const before = oldest?.createdAt;
+
+    const newMessages = await getChatMessages(chatRoomId, PAGE_SIZE, before);
+
+    setMessages((prev) => [...newMessages.reverse(), ...prev]);
+    setHasMore(newMessages.length === PAGE_SIZE);
+  };
+
   return {
     messages,
     sendMessage,
+    loadMoreMessages,
+    hasMore,
   };
 }
