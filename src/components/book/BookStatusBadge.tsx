@@ -1,7 +1,7 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
-import { convertBookStatus } from '@/lib/utils/convertLang';
 import { BookStatus } from '@/types/books';
+import { convertBookStatus } from '@/lib/utils/convert';
 
 interface BookStatusBadgeProps {
   status: BookStatus;

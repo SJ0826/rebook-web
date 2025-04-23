@@ -2,13 +2,15 @@
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import ChatDetail from '@/components/chat/ChatDetail';
 import { getChatList } from '@/lib/api/chat';
 import { useToast } from '@/lib/contexts/ToastContext';
-import ChatDetail from '@/components/chat/ChatDetail';
 
 export default function ChatPage() {
-  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
   const { showToast } = useToast();
+  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
+
+  // 채팅 목록 조회
   const { data: chatList, isError: isChatListError } = useQuery({
     queryKey: ['chatList'],
     queryFn: async () => {
@@ -30,7 +32,9 @@ export default function ChatPage() {
           {chatList?.map((room) => (
             <li
               key={room.chatRoomId}
-              onClick={() => setSelectedRoomId(room.chatRoomId)}
+              onClick={() => {
+                setSelectedRoomId(room.chatRoomId);
+              }}
               className={`hover:bg-base-300 flex cursor-pointer items-center gap-4 px-4 py-3 ${
                 selectedRoomId === room.chatRoomId
                   ? 'bg-base-300 font-bold'
@@ -38,7 +42,7 @@ export default function ChatPage() {
               }`}
             >
               <img
-                src={room.bookImage}
+                src={room.book.bookImage[0].imageUrl}
                 alt="책 이미지"
                 className="h-12 w-12 rounded"
               />
@@ -71,7 +75,12 @@ export default function ChatPage() {
             채팅 목록으로
           </button>
         </div>
-        <ChatDetail selectedRoomId={selectedRoomId} />
+        <ChatDetail
+          selectedRoomId={selectedRoomId}
+          book={
+            chatList?.find((chat) => chat.chatRoomId === selectedRoomId)?.book
+          }
+        />
       </div>
     </div>
   );

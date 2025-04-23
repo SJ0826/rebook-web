@@ -4,8 +4,16 @@ import { useQuery } from '@tanstack/react-query';
 import { getMyProfile } from '@/lib/api/my';
 import { useToast } from '@/lib/contexts/ToastContext';
 import { formatKoreanTime } from '@/lib/utils/time';
+import { BookSummary } from '@/types/chat';
+import { convertBookSaleStatus } from '@/lib/utils/convert';
 
-const ChatDetail = ({ selectedRoomId }: { selectedRoomId: number | null }) => {
+const ChatDetail = ({
+  selectedRoomId,
+  book,
+}: {
+  selectedRoomId: number | null;
+  book?: BookSummary;
+}) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
   const topSentinelRef = useRef<HTMLDivElement>(null);
@@ -95,11 +103,25 @@ const ChatDetail = ({ selectedRoomId }: { selectedRoomId: number | null }) => {
       <div className="bg-base-100 flex-1 overflow-y-auto p-4" ref={scrollRef}>
         {selectedRoomId ? (
           <div>
-            <div className="mb-4 text-xl font-bold">
-              채팅방 #{selectedRoomId}
-            </div>
+            {book && (
+              <div className="border-base-200 mb-4 flex items-center gap-4 rounded-lg border p-4 shadow-sm">
+                <img
+                  src={
+                    book?.bookImage?.[0]?.imageUrl ?? '/images/default-book.png'
+                  }
+                  alt="책 썸네일"
+                  className="h-20 w-16 rounded-md object-cover"
+                />
+                <div>
+                  <div className="text-lg font-semibold">{book?.title}</div>
+                  <div className="text-base-content/70 text-sm">
+                    ₩ {book?.price?.toLocaleString()}원 ·{' '}
+                    {convertBookSaleStatus(book?.saleStatus)}
+                  </div>
+                </div>
+              </div>
+            )}
             <div ref={topSentinelRef}></div>
-
             {messages?.map((msg, index) => {
               const isLast = index === messages.length - 1;
               return (

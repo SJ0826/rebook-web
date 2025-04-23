@@ -1,4 +1,15 @@
 // 채팅방 목록
+
+import { BookSaleStatus } from '@/types/books';
+
+export interface BookSummary {
+  id: number;
+  title: string;
+  price: number;
+  saleStatus: BookSaleStatus;
+  bookImage: { imageUrl: string }[];
+}
+
 export interface ChatListOpponent {
   userId: number;
   name: string;
@@ -10,7 +21,7 @@ export interface ChatListItem {
   lastMessage: string;
   lastMessageTime: string; // ISO 문자열로 응답되므로 Date 타입이 아님
   opponent: ChatListOpponent;
-  bookImage: string;
+  book: BookSummary;
   unreadCount: number;
 }
 
