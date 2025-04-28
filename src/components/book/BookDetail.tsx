@@ -260,7 +260,12 @@ export default function BookDetail() {
               </div>
             ) : (
               <div className={'flex w-full flex-col gap-3 md:flex-row'}>
-                <button className="btn btn-primary flex flex-1">
+                <button
+                  className="btn btn-primary flex flex-1"
+                  onClick={() =>
+                    router.push(`${ROUTES.CHAT}?bookId=${book.id}`)
+                  }
+                >
                   <span>받은 제안</span>
                   <div
                     className={

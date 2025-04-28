@@ -6,17 +6,20 @@ import ChatDetail from '@/components/chat/ChatDetail';
 import { getChatList } from '@/lib/api/chat';
 import { useToast } from '@/lib/contexts/ToastContext';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import ChatList from '@/components/chat/ChatList'; // 추가
+import ChatList from '@/components/chat/ChatList';
+import { useSearchParams } from 'next/navigation';
 
 export default function ChatPage() {
   const { showToast } = useToast();
+  const searchParams = useSearchParams();
+  const bookId = searchParams.get('bookId');
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
 
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
   const { data: chatList, isError: isChatListError } = useQuery({
-    queryKey: ['chatList'],
-    queryFn: async () => await getChatList(),
+    queryKey: ['chatList', bookId],
+    queryFn: async () => await getChatList(bookId ? Number(bookId) : undefined),
   });
 
   useEffect(() => {

@@ -5,9 +5,11 @@ import { ChatListItem, ChatMessage } from '@/types/chat';
 const CHAT = '/chat';
 
 // 채팅 목록 조회
-export const getChatList = async () => {
+export const getChatList = async (bookId?: number) => {
+  console.log(bookId);
   const response = await privateAxiosClient.get<ApiResponse<ChatListItem[]>>(
-    `${CHAT}`
+    CHAT,
+    { params: bookId !== undefined ? { bookId } : {} }
   );
   return response.data.data;
 };
