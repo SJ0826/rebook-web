@@ -66,7 +66,7 @@ export interface SellingBook extends Book {
 // ---------------------------------------------
 
 export interface BookDetail {
-  id: bigint;
+  id: number;
   title: string;
   author: string;
   publisher: string;
@@ -75,13 +75,14 @@ export interface BookDetail {
   status: BookStatus;
   createdAt: string;
   seller: {
-    id: bigint;
+    id: number;
     name: string;
   };
   bookImages: { uuid: string; imageUrl: string }[];
   orderCount: number;
   favoriteCount: number;
   isFavorite: boolean;
+  isOrderRequested: boolean;
   saleStatus: BookSaleStatus;
 }
 

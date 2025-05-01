@@ -1,11 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import FilterOptions from '@/components/home/FilterOptions';
 import BookGrid from '@/components/home/BookGrid';
 import { useQuery } from '@tanstack/react-query';
 import { searchBooksAPI } from '@/lib/api/books';
 import { BookSearchSort } from '@/types/books';
+import { SparklesIcon } from '@heroicons/react/24/solid';
 
 const PAGE_SIZE = 8;
 
@@ -56,7 +58,31 @@ export default function RebookMain() {
   const books = data?.books ?? [];
   const totalPages = data?.totalPages ?? 1;
   return (
-    <div className="container mx-auto p-4 bg-base-100">
+    <div className="bg-base-100 container mx-auto p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="mb-6 w-full rounded-xl bg-yellow-100 p-6 shadow-md"
+      >
+        <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
+          <div>
+            <h1 className="text-3xl font-bold text-yellow-900">
+              중고책 거래의 시작, <span className="text-primary">ReBook</span>
+            </h1>
+            <p className="mt-2 text-lg text-yellow-800">
+              읽지 않는 책, ReBook에서 새 주인을 찾아주세요!
+            </p>
+            <button className="btn btn-primary btn-sm mt-4">
+              지금 책 보러가기 →
+            </button>
+          </div>
+
+          <div className="hidden text-yellow-600 md:block">
+            <SparklesIcon className="h-20 w-20" />
+          </div>
+        </div>
+      </motion.div>
       {/* 필터 옵션 */}
       <FilterOptions
         searchTerm={searchTerm}
@@ -73,7 +99,7 @@ export default function RebookMain() {
       <BookGrid books={books} />
 
       {/* 페이지네이션 */}
-      <div className="flex justify-center mt-10">
+      <div className="mt-10 flex justify-center">
         <div className="join">
           <button
             className="join-item btn"

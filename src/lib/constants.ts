@@ -9,4 +9,5 @@ export const ROUTES = {
   MY_BOOKSHELF: '/my-bookshelf',
   FAVORITES: '/favorites',
   PROFILE: '/profile',
+  CHAT: '/chat',
 };
