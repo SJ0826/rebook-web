@@ -32,3 +32,10 @@ export const getChatMessages = async (
 
   return response.data.data;
 };
+
+// 채팅방 마지막으로 읽은 날짜 업데이트 (채팅방 입장시 사용)
+export const updateLastReadTime = async (chatRoomId: number) => {
+  const url = `${CHAT}/${chatRoomId}/read`;
+  const response = await privateAxiosClient.patch(url);
+  return response.data.data;
+};

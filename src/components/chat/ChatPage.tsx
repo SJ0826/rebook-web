@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import ChatDetail from '@/components/chat/ChatDetail';
-import { getChatList } from '@/lib/api/chat';
+import { getChatList, updateLastReadTime } from '@/lib/api/chat';
 import { useToast } from '@/lib/contexts/ToastContext';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import ChatList from '@/components/chat/ChatList';
@@ -19,7 +19,12 @@ export default function ChatPage() {
 
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
-  const { data: chatList, isError: isChatListError } = useQuery({
+  // 채팅 목록 조회
+  const {
+    data: chatList,
+    isError: isChatListError,
+    refetch: refetchChatList,
+  } = useQuery({
     queryKey: ['chatList', bookId],
     queryFn: async () => {
       const response = await getChatList(bookId ? Number(bookId) : undefined);
@@ -39,11 +44,25 @@ export default function ChatPage() {
     },
   });
 
+  // 마지막으로 읽은 날짜 업데이트
+  const { mutate: updateLastReadTimeMutate } = useMutation({
+    mutationFn: updateLastReadTime,
+    onError: (error) => {
+      console.error(error, ': 마지막으로 읽은 날짜 업데이트 실패');
+    },
+  });
+
   useEffect(() => {
     if (isChatListError) {
       showToast('메세지 목록을 읽어올 수 없습니다', 'error');
     }
   }, [isChatListError, showToast]);
+
+  useEffect(() => {
+    if (!selectedRoomId) return;
+    updateLastReadTimeMutate(Number(selectedRoomId));
+    refetchChatList();
+  }, [refetchChatList, selectedRoomId, updateLastReadTimeMutate]);
 
   return (
     <div className="bg-base-100 text-base-content -mx-4 -mb-19 flex max-h-screen flex-1 md:mx-0">
