@@ -6,7 +6,6 @@ const CHAT = '/chat';
 
 // 채팅 목록 조회
 export const getChatList = async (bookId?: number) => {
-  console.log(bookId);
   const response = await privateAxiosClient.get<ApiResponse<ChatListItem[]>>(
     CHAT,
     { params: bookId !== undefined ? { bookId } : {} }

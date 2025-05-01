@@ -7,6 +7,7 @@ export interface BookSummary {
   title: string;
   price: number;
   saleStatus: BookSaleStatus;
+  sellerId: number;
   bookImage: { imageUrl: string }[];
 }
 

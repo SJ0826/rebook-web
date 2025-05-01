@@ -15,6 +15,7 @@ const ChatList = ({
   chatList,
 }: ChatListProps) => {
   const isDesktop = useMediaQuery('(min-width: 768px)');
+
   return (
     <>
       {(isDesktop || (!isDesktop && selectedRoomId === null)) && (

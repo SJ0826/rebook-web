@@ -20,6 +20,7 @@ import { HeartIcon as HeartIconSolid } from '@heroicons/react/16/solid';
 import { HeartIcon as HeartIconOutline } from '@heroicons/react/24/outline';
 import { createOrderAPI } from '@/lib/api/orders';
 import { AxiosError } from 'axios';
+import OrderModal from '@/components/book/OrderModal';
 
 export default function BookDetail() {
   const { id } = useParams();
@@ -29,7 +30,7 @@ export default function BookDetail() {
   const { data: myProfile, isLoading: isMyProfileLoading } =
     useMyProfileQuery();
   const queryClient = useQueryClient();
-  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+  const [showOrderModal, setShowOrderModal] = useState(false);
 
   const {
     data: book,
@@ -138,6 +139,25 @@ export default function BookDetail() {
     createFavorite(book.id);
   };
 
+  /** 거래 요청 하기 / 진행중인 거래 보기 클릭 시 */
+  const handleOrderButton = () => {
+    if (book.isOrderRequested) {
+      router.push('/chat?bookId=' + book.id);
+      return;
+    }
+
+    setShowOrderModal(true);
+  };
+
+  /** 받은 제안 클릭 시 */
+  const handleIncomingOrder = () => {
+    if (book.orderCount === 0) {
+      showToast('아직 제안 받은 거래가 없어요', 'info');
+      return;
+    }
+    router.push(`${ROUTES.CHAT}?bookId=${book.id}`);
+  };
+
   return (
     <div className="container mx-auto p-4">
       <div className="flex flex-col rounded-lg bg-white p-6 shadow-lg md:flex-row">
@@ -240,9 +260,11 @@ export default function BookDetail() {
               <div className={'flex w-full flex-col gap-4 md:flex-row'}>
                 <button
                   className="btn btn-primary w-full md:w-1/2"
-                  onClick={() => setIsOrderModalOpen(true)}
+                  onClick={handleOrderButton}
                 >
-                  거래 제안하기
+                  {book.isOrderRequested
+                    ? '진행 중인 거래 보기'
+                    : '거래 제안하기'}
                 </button>
                 <div
                   className={'tooltip w-full md:w-1/2'}
@@ -262,9 +284,7 @@ export default function BookDetail() {
               <div className={'flex w-full flex-col gap-3 md:flex-row'}>
                 <button
                   className="btn btn-primary flex flex-1"
-                  onClick={() =>
-                    router.push(`${ROUTES.CHAT}?bookId=${book.id}`)
-                  }
+                  onClick={handleIncomingOrder}
                 >
                   <span>받은 제안</span>
                   <div
@@ -293,32 +313,14 @@ export default function BookDetail() {
           </div>
         </div>
       </div>
-      {isOrderModalOpen && (
-        <div className="modal modal-open">
-          <div className="modal-box">
-            <h3 className="text-lg font-bold">거래를 시작할까요?</h3>
-            <p className="py-4">
-              이 책에 대해 판매자에게 거래를 제안하고 채팅방을 생성할게요.
-            </p>
-            <div className="modal-action">
-              <button
-                className="btn btn-outline"
-                onClick={() => setIsOrderModalOpen(false)}
-              >
-                취소
-              </button>
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  createOrderMutate(book.id);
-                  setIsOrderModalOpen(false);
-                }}
-              >
-                네, 시작할게요
-              </button>
-            </div>
-          </div>
-        </div>
+      {showOrderModal && (
+        <OrderModal
+          onClickCancel={() => setShowOrderModal(false)}
+          onClickConfirm={() => {
+            createOrderMutate(book.id);
+            setShowOrderModal(false);
+          }}
+        />
       )}
     </div>
   );

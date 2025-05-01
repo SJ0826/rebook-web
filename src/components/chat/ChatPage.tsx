@@ -8,18 +8,35 @@ import { useToast } from '@/lib/contexts/ToastContext';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import ChatList from '@/components/chat/ChatList';
 import { useSearchParams } from 'next/navigation';
+import { useMyProfileQuery } from '@/hooks/useAuthMutation';
 
 export default function ChatPage() {
   const { showToast } = useToast();
   const searchParams = useSearchParams();
-  const bookId = searchParams.get('bookId');
+  const bookId = Number(searchParams.get('bookId'));
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
+  const myProfile = useMyProfileQuery();
 
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
   const { data: chatList, isError: isChatListError } = useQuery({
     queryKey: ['chatList', bookId],
-    queryFn: async () => await getChatList(bookId ? Number(bookId) : undefined),
+    queryFn: async () => {
+      const response = await getChatList(bookId ? Number(bookId) : undefined);
+      if (bookId) {
+        const targetChatRoomId = response.find(
+          (chat) => chat.book.id === bookId
+        )?.chatRoomId;
+
+        if (targetChatRoomId) {
+          const isSeller = response[0].book.sellerId === myProfile.data?.id;
+          setSelectedRoomId(isSeller ? null : targetChatRoomId);
+        } else {
+          showToast('채팅을 찾을 수 없습니다', 'error');
+        }
+      }
+      return response;
+    },
   });
 
   useEffect(() => {
