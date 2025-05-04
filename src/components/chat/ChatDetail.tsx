@@ -52,6 +52,23 @@ const ChatDetail = ({
     }
   };
 
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
+      e.preventDefault();
+      const message = currentMessage.trim();
+      if (!message) return;
+
+      try {
+        setShouldScrollToBottom(true);
+        await sendMessage(message);
+      } catch {
+        showToast('메시지 전송 실패', 'error');
+      } finally {
+        setCurrentMessage('');
+      }
+    }
+  };
+
   useEffect(() => {
     if (!shouldScrollToBottom) return;
 
@@ -65,7 +82,7 @@ const ChatDetail = ({
           if (isFirstLoad) setIsFirstLoad(false);
         }
       });
-    }, 0); // DOM 업데이트 이후에 실행되도록
+    }, 50); // DOM 업데이트 이후에 실행되도록
 
     return () => clearTimeout(timeout);
   }, [messages, shouldScrollToBottom]);
@@ -167,12 +184,7 @@ const ChatDetail = ({
             className="input input-bordered bg-base-100 flex-1"
             value={currentMessage}
             onChange={(value) => setCurrentMessage(value.currentTarget.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                handleSubmitMessage();
-              }
-            }}
+            onKeyDown={handleKeyDown}
           />
           <button
             className="btn btn-warning text-white"
