@@ -14,6 +14,8 @@ import { BookSummary } from '@/types/chat';
 import { convertBookSaleStatus } from '@/lib/utils/convert';
 import Image from 'next/image';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { ROUTES } from '@/lib/constants';
+import { useRouter } from 'next/navigation';
 
 const ChatDetail = ({
   selectedRoomId,
@@ -24,6 +26,7 @@ const ChatDetail = ({
   setSelectedRoomId: Dispatch<SetStateAction<number | null>>;
   book?: BookSummary;
 }) => {
+  const router = useRouter();
   const scrollRef = useRef<HTMLDivElement>(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
   const topSentinelRef = useRef<HTMLDivElement>(null);
@@ -153,7 +156,10 @@ const ChatDetail = ({
       )}
       {/* 책 요약 정보 */}
       <section className="sticky top-0 z-10 bg-white px-4 py-6 pb-2">
-        <div className="border-base-300 flex items-center gap-4 border-b bg-white p-4 shadow-md">
+        <div
+          className="border-base-300 flex items-center gap-4 border-b bg-white p-4 shadow-md"
+          onClick={() => router.push(`${ROUTES.BOOK}/${book.id}`)}
+        >
           <Image
             src={book?.bookImage?.[0]?.imageUrl ?? '/images/default-book.png'}
             alt="책 썸네일"
@@ -177,7 +183,7 @@ const ChatDetail = ({
         className="bg-base-100 min-h-0 flex-1 overflow-y-auto px-4 py-2"
       >
         <div ref={topSentinelRef} />
-        {messages?.map((msg, idx) => {
+        {messages?.map((msg) => {
           return (
             <div key={msg.id}>
               {isMyBubble(msg.senderId) ? (
