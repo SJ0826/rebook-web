@@ -1,21 +1,21 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import ChatDetail from '@/components/chat/ChatDetail';
 import { getChatList, updateLastReadTime } from '@/lib/api/chat';
-import { useToast } from '@/lib/contexts/ToastContext';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
 import ChatList from '@/components/chat/ChatList';
-import { useSearchParams } from 'next/navigation';
+import ChatDetail from '@/components/chat/ChatDetail';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { useToast } from '@/lib/contexts/ToastContext';
 
-export default function ChatPage() {
-  const { showToast } = useToast();
-  const searchParams = useSearchParams();
-  const bookId = Number(searchParams.get('bookId'));
-  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
-
+const IncomingOrderChats = () => {
+  const params = useParams();
+  const bookId = Number(params.id);
   const isDesktop = useMediaQuery('(min-width: 768px)');
+  const { showToast } = useToast();
+
+  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
 
   // 채팅 목록 조회
   const {
@@ -25,23 +25,12 @@ export default function ChatPage() {
   } = useQuery({
     queryKey: ['chatList', bookId],
     queryFn: async () => {
-      const response = await getChatList(bookId ? Number(bookId) : undefined);
-      if (bookId) {
-        // 구매자가 책 상세페이지에서 바로 들어온 경우
-        const targetChatRoomId = response.find(
-          (chat) => chat.book.id === bookId
-        )?.chatRoomId;
-
-        if (targetChatRoomId) {
-          setSelectedRoomId(targetChatRoomId);
-        } else {
-          showToast('채팅을 찾을 수 없습니다', 'error');
-        }
-      }
-
-      return response;
+      return await getChatList(bookId ? Number(bookId) : undefined);
     },
   });
+  if (isChatListError) {
+    showToast('채팅 목록 조회 중 에러가 발생했습니다', 'error');
+  }
 
   // 마지막으로 읽은 날짜 업데이트
   const { mutate: updateLastReadTimeMutate } = useMutation({
@@ -52,12 +41,6 @@ export default function ChatPage() {
   });
 
   useEffect(() => {
-    if (isChatListError) {
-      showToast('메세지 목록을 읽어올 수 없습니다', 'error');
-    }
-  }, [isChatListError, showToast]);
-
-  useEffect(() => {
     if (!selectedRoomId) return;
     updateLastReadTimeMutate(Number(selectedRoomId));
     refetchChatList();
@@ -65,16 +48,26 @@ export default function ChatPage() {
 
   return (
     <div className="bg-base-100 text-base-content mx-4 -mb-19 flex max-h-[calc(100vh-65px)] flex-1 overflow-hidden md:mx-0">
-      {/* ✅ 채팅 목록 */}
+      {/* ✅ 목록 조건 */}
       <ChatList
         selectedRoomId={selectedRoomId}
         setSelectedRoomId={setSelectedRoomId}
         chatList={chatList}
       />
 
-      {/* ✅ 채팅 상세 */}
+      {/* ✅ 상세 조건 */}
       {(isDesktop || (!isDesktop && selectedRoomId !== null)) && (
         <div className="flex flex-1 flex-col">
+          {!isDesktop && (
+            <div className="border-base-300 bg-base-200 flex items-center border-b p-4">
+              <button
+                onClick={() => setSelectedRoomId(null)}
+                className="btn btn-sm btn-outline"
+              >
+                채팅 목록으로
+              </button>
+            </div>
+          )}
           <ChatDetail
             selectedRoomId={selectedRoomId}
             setSelectedRoomId={setSelectedRoomId}
@@ -86,4 +79,6 @@ export default function ChatPage() {
       )}
     </div>
   );
-}
+};
+
+export default IncomingOrderChats;

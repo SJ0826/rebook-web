@@ -155,7 +155,7 @@ export default function BookDetail() {
       showToast('아직 제안 받은 거래가 없어요', 'info');
       return;
     }
-    router.push(`${ROUTES.CHAT}?bookId=${book.id}`);
+    router.push(`${ROUTES.BOOK}/${book.id}/chats`);
   };
 
   return (
@@ -286,7 +286,7 @@ export default function BookDetail() {
                   className="btn btn-primary flex flex-1"
                   onClick={handleIncomingOrder}
                 >
-                  <span>받은 제안</span>
+                  <span>받은 거래 제안</span>
                   <div
                     className={
                       'badge badge-sm bg-neutral border-neutral text-base-100'
