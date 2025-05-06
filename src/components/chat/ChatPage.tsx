@@ -64,29 +64,20 @@ export default function ChatPage() {
   }, [refetchChatList, selectedRoomId, updateLastReadTimeMutate]);
 
   return (
-    <div className="bg-base-100 text-base-content -mx-4 -mb-19 flex max-h-screen flex-1 md:mx-0">
-      {/* ✅ 목록 조건 */}
+    <div className="bg-base-100 text-base-content mx-4 -mb-19 flex max-h-[calc(100vh-65px)] flex-1 overflow-hidden md:mx-0">
+      {/* ✅ 채팅 목록 */}
       <ChatList
         selectedRoomId={selectedRoomId}
         setSelectedRoomId={setSelectedRoomId}
         chatList={chatList}
       />
 
-      {/* ✅ 상세 조건 */}
+      {/* ✅ 채팅 상세 */}
       {(isDesktop || (!isDesktop && selectedRoomId !== null)) && (
         <div className="flex flex-1 flex-col">
-          {!isDesktop && (
-            <div className="border-base-300 bg-base-200 flex items-center border-b p-4">
-              <button
-                onClick={() => setSelectedRoomId(null)}
-                className="btn btn-sm btn-outline"
-              >
-                채팅 목록으로
-              </button>
-            </div>
-          )}
           <ChatDetail
             selectedRoomId={selectedRoomId}
+            setSelectedRoomId={setSelectedRoomId}
             book={
               chatList?.find((chat) => chat.chatRoomId === selectedRoomId)?.book
             }

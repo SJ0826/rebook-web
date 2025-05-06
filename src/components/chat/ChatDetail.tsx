@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useChat } from '@/hooks/useChat';
 import { useQuery } from '@tanstack/react-query';
 import { getMyProfile } from '@/lib/api/my';
@@ -6,17 +12,22 @@ import { useToast } from '@/lib/contexts/ToastContext';
 import { formatKoreanTime } from '@/lib/utils/time';
 import { BookSummary } from '@/types/chat';
 import { convertBookSaleStatus } from '@/lib/utils/convert';
+import Image from 'next/image';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 const ChatDetail = ({
   selectedRoomId,
+  setSelectedRoomId,
   book,
 }: {
   selectedRoomId: number | null;
+  setSelectedRoomId: Dispatch<SetStateAction<number | null>>;
   book?: BookSummary;
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
   const topSentinelRef = useRef<HTMLDivElement>(null);
+  const isDesktop = useMediaQuery('(min-width: 768px)');
 
   const { showToast } = useToast();
   const { messages, sendMessage, loadMoreMessages, hasMore } =
@@ -70,22 +81,24 @@ const ChatDetail = ({
   };
 
   useEffect(() => {
-    if (!shouldScrollToBottom) return;
+    if (!shouldScrollToBottom || !messages?.length || !scrollRef.current)
+      return;
 
-    const timeout = setTimeout(() => {
-      requestAnimationFrame(() => {
-        if (lastMessageRef.current) {
-          lastMessageRef.current.scrollIntoView({
-            behavior: isFirstLoad ? 'auto' : 'smooth',
-          });
-          setShouldScrollToBottom(false);
-          if (isFirstLoad) setIsFirstLoad(false);
-        }
-      });
-    }, 50); // DOM 업데이트 이후에 실행되도록
-
-    return () => clearTimeout(timeout);
+    // DOM 렌더 후 다음 프레임에서 실행 보장
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        scrollRef.current!.scrollTop = scrollRef.current!.scrollHeight;
+        setShouldScrollToBottom(false);
+        setIsFirstLoad(false);
+      }, 0);
+    });
   }, [messages, shouldScrollToBottom]);
+
+  useEffect(() => {
+    if (selectedRoomId !== null) {
+      setShouldScrollToBottom(true);
+    }
+  }, [selectedRoomId]);
 
   // 스크롤 감지 후 과거 메세지 호출
   useEffect(() => {
@@ -115,86 +128,97 @@ const ChatDetail = ({
     return () => el.removeEventListener('scroll', handleScroll);
   }, [hasMore, loadMoreMessages]);
 
-  return (
-    <>
-      <div className="bg-base-100 flex-1 overflow-y-auto p-4" ref={scrollRef}>
-        {selectedRoomId ? (
-          <div>
-            {book && (
-              <div className="border-base-200 mb-4 flex items-center gap-4 rounded-lg border p-4 shadow-sm">
-                <img
-                  src={
-                    book?.bookImage?.[0]?.imageUrl ?? '/images/default-book.png'
-                  }
-                  alt="책 썸네일"
-                  className="h-20 w-16 rounded-md object-cover"
-                />
-                <div>
-                  <div className="text-lg font-semibold">{book?.title}</div>
-                  <div className="text-base-content/70 text-sm">
-                    ₩ {book?.price?.toLocaleString()}원 ·{' '}
-                    {convertBookSaleStatus(book?.saleStatus)}
-                  </div>
-                </div>
-              </div>
-            )}
-            <div ref={topSentinelRef}></div>
-            {messages?.map((msg, index) => {
-              const isLast = index === messages.length - 1;
-              return (
-                <div
-                  key={msg.id + msg.createdAt}
-                  ref={isLast ? lastMessageRef : undefined}
-                >
-                  {isMyBubble(msg.senderId) ? (
-                    <div className="chat chat-end">
-                      <div className="chat-bubble bg-warning text-warning-content">
-                        {msg.content}
-                      </div>
-                      <div className={'chat-footer'}>
-                        {formatKoreanTime(msg.createdAt)}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="chat chat-start">
-                      <div className="chat-bubble bg-base-200 text-base-content">
-                        {msg.content}
-                      </div>
-                      <div className={'chat-footer'}>
-                        {formatKoreanTime(msg.createdAt)}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="text-base-content/50 flex h-full items-center justify-center">
-            채팅방을 선택해주세요.
-          </div>
-        )}
+  if (!book) {
+    return (
+      <div className="text-base-content/50 flex h-full items-center justify-center">
+        채팅방을 선택해주세요.
       </div>
-
-      {selectedRoomId && (
-        <div className="border-base-300 bg-base-200 flex items-center gap-2 border-t p-4">
-          <input
-            type="text"
-            placeholder="메시지를 입력하세요"
-            className="input input-bordered bg-base-100 flex-1"
-            value={currentMessage}
-            onChange={(value) => setCurrentMessage(value.currentTarget.value)}
-            onKeyDown={handleKeyDown}
-          />
+    );
+  }
+  return (
+    <div className="flex h-full flex-col">
+      {!isDesktop && (
+        <div className="border-base-300 bg-base-200 flex items-center border-b p-4">
           <button
-            className="btn btn-warning text-white"
-            onClick={handleSubmitMessage}
+            onClick={() => setSelectedRoomId(null)}
+            className="btn btn-sm btn-outline"
           >
-            전송
+            채팅 목록으로
           </button>
         </div>
       )}
-    </>
+      {/* 책 요약 정보 */}
+      <section className="sticky top-0 z-10 bg-white px-4 py-6 pb-2">
+        <div className="border-base-300 flex items-center gap-4 border-b bg-white p-4 shadow-md">
+          <Image
+            src={book?.bookImage?.[0]?.imageUrl ?? '/images/default-book.png'}
+            alt="책 썸네일"
+            width={64}
+            height={80}
+            className="h-20 w-16 rounded-md object-cover"
+          />
+          <div>
+            <div className="text-lg font-semibold">{book?.title}</div>
+            <div className="text-base-content/70 text-sm">
+              ₩ {book?.price?.toLocaleString()} ·{' '}
+              {convertBookSaleStatus(book?.saleStatus)}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 채팅 메시지 리스트 */}
+      <section
+        ref={scrollRef}
+        className="bg-base-100 min-h-0 flex-1 overflow-y-auto px-4 py-2"
+      >
+        <div ref={topSentinelRef} />
+        {messages?.map((msg, idx) => {
+          const isLast = idx === messages.length - 1;
+          return (
+            <div key={msg.id} ref={isLast ? lastMessageRef : undefined}>
+              {isMyBubble(msg.senderId) ? (
+                <div className="chat chat-end">
+                  <div className="chat-bubble bg-warning text-warning-content">
+                    {msg.content}
+                  </div>
+                  <div className="chat-footer">
+                    {formatKoreanTime(msg.createdAt)}
+                  </div>
+                </div>
+              ) : (
+                <div className="chat chat-start">
+                  <div className="chat-bubble bg-base-200 text-base-content">
+                    {msg.content}
+                  </div>
+                  <div className="chat-footer">
+                    {formatKoreanTime(msg.createdAt)}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </section>
+
+      {/* 입력창 */}
+      <section className="border-base-300 bg-base-200 flex h-[73px] items-center gap-2 border-t p-4">
+        <input
+          type="text"
+          value={currentMessage}
+          onChange={(e) => setCurrentMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="메시지를 입력하세요"
+          className="input input-bordered bg-base-100 flex-1"
+        />
+        <button
+          className="btn btn-warning text-white"
+          onClick={handleSubmitMessage}
+        >
+          전송
+        </button>
+      </section>
+    </div>
   );
 };
 
