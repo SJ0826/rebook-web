@@ -81,21 +81,25 @@ const ChatDetail = ({
   };
 
   useEffect(() => {
-    if (!shouldScrollToBottom || !messages?.length || !scrollRef.current)
+    if (!shouldScrollToBottom || !messages?.length || !lastMessageRef.current)
       return;
 
-    // DOM 렌더 후 다음 프레임에서 실행 보장
+    // 두 프레임 뒤에 실행 (최신 챗 버블 포커징 목적)
     requestAnimationFrame(() => {
-      setTimeout(() => {
-        scrollRef.current!.scrollTop = scrollRef.current!.scrollHeight;
+      requestAnimationFrame(() => {
+        lastMessageRef.current!.scrollIntoView({
+          behavior: isFirstLoad ? 'auto' : 'smooth',
+          block: 'end',
+        });
         setShouldScrollToBottom(false);
         setIsFirstLoad(false);
-      }, 0);
+      });
     });
   }, [messages, shouldScrollToBottom]);
 
   useEffect(() => {
     if (selectedRoomId !== null) {
+      setIsFirstLoad(true);
       setShouldScrollToBottom(true);
     }
   }, [selectedRoomId]);
@@ -174,9 +178,8 @@ const ChatDetail = ({
       >
         <div ref={topSentinelRef} />
         {messages?.map((msg, idx) => {
-          const isLast = idx === messages.length - 1;
           return (
-            <div key={msg.id} ref={isLast ? lastMessageRef : undefined}>
+            <div key={msg.id}>
               {isMyBubble(msg.senderId) ? (
                 <div className="chat chat-end">
                   <div className="chat-bubble bg-warning text-warning-content">
@@ -199,6 +202,7 @@ const ChatDetail = ({
             </div>
           );
         })}
+        <div ref={lastMessageRef} />
       </section>
 
       {/* 입력창 */}

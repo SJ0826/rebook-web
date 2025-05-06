@@ -47,7 +47,7 @@ const IncomingOrderChats = () => {
   }, [refetchChatList, selectedRoomId, updateLastReadTimeMutate]);
 
   return (
-    <div className="bg-base-100 text-base-content -mx-4 -mb-19 flex max-h-screen flex-1 md:mx-0">
+    <div className="bg-base-100 text-base-content mx-4 -mb-19 flex max-h-[calc(100vh-65px)] flex-1 overflow-hidden md:mx-0">
       {/* ✅ 목록 조건 */}
       <ChatList
         selectedRoomId={selectedRoomId}
@@ -70,6 +70,7 @@ const IncomingOrderChats = () => {
           )}
           <ChatDetail
             selectedRoomId={selectedRoomId}
+            setSelectedRoomId={setSelectedRoomId}
             book={
               chatList?.find((chat) => chat.chatRoomId === selectedRoomId)?.book
             }
