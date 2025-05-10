@@ -1,6 +1,7 @@
 import React, {
   Dispatch,
   SetStateAction,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -31,6 +32,7 @@ const ChatDetail = ({
   const lastMessageRef = useRef<HTMLDivElement>(null);
   const topSentinelRef = useRef<HTMLDivElement>(null);
   const isDesktop = useMediaQuery('(min-width: 768px)');
+  const messagesLengthRef = useRef<number>(0);
 
   const { showToast } = useToast();
   const { messages, sendMessage, loadMoreMessages, hasMore } =
@@ -47,6 +49,16 @@ const ChatDetail = ({
   });
   const isMyBubble = (senderId: number) => myProfile?.id === senderId;
 
+  // 스크롤을 맨 아래로 이동시키는 함수
+  const scrollToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({
+        behavior,
+        block: 'end',
+      });
+    }
+  }, []);
+
   // 메세지 전송 핸들러
   const handleSubmitMessage = async () => {
     const message = currentMessage.trim();
@@ -61,7 +73,6 @@ const ChatDetail = ({
       setTimeout(() => {
         // 중복 전송 방지 디바운싱
         setIsSubmitting(false);
-        setCurrentMessage('');
       }, 300);
     }
   };
@@ -70,40 +81,48 @@ const ChatDetail = ({
     if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
       e.preventDefault();
       const message = currentMessage.trim();
-      if (!message) return;
+      if (!message || isSubmitting) return;
 
       try {
+        setIsSubmitting(true);
         setShouldScrollToBottom(true);
         await sendMessage(message);
+        setCurrentMessage('');
       } catch {
         showToast('메시지 전송 실패', 'error');
       } finally {
-        setCurrentMessage('');
+        setTimeout(() => {
+          setIsSubmitting(false);
+        }, 300);
       }
     }
   };
 
+  // 메시지가 변경되었을 때 스크롤 처리
   useEffect(() => {
-    if (!shouldScrollToBottom || !messages?.length || !lastMessageRef.current)
-      return;
+    if (!messages) return;
 
-    // 두 프레임 뒤에 실행 (최신 챗 버블 포커징 목적)
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        lastMessageRef.current!.scrollIntoView({
-          behavior: isFirstLoad ? 'auto' : 'smooth',
-          block: 'end',
-        });
-        setShouldScrollToBottom(false);
+    // 새 메시지가 추가된 경우에만 스크롤 처리
+    if (messages.length > messagesLengthRef.current && shouldScrollToBottom) {
+      // 메시지가 렌더링 된 후에 스크롤 처리를 위해 setTimeout 사용
+      const timer = setTimeout(() => {
+        scrollToBottom(isFirstLoad ? 'auto' : 'smooth');
         setIsFirstLoad(false);
-      });
-    });
-  }, [messages, shouldScrollToBottom]);
+      }, 100);
 
+      return () => clearTimeout(timer);
+    }
+
+    // 현재 메시지 수를 저장
+    messagesLengthRef.current = messages.length;
+  }, [messages, shouldScrollToBottom, scrollToBottom, isFirstLoad]);
+
+  // 채팅방이 변경되었을 때 초기화
   useEffect(() => {
     if (selectedRoomId !== null) {
       setIsFirstLoad(true);
       setShouldScrollToBottom(true);
+      messagesLengthRef.current = 0;
     }
   }, [selectedRoomId]);
 
@@ -129,11 +148,16 @@ const ChatDetail = ({
           el.scrollTop = heightDiff;
         });
       }
+
+      // 사용자가 스크롤을 올렸을 때는 자동 스크롤 비활성화
+      const isScrolledNearBottom =
+        el.scrollHeight - el.scrollTop - el.clientHeight < 100;
+      setShouldScrollToBottom(isScrolledNearBottom);
     };
 
     el.addEventListener('scroll', handleScroll);
     return () => el.removeEventListener('scroll', handleScroll);
-  }, [hasMore, loadMoreMessages]);
+  }, [hasMore, loadMoreMessages, showToast]);
 
   if (!book) {
     return (
@@ -157,7 +181,7 @@ const ChatDetail = ({
       {/* 책 요약 정보 */}
       <section className="sticky top-0 z-10 bg-white px-4 py-6 pb-2">
         <div
-          className="border-base-300 flex items-center gap-4 border-b bg-white p-4 shadow-md"
+          className="border-base-300 flex cursor-pointer items-center gap-4 border-b bg-white p-4 shadow-md"
           onClick={() => router.push(`${ROUTES.BOOK}/${book.id}`)}
         >
           <Image
@@ -183,9 +207,10 @@ const ChatDetail = ({
         className="bg-base-100 min-h-0 flex-1 overflow-y-auto px-4 py-2"
       >
         <div ref={topSentinelRef} />
-        {messages?.map((msg) => {
+        {messages?.map((msg, index) => {
+          const isLastMessage = index === messages.length - 1;
           return (
-            <div key={msg.id}>
+            <div key={msg.id} ref={isLastMessage ? lastMessageRef : undefined}>
               {isMyBubble(msg.senderId) ? (
                 <div className="chat chat-end">
                   <div className="chat-bubble bg-warning text-warning-content">
@@ -208,7 +233,6 @@ const ChatDetail = ({
             </div>
           );
         })}
-        <div ref={lastMessageRef} />
       </section>
 
       {/* 입력창 */}
@@ -224,6 +248,7 @@ const ChatDetail = ({
         <button
           className="btn btn-warning text-white"
           onClick={handleSubmitMessage}
+          disabled={isSubmitting || !currentMessage.trim()}
         >
           전송
         </button>

@@ -93,7 +93,6 @@ export default function SignupPage() {
       },
       {
         onSuccess: () => {
-          // router.push(ROUTES.HOME),
           setShowVerifyModal(true);
         },
         onError: (error) => {
@@ -109,13 +108,13 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-base-200 p-4 rounded-field">
-      <div className="card w-full max-w-sm bg-base-100 shadow-xl p-6 ">
-        <h2 className="text-2xl font-bold text-center">회원가입</h2>
-        <p className="text-sm text-center text-gray-500 mt-2">
+    <div className="bg-base-200 rounded-field flex min-h-screen items-center justify-center p-4">
+      <div className="card bg-base-100 w-full max-w-sm p-6 shadow-xl">
+        <h2 className="text-center text-2xl font-bold">회원가입</h2>
+        <p className="mt-2 text-center text-sm text-gray-500">
           회원가입 후 이메일로 인증 링크가 전송됩니다.
         </p>
-        <form className="flex flex-col gap-4 mt-4" onSubmit={handleSubmit}>
+        <form className="mt-4 flex flex-col gap-4" onSubmit={handleSubmit}>
           <label className="form-control w-full">
             <span className="label-text">이메일</span>
             <input
@@ -127,7 +126,7 @@ export default function SignupPage() {
               onChange={handleChange}
             />
             {errors.email && (
-              <p className="text-error text-sm mt-1">{errors.email}</p>
+              <p className="text-error mt-1 text-sm">{errors.email}</p>
             )}
           </label>
 
@@ -142,7 +141,7 @@ export default function SignupPage() {
               onChange={handleChange}
             />
             {errors.name && (
-              <p className="text-error text-sm mt-1">{errors.name}</p>
+              <p className="text-error mt-1 text-sm">{errors.name}</p>
             )}
           </label>
 
@@ -156,11 +155,11 @@ export default function SignupPage() {
               value={formData.password}
               onChange={handleChange}
             />
-            <span className="label-text-alt text-gray-500 mt-1">
+            <span className="label-text-alt mt-1 text-gray-500">
               8자 이상, 영문, 숫자, 특수문자 포함
             </span>
             {errors.password && (
-              <p className="text-error text-sm mt-1">{errors.password}</p>
+              <p className="text-error mt-1 text-sm">{errors.password}</p>
             )}
           </label>
 
@@ -175,7 +174,7 @@ export default function SignupPage() {
               onChange={handleChange}
             />
             {errors.confirmPassword && (
-              <p className="text-error text-sm mt-1">
+              <p className="text-error mt-1 text-sm">
                 {errors.confirmPassword}
               </p>
             )}
@@ -197,7 +196,7 @@ export default function SignupPage() {
           </button>
         </form>
 
-        <p className="text-sm text-center mt-4">
+        <p className="mt-4 text-center text-sm">
           이미 계정이 있으신가요?{' '}
           <Link href="/login" className="text-primary font-semibold">
             로그인
@@ -207,7 +206,7 @@ export default function SignupPage() {
       {showVerifyModal && (
         <div className="modal modal-open">
           <div className="modal-box text-center">
-            <h3 className="font-bold text-lg text-primary">이메일 인증 안내</h3>
+            <h3 className="text-primary text-lg font-bold">이메일 인증 안내</h3>
             <p className="py-4 text-sm text-gray-700">
               가입하신 이메일로 인증 링크를 전송했어요.
               <br />
@@ -218,7 +217,7 @@ export default function SignupPage() {
               <br /> 고객문의를 통해 이메일 주소 수정을 요청해주세요
             </p>
             <p>{`가입 이메일 주소: ${formData.email} `}</p>
-            <div className="flex flex-col gap-2 mt-4">
+            <div className="mt-4 flex flex-col gap-2">
               <button
                 onClick={() => resendVerificationEmailMutate(formData.email)}
                 className="btn btn-primary"
