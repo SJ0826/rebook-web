@@ -12,9 +12,10 @@ import { useSearchParams } from 'next/navigation';
 export default function ChatPage() {
   const { showToast } = useToast();
   const searchParams = useSearchParams();
-  const bookId = Number(searchParams.get('bookId'));
+
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
 
+  const bookId = Number(searchParams.get('bookId'));
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
   // 채팅 목록 조회
@@ -45,7 +46,14 @@ export default function ChatPage() {
 
   // 마지막으로 읽은 날짜 업데이트
   const { mutate: updateLastReadTimeMutate } = useMutation({
-    mutationFn: updateLastReadTime,
+    mutationFn: async (selectedRoomId: number) => {
+      const response = await updateLastReadTime(selectedRoomId);
+
+      if (response.lastReadAt) {
+        refetchChatList();
+        return;
+      }
+    },
     onError: (error) => {
       console.error(error, ': 마지막으로 읽은 날짜 업데이트 실패');
     },

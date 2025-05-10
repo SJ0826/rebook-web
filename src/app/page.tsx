@@ -8,6 +8,10 @@ import { useQuery } from '@tanstack/react-query';
 import { searchBooksAPI } from '@/lib/api/books';
 import { BookSearchSort } from '@/types/books';
 import { SparklesIcon } from '@heroicons/react/24/solid';
+import { useAuth } from '@/hooks/useAuth';
+import { ROUTES } from '@/lib/constants';
+import { useRouter } from 'next/navigation';
+import { triggerToast } from '@/lib/contexts/ToastContext';
 
 const PAGE_SIZE = 8;
 
@@ -19,6 +23,9 @@ export default function RebookMain() {
     BookSearchSort.NEWEST
   );
   const [currentPage, setCurrentPage] = useState(1);
+
+  const router = useRouter();
+  const { isLoggedIn } = useAuth();
 
   // 책 목록 호출
   const { data } = useQuery({
@@ -73,8 +80,18 @@ export default function RebookMain() {
             <p className="mt-2 text-lg text-yellow-800">
               읽지 않는 책, ReBook에서 새 주인을 찾아주세요!
             </p>
-            <button className="btn btn-primary btn-sm mt-4">
-              지금 책 보러가기 →
+            <button
+              className="btn btn-primary btn-sm mt-4"
+              onClick={() => {
+                if (!isLoggedIn) {
+                  triggerToast('로그인이 필요한 서비스입니다', 'info');
+                  return;
+                }
+
+                router.push(ROUTES.BOOK_REGISTER);
+              }}
+            >
+              책 등록하기 →
             </button>
           </div>
 
