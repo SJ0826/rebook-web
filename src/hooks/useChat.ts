@@ -15,7 +15,6 @@ export function useChat(chatRoomId: number | null) {
   // 메시지 전송
   // -------------------------------
   const sendMessage = async (content: string) => {
-    console.log('[sendMessage] 보내는 메시지:', content);
     if (!socketRef.current || !chatRoomId) return;
     socketRef.current.emit('message', { chatRoomId, content });
   };

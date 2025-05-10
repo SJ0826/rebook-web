@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { useChat } from '@/hooks/useChat';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getMyProfile } from '@/lib/api/my';
 import { useToast } from '@/lib/contexts/ToastContext';
 import { formatKoreanTime } from '@/lib/utils/time';
@@ -33,10 +33,11 @@ const ChatDetail = ({
   const topSentinelRef = useRef<HTMLDivElement>(null);
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const messagesLengthRef = useRef<number>(0);
-
   const { showToast } = useToast();
   const { messages, sendMessage, loadMoreMessages, hasMore } =
     useChat(selectedRoomId);
+  const queryClient = useQueryClient();
+
   const [currentMessage, setCurrentMessage] = useState('');
   const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -101,6 +102,9 @@ const ChatDetail = ({
   // 메시지가 변경되었을 때 스크롤 처리
   useEffect(() => {
     if (!messages) return;
+
+    // 채팅 목록 업데이트 (안읽은 메세지 초기화)
+    queryClient.invalidateQueries({ queryKey: ['chatList'] });
 
     // 새 메시지가 추가된 경우에만 스크롤 처리
     if (messages.length > messagesLengthRef.current && shouldScrollToBottom) {
