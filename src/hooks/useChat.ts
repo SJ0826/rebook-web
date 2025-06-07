@@ -39,7 +39,7 @@ export function useChat(chatRoomId: number | null) {
     const connectSocket = () => {
       if (socketRef.current) return;
 
-      socketRef.current = io('http://localhost:4000', {
+      socketRef.current = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
         withCredentials: true,
         auth: { token: accessToken },
         transports: ['polling', 'websocket'],
