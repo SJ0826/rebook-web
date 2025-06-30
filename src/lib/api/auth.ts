@@ -32,7 +32,9 @@ export const loginUserAPI = async (payload: {
   email: string;
   password: string;
 }) => {
-  const response = await publicAxiosClient.post(`${AUTH}/login`, payload);
+  const response = await publicAxiosClient.post(`${AUTH}/login`, payload, {
+    withCredentials: true,
+  });
   return response.data;
 };
 
