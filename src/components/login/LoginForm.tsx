@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { Button, Input } from '@/components/ui';
@@ -23,6 +23,12 @@ const LoginForm = () => {
   const { showToast } = useToast();
   const router = useRouter();
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    router.prefetch(ROUTES.HOME); // 로그인 성공 후 갈 페이지를 미리 prefetch
+  }, [router]);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -30,6 +36,9 @@ const LoginForm = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setIsSubmitting(true);
+
     loginMutate(
       { email: formData.email, password: formData.password },
       {
@@ -40,10 +49,12 @@ const LoginForm = () => {
           } else {
             showToast('알 수 없는 오류가 발생했습니다.', 'error');
           }
+          setIsSubmitting(false);
         },
       }
     );
   };
+
   return (
     <div className={'flex items-center justify-center'}>
       <div className={'flex max-w-100 flex-col pt-30 md:pt-50'}>
@@ -79,11 +90,13 @@ const LoginForm = () => {
           <Button
             type="submit"
             disabled={
-              formData.email.length === 0 || formData.password.length === 0
+              formData.email.length === 0 ||
+              formData.password.length === 0 ||
+              isSubmitting
             }
             className={'mt-6'}
           >
-            로그인
+            {isSubmitting ? '로그인중...' : '로그인'}
           </Button>
         </form>
         <p className={'text- mt-2 text-sm text-gray-600'}>
