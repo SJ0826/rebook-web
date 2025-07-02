@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useMyProfileMutation } from '@/hooks/useAuthMutation';
+import { useMyProfileMutation } from '@/hooks/mutations/useAuthMutation';
 import { useToast } from '@/lib/contexts/ToastContext';
 import { useQueryClient } from '@tanstack/react-query';
 

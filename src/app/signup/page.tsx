@@ -6,7 +6,7 @@ import Link from 'next/link';
 import {
   useRegisterMutation,
   useResendVerificationEmailMutation,
-} from '@/hooks/useAuthMutation';
+} from '@/hooks/mutations/useAuthMutation';
 import { useToast } from '@/lib/contexts/ToastContext';
 
 interface FormData {
