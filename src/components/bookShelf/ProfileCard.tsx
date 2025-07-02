@@ -6,7 +6,7 @@ import { PencilIcon } from '@heroicons/react/24/outline';
 import {
   useMyProfileMutation,
   useMyProfileQuery,
-} from '@/hooks/useAuthMutation';
+} from '@/hooks/mutations/useAuthMutation';
 import { uploadImagesAPI } from '@/lib/api/files';
 import { useToast } from '@/lib/contexts/ToastContext';
 import { twMerge } from 'tailwind-merge';

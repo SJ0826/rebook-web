@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import BookStatusBadge from '@/components/book/BookStatusBadge';
 import { useAuth } from '@/hooks/useAuth';
-import { useMyProfileQuery } from '@/hooks/useAuthMutation';
+import { useMyProfileQuery } from '@/hooks/mutations/useAuthMutation';
 import {
   deleteBookAPI,
   getBookDetailAPI,
