@@ -18,7 +18,7 @@ const CustomInput = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <Field>
-        <div className="flex w-full items-center">
+        <div className="flex w-full flex-wrap items-center">
           {label && (
             <Label
               htmlFor={props.id}
