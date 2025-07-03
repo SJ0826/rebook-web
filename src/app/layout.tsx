@@ -4,6 +4,7 @@ import Layout from '@/components/layout/Layout';
 import { QueryProviders } from '@/lib/contexts/QueryClientProvider';
 import { ToastProvider } from '@/lib/contexts/ToastContext';
 import './globals.css';
+import { ModalProvider } from '@/hooks/useModalStack';
 
 // 폰트
 const pretendard = localFont({
@@ -47,9 +48,11 @@ export default function RootLayout({
         className={`${pretendard.variable} font-pretendard flex min-h-screen flex-col`}
       >
         <QueryProviders>
-          <ToastProvider>
-            <Layout>{children}</Layout>
-          </ToastProvider>
+          <ModalProvider>
+            <ToastProvider>
+              <Layout>{children}</Layout>
+            </ToastProvider>
+          </ModalProvider>
         </QueryProviders>
       </body>
     </html>
