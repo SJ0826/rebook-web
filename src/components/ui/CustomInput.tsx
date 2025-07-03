@@ -35,7 +35,7 @@ const CustomInput = forwardRef<HTMLInputElement, InputProps>(
           <Input
             ref={ref}
             className={twMerge(
-              'block w-full rounded-md border bg-white px-3 py-2 text-sm shadow-sm transition-colors',
+              'text-md block w-full rounded-md border bg-white px-3 py-2 shadow-sm transition-colors',
               'placeholder-gray-400 focus:outline-none',
               hasError
                 ? 'border-red-500 focus:border-red-500 focus:ring-red-500'

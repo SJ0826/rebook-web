@@ -94,6 +94,7 @@ const LoginForm = () => {
               formData.password.length === 0 ||
               isSubmitting
             }
+            size={'lg'}
             className={'mt-6'}
           >
             {isSubmitting ? '로그인중...' : '로그인'}
