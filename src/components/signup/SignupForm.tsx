@@ -1,11 +1,12 @@
 import React, { FormEvent, useState } from 'react';
 import { useToast } from '@/lib/contexts/ToastContext';
-import { useResendVerificationEmailMutation } from '@/hooks/mutations/useAuthMutation';
 import axios from 'axios';
 import Link from 'next/link';
 import { Button, Input } from '@/components/ui';
 import { useMutation } from '@tanstack/react-query';
 import { signupUserAPI } from '@/lib/api/auth';
+import { useModalStack } from '@/hooks/useModalStack';
+import EmailVerificationModal from '@/components/signup/EmailVerificationModal';
 
 interface FormData {
   email: string;
@@ -29,6 +30,7 @@ const VALIDATION = {
 
 const SignupForm = () => {
   const { showToast } = useToast();
+  const { push } = useModalStack();
   const [formData, setFormData] = useState<FormData>({
     email: '',
     name: '',
@@ -37,15 +39,11 @@ const SignupForm = () => {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showVerifyModal, setShowVerifyModal] = useState(false);
 
-  // 회원가입 (이메일 인증 요청)
+  // 회원가입 뮤테이션 (이메일 인증 요청)
   const { mutate } = useMutation({
     mutationFn: signupUserAPI,
   });
-
-  const { mutate: resendVerificationEmailMutate } =
-    useResendVerificationEmailMutation();
 
   // 회원가입 폼 검증
   const validateForm = (): boolean => {
@@ -98,7 +96,10 @@ const SignupForm = () => {
       },
       {
         onSuccess: () => {
-          setShowVerifyModal(true);
+          push({
+            key: 'EmailVerificationModal',
+            modal: <EmailVerificationModal email={formData.email} />,
+          });
         },
         onError: (error) => {
           if (axios.isAxiosError(error)) {
@@ -112,6 +113,7 @@ const SignupForm = () => {
     );
   };
 
+  // 렌더링
   return (
     <div className={'flex h-screen items-center justify-center'}>
       <div
@@ -189,32 +191,6 @@ const SignupForm = () => {
           </Link>
         </p>
       </div>
-
-      {showVerifyModal && (
-        <div>
-          <div>
-            <h3>이메일 인증 안내</h3>
-            <p>
-              가입하신 이메일로 인증 링크를 전송했어요.
-              <br />
-              받은 메일함 또는 스팸함을 확인해주세요!
-              <br />
-              <br />
-              이메일 주소를 잘못 입력하셨다면
-              <br /> 고객문의를 통해 이메일 주소 수정을 요청해주세요
-            </p>
-            <p>{`가입 이메일 주소: ${formData.email} `}</p>
-            <div>
-              <button
-                onClick={() => resendVerificationEmailMutate(formData.email)}
-              >
-                인증 메일 다시 보내기
-              </button>
-              <button onClick={() => setShowVerifyModal(false)}>닫기</button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
