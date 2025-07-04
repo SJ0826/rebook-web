@@ -4,4 +4,5 @@ export const noAuthRoutes = [
   ROUTES.LOGIN,
   ROUTES.SIGNUP,
   ROUTES.AUTH_VERIFY_EMAIL,
+  ROUTES.AUTH_SEND_EMAIL,
 ];

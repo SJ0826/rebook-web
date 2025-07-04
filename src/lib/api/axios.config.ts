@@ -75,11 +75,15 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
             triggerToast('알 수 없는 오류가 발생했습니다.', 'error');
         }
       } else if (error.request) {
-        console.error('No response received:', error.request);
-        alert('서버로부터 응답을 받지 못했습니다.');
+        const errorMessage =
+          error.message === 'Network Error'
+            ? '네트워크 연결에 실패했습니다. 인터넷 상태를 확인해주세요.'
+            : '서버로부터 응답을 받지 못했습니다. 잠시 후 다시 시도해주세요.';
+
+        triggerToast(errorMessage, 'error');
       } else {
         console.error('Request error:', error.message);
-        alert('요청을 보내는 중 오류가 발생했습니다.');
+        triggerToast('요청을 보내는 중 오류가 발생했습니다.', 'error');
       }
 
       return Promise.reject(error);

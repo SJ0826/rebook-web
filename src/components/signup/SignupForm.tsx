@@ -1,12 +1,10 @@
 import React, { FormEvent, useState } from 'react';
-import { useToast } from '@/lib/contexts/ToastContext';
-import axios from 'axios';
 import Link from 'next/link';
 import { Button, Input } from '@/components/ui';
 import { useMutation } from '@tanstack/react-query';
 import { signupUserAPI } from '@/lib/api/auth';
-import { useModalStack } from '@/hooks/useModalStack';
-import EmailVerificationModal from '@/components/signup/EmailVerificationModal';
+import { useRouter } from 'next/navigation';
+import { ROUTES } from '@/lib/constants';
 
 interface FormData {
   email: string;
@@ -29,8 +27,8 @@ const VALIDATION = {
 };
 
 const SignupForm = () => {
-  const { showToast } = useToast();
-  const { push } = useModalStack();
+  const router = useRouter();
+
   const [formData, setFormData] = useState<FormData>({
     email: '',
     name: '',
@@ -96,17 +94,15 @@ const SignupForm = () => {
       },
       {
         onSuccess: () => {
-          push({
-            key: 'EmailVerificationModal',
-            modal: <EmailVerificationModal email={formData.email} />,
-          });
+          router.push(ROUTES.AUTH_SEND_EMAIL);
         },
         onError: (error) => {
-          if (axios.isAxiosError(error)) {
-            showToast(error.response?.data?.message, 'error');
-          } else {
-            showToast('알 수 없는 오류가 발생했습니다.', 'error');
-          }
+          // if (axios.isAxiosError(error)) {
+          //   showToast(error.response?.data?.message, 'error');
+          // } else {
+          //   showToast('알 수 없는 오류가 발생했습니다.', 'error');
+          // }
+          console.log(error);
         },
         onSettled: () => setIsSubmitting(false),
       }

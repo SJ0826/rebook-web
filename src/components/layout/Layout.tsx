@@ -1,7 +1,7 @@
 import React from 'react';
-import Header from '@/components/layout/Header';
 import { twMerge } from 'tailwind-merge';
 import ClientLayoutWrapper from '@/components/layout/ClientLayoutWrapper';
+import Header from '@/components/layout/Header';
 
 interface LayoutProps {
   children: React.ReactNode;
