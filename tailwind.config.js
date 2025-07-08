@@ -9,7 +9,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        secondary: {
+        primary: {
           50: '#FFFBEB',
           100: '#FEF3C7',
           200: '#FDE68A',
@@ -21,7 +21,7 @@ module.exports = {
           800: '#92400E',
           900: '#78350F',
         },
-        primary: {
+        secondary: {
           50: '#F8FAFC',
           100: '#F1F5F9',
           200: '#E2E8F0',
@@ -30,7 +30,7 @@ module.exports = {
           500: '#64748B',
           600: '#475569',
           700: '#334155',
-          800: '#1E293B', // 헤더/푸터 배경
+          800: '#1E293B',
           900: '#0F172A',
         },
         gray: {
