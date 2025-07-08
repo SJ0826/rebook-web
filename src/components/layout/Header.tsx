@@ -72,50 +72,6 @@ export default function Header() {
               icon={<ChatBubbleOvalLeftIcon />}
             />
           </nav>
-          {/*<nav className="hidden items-center gap-6 md:flex">*/}
-          {/*  <Link*/}
-          {/*    href={'#'}*/}
-          {/*    onClick={(e) => {*/}
-          {/*      e.preventDefault();*/}
-          {/*      handleRouteWithAuth(ROUTES.BOOK_REGISTER);*/}
-          {/*    }}*/}
-          {/*    className="w-20 text-center font-semibold"*/}
-          {/*  >*/}
-          {/*    책 등록*/}
-          {/*  </Link>*/}
-          {/*  <Link*/}
-          {/*    href={'#'}*/}
-          {/*    onClick={(e) => {*/}
-          {/*      e.preventDefault();*/}
-          {/*      handleRouteWithAuth(ROUTES.MY_BOOKSHELF);*/}
-          {/*    }}*/}
-          {/*    className="w-20 text-center font-semibold"*/}
-          {/*  >*/}
-          {/*    나의 서재*/}
-          {/*  </Link>*/}
-          {/*  <Link*/}
-          {/*    href={'#'}*/}
-          {/*    onClick={(e) => {*/}
-          {/*      e.preventDefault();*/}
-          {/*      handleRouteWithAuth(ROUTES.CHAT);*/}
-          {/*    }}*/}
-          {/*    className="w-20 text-center font-semibold"*/}
-          {/*  >*/}
-          {/*    채팅*/}
-          {/*  </Link>*/}
-          {/*  <button*/}
-          {/*    onClick={handleLoginRoute}*/}
-          {/*    className="w-20 text-center font-semibold"*/}
-          {/*  >*/}
-          {/*    {isLoggedIn ? '로그아웃' : '로그인'}*/}
-          {/*  </button>*/}
-          {/*</nav>*/}
-          {/*<button*/}
-          {/*  className="btn btn-ghost md:hidden"*/}
-          {/*  onClick={() => setIsOpenMobileNav((prev) => !prev)}*/}
-          {/*>*/}
-          {/*  ☰*/}
-          {/*</button>*/}
         </div>
 
         {/*{isOpenMobileNav && (*/}

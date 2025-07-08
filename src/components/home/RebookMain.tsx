@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getSearchBooks } from '@/lib/api/books';
 import { BookSearchSort } from '@/types/books';
+import BookCard from '@/components/book/BookCard';
 
 const PAGE_SIZE = 8;
 
@@ -16,9 +17,13 @@ const RebookMain = () => {
   );
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: bookList, isPending: isPendingBookList } = useQuery({
+  const {
+    data: searchBookList,
+    isPending: isPendingBookList,
+    isError: isErrorBookList,
+  } = useQuery({
     queryKey: [
-      'searchBooks',
+      'searchBookList',
       searchTerm,
       priceFilter,
       statusFilter,
@@ -52,8 +57,22 @@ const RebookMain = () => {
   });
 
   if (isPendingBookList) return <div>로딩중 ...</div>;
-  console.log(bookList);
-  return <div></div>;
+  if (isErrorBookList) return <div>에러... 컴포넌트.. 기능 개발중..</div>;
+  if (!searchBookList?.totalPages) return <div>엠티 컴포넌트 기능 개발중</div>;
+
+  return (
+    <div className={'mx-auto flex max-w-5xl flex-col gap-8'}>
+      {/* 필터 */}
+      <section>filters</section>
+
+      {/* 책 목록*/}
+      <section className="grid grid-cols-4 gap-8">
+        {searchBookList.books?.map((book) => (
+          <BookCard key={`book-card-id-${book.id}`} book={book} />
+        ))}
+      </section>
+    </div>
+  );
 };
 
 export default RebookMain;

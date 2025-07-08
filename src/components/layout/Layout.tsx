@@ -9,7 +9,7 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <div className={twMerge('flex min-h-screen flex-col')}>
+    <div className={twMerge('flex min-h-screen flex-col pt-34')}>
       {/* 상단 네비게이션 */}
       <Header />
       {/* 메인 콘텐츠 영역 */}

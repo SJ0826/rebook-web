@@ -20,27 +20,24 @@ const BookCard = ({ book }: BookCardProps) => {
     <div
       key={book.id}
       onClick={() => router.push(`/book/${book.id}`)}
-      className="relative card bg-base-100 shadow-lg cursor-pointer
-                     hover:scale-105 hover:shadow-xl transition-transform duration-300 ease-in-out"
+      className="relative"
     >
-      <figure className="relative h-48">
+      <figure>
         {book.imageUrls ? (
           <Image
             src={book.imageUrls || '/placeholder.svg'}
             alt={book.title}
             fill
-            className="object-cover rounded-t-lg"
+            className="rounded-t-lg object-cover"
           />
         ) : (
-          <div className={'w-full h-full bg-gray-200'} />
+          <div className={'h-full w-full bg-gray-200'} />
         )}
       </figure>
-      <div className=" card-body">
-        <h2 className="card-title">{book.title}</h2>
-        <p className="text-base-content">{book.author}</p>
-        <p className="text-[1rem] font-bold text-neutral">
-          {book.price.toLocaleString()}원
-        </p>
+      <div>
+        <h2>{book.title}</h2>
+        <p>{book.author}</p>
+        <p>{book.price.toLocaleString()}원</p>
 
         {/* 판매 상태 표시 - 메인 페이지('/')에서는 숨김 */}
         {pathname !== '/' && (
@@ -58,14 +55,14 @@ const BookCard = ({ book }: BookCardProps) => {
         {/*  거래 요청 횟수 */}
         <div
           className={
-            'absolute bottom-6 right-6 flex items-center justify-end gap-2'
+            'absolute right-6 bottom-6 flex items-center justify-end gap-2'
           }
         >
-          <div className={'flex gap-1 items-center justify-center'}>
+          <div className={'flex items-center justify-center gap-1'}>
             <HeartIcon className={'size-4 text-red-500'} />
             <p className="text-sm text-gray-500">{book.favoriteCount ?? 0}</p>
           </div>
-          <div className={'flex gap-1 items-center justify-center'}>
+          <div className={'flex items-center justify-center gap-1'}>
             <ChatBubbleBottomCenterIcon className={'size-4'} />
             <p className="text-sm text-gray-500">{book.orderCount ?? 0}</p>
           </div>
