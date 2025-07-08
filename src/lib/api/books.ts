@@ -10,7 +10,7 @@ import { privateAxiosClient, publicAxiosClient } from '@/lib/api/axios.client';
 const BOOKS = '/books';
 
 // 책 목록 조회(검색)
-export const searchBooksAPI = async (params: {
+export const getSearchBooks = async (params: {
   search?: string;
   status?: string;
   minPrice?: number;
