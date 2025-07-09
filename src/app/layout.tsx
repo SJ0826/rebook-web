@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import Layout from '@/components/layout/Layout';
 import { QueryProviders } from '@/lib/contexts/QueryClientProvider';
 import { ToastProvider } from '@/lib/contexts/ToastContext';
 import './globals.css';
@@ -43,15 +42,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" data-theme={'bumblebee'}>
+    <html lang="en">
       <body
-        className={`${pretendard.variable} font-pretendard flex min-h-screen flex-col`}
+      // className={`${pretendard.variable} font-pretendard flex min-h-screen flex-col`}
       >
         <QueryProviders>
           <ModalProvider>
-            <ToastProvider>
-              <Layout>{children}</Layout>
-            </ToastProvider>
+            <ToastProvider>{children}</ToastProvider>
           </ModalProvider>
         </QueryProviders>
       </body>

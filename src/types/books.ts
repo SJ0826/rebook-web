@@ -44,8 +44,8 @@ export interface Book {
   price: number;
   status: BookStatus;
   imageUrls: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   saleStatus: BookSaleStatus;
   orderCount: number;
   favoriteCount: number;

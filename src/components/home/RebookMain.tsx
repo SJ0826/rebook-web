@@ -61,12 +61,12 @@ const RebookMain = () => {
   if (!searchBookList?.totalPages) return <div>엠티 컴포넌트 기능 개발중</div>;
 
   return (
-    <div className={'mx-auto flex max-w-5xl flex-col gap-8'}>
+    <div className={'mx-auto flex w-full max-w-5xl flex-col gap-8'}>
       {/* 필터 */}
       <section>filters</section>
 
       {/* 책 목록*/}
-      <section className="grid grid-cols-4 gap-8">
+      <section className="grid w-full grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {searchBookList.books?.map((book) => (
           <BookCard key={`book-card-id-${book.id}`} book={book} />
         ))}

@@ -27,7 +27,9 @@ export default async function HomePage() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <RebookMain />
+      <div className={'px-10'}>
+        <RebookMain />
+      </div>
     </HydrationBoundary>
   );
 }
