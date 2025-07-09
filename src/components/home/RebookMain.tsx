@@ -93,7 +93,7 @@ const RebookMain = () => {
       {/* 책 목록*/}
       <section>
         {searchBookList?.totalCount > 0 ? (
-          <div className="grid w-full grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid w-full grid-cols-2 gap-2 md:grid-cols-3 md:gap-8 lg:grid-cols-4">
             {searchBookList.books?.map((book) => (
               <BookCard key={`book-card-id-${book.id}`} book={book} />
             ))}
