@@ -50,17 +50,18 @@ const BookCard = ({ book }: BookCardProps) => {
       {/* 컨텐츠 영역 */}
       <div className="relative space-y-3 p-4">
         {/* 제목 */}
-        <div className={'flex justify-between gap-2'}>
-          <h3 className="line-clamp-2 text-base leading-tight text-gray-700">
-            {book.title}
-          </h3>
+        <h3 className="line-clamp-2 text-base leading-tight text-gray-700">
+          {book.title}
+        </h3>
+
+        <div className={'flex items-center gap-2'}>
+          {/* 가격 */}
+          <div className="text-lg font-bold text-gray-900">
+            {book.price.toLocaleString()}원
+          </div>
+
           {/* 책 상태 뱃지 */}
           <BookStatusBadge status={book.status} />
-        </div>
-
-        {/* 가격 */}
-        <div className="text-lg font-bold text-gray-900">
-          {book.price.toLocaleString()}원
         </div>
 
         {/* 판매 상태 - 메인 페이지가 아닐 때만 표시 */}

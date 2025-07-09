@@ -26,7 +26,7 @@ const BookStatusBadge = ({ status }: BookStatusBadgeProps) => {
 
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium ${getStatusStyle(status)}`}
+      className={`inline-flex min-w-fit items-center rounded-full border px-2.5 py-0.5 text-xs font-medium ${getStatusStyle(status)}`}
     >
       {convertBookStatus(status)}
     </span>

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { getSearchBooks } from '@/lib/api/books';
 import { BookSearchSort } from '@/types/books';
 import BookCard from '@/components/book/BookCard';
@@ -15,10 +15,11 @@ const PAGE_SIZE = 8;
 
 const RebookMain = () => {
   const { query } = useSearchStore();
+  const { filters, updateFilter, resetFilters, setFilters } = useBookFilters();
+
   const [sortOption, setSortOption] = useState<BookSearchSort>(
     BookSearchSort.NEWEST
   );
-  const { filters, updateFilter, resetFilters, setFilters } = useBookFilters();
   const [currentPage, setCurrentPage] = useState(1);
 
   const {
@@ -28,8 +29,11 @@ const RebookMain = () => {
   } = useQuery({
     queryKey: [
       'searchBookList',
-      filters.sortOption,
+      query,
+      sortOption,
       filters.statusFilter,
+      filters.minPrice,
+      filters.maxPrice,
       currentPage,
     ],
     queryFn: async () => {
@@ -43,33 +47,60 @@ const RebookMain = () => {
         limit: PAGE_SIZE,
       });
     },
+    placeholderData: keepPreviousData,
   });
+
+  // 페이지 변경 시 첫 페이지로 리셋
+  const handleFiltersChange = (newFilters: typeof filters) => {
+    setFilters(newFilters);
+    setCurrentPage(1);
+  };
+
+  const handleSortChange = (sort: BookSearchSort) => {
+    setSortOption(sort);
+    setCurrentPage(1);
+  };
 
   if (isPendingBookList) return <div>로딩중 ...</div>;
   if (isErrorBookList) return <div>에러... 컴포넌트.. 기능 개발중..</div>;
-  if (!searchBookList?.totalPages) return <div>엠티 컴포넌트 기능 개발중</div>;
 
   return (
-    <div className={'mx-auto flex w-full max-w-5xl flex-col gap-8'}>
+    <div className={'mx-auto flex w-full max-w-5xl flex-col gap-2'}>
       {/* 필터 */}
-      <BookFilters filters={filters} onFiltersChange={setFilters} />
+      <BookFilters filters={filters} onFiltersChange={handleFiltersChange} />
 
-      {/* 정렬 */}
+      {/* 검색 결과 및 정렬 */}
+      <div className="mt-3 flex items-center justify-between">
+        {/* 검색 결과 */}
+        <div className="flex items-center gap-3">
+          <div className="rounded-lg bg-gray-50 px-3 py-2">
+            <span className="text-sm text-gray-600">검색 결과</span>
+            <span className="text-primary-600 ml-2 text-lg font-semibold">
+              {searchBookList?.totalCount || 0}
+            </span>
+            <span className="text-sm text-gray-600">권</span>
+          </div>
 
-      {/* 정렬 필터 */}
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-gray-900">정렬</h3>
-        <SortControl
-          sortOption={filters.sortOption}
-          onSortChange={(sort: BookSearchSort) => setSortOption(sort)}
-        />
+          {query && (
+            <span className="text-sm text-gray-500">{`'${query}' 검색`}</span>
+          )}
+        </div>
+
+        {/* 정렬 필터 */}
+        <SortControl sortOption={sortOption} onSortChange={handleSortChange} />
       </div>
 
       {/* 책 목록*/}
-      <section className="grid w-full grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {searchBookList.books?.map((book) => (
-          <BookCard key={`book-card-id-${book.id}`} book={book} />
-        ))}
+      <section>
+        {searchBookList?.totalCount > 0 ? (
+          <div className="grid w-full grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {searchBookList.books?.map((book) => (
+              <BookCard key={`book-card-id-${book.id}`} book={book} />
+            ))}
+          </div>
+        ) : (
+          <div>엠티 컴포넌트 기능 개발중</div>
+        )}
       </section>
 
       {/* 페이지네이션 */}

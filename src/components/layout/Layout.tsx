@@ -21,7 +21,12 @@ const Layout = ({ children }: LayoutProps) => {
       {/* 상단 네비게이션 */}
       <Header />
       {/* 메인 콘텐츠 영역 */}
-      <div className={twMerge('flex flex-1 flex-col', isGray && 'bg-gray-50')}>
+      <div
+        className={twMerge(
+          'flex flex-1 flex-col pb-60',
+          isGray && 'bg-gray-50'
+        )}
+      >
         {children}
       </div>
     </main>

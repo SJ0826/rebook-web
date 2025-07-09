@@ -12,14 +12,30 @@ const BOOKS = '/books';
 // 책 목록 조회(검색)
 export const getSearchBooks = async (params: {
   search?: string;
-  status?: string;
+  status?: string[];
   minPrice?: number;
   maxPrice?: number;
   page?: number;
   limit?: number;
   sort?: BookSearchSort;
-}): Promise<{ books: Book[]; totalPages: number }> => {
-  const response = await publicAxiosClient.get(`${BOOKS}/search`, { params });
+}): Promise<{ books: Book[]; totalPages: number; totalCount: number }> => {
+  const { status, ...otherParams } = params;
+
+  const queryParams = new URLSearchParams();
+
+  Object.entries(otherParams).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      queryParams.append(key, value.toString());
+    }
+  });
+
+  if (status && status.length > 0) {
+    status.forEach((value) => queryParams.append('status', value));
+  }
+
+  const response = await publicAxiosClient.get(
+    `${BOOKS}/search?${queryParams.toString()}`
+  );
   return response.data.data;
 };
 

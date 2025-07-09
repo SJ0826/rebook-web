@@ -11,6 +11,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   helperText?: string;
   required?: boolean;
   clearable?: boolean;
+  onClear?: () => void;
   className?: string;
 }
 
@@ -22,6 +23,7 @@ const CustomInput = forwardRef<HTMLInputElement, InputProps>(
       helperText,
       required,
       clearable = true,
+      onClear,
       className,
       value,
       onChange,
@@ -47,6 +49,8 @@ const CustomInput = forwardRef<HTMLInputElement, InputProps>(
 
     // 클리어 버튼 클릭
     const handleClear = () => {
+      if (onClear) onClear();
+
       setInternalValue('');
       inputRef.current?.focus();
       // 부모 onChange 호출 (빈 값 전달)

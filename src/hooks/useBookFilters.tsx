@@ -4,7 +4,7 @@ import { FilterState } from '@/components/home/BookFilters';
 
 const useBookFilters = () => {
   const [filters, setFilters] = useState<FilterState>({
-    searchTerm: '',
+    searchTerm: '', // 실제로는 사용하지 않음 (헤더에서 관리)
     minPrice: undefined,
     maxPrice: undefined,
     statusFilter: undefined,

@@ -17,7 +17,7 @@ const SortControl = ({
   return (
     <div className="flex items-center p-1">
       {sortOptions.map((option, index) => (
-        <>
+        <div key={option.value + index} className={'flex items-center'}>
           <button
             key={option.value}
             onClick={() => onSortChange(option.value)}
@@ -32,7 +32,7 @@ const SortControl = ({
           {index < sortOptions.length - 1 && (
             <div className="mx-1 h-[12px] w-[1px] bg-gray-300" />
           )}
-        </>
+        </div>
       ))}
     </div>
   );
