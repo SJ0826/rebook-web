@@ -74,7 +74,7 @@ const CustomInput = forwardRef<HTMLInputElement, InputProps>(
     }, [value]);
 
     return (
-      <Field>
+      <Field className={className}>
         <div className="flex w-full flex-wrap items-start">
           {label && (
             <Label

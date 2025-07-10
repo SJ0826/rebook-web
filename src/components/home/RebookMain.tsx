@@ -8,14 +8,16 @@ import BookCard from '@/components/book/BookCard';
 import Pagination from '@/components/ui/Pagination';
 import BookFilters from '@/components/home/BookFilters';
 import useBookFilters from '@/hooks/useBookFilters';
-import { useSearchStore } from '@/lib/store/search';
 import SortControl from '@/components/home/SortControl';
+import { useSearchParams } from 'next/navigation';
 
 const PAGE_SIZE = 8;
 
 const RebookMain = () => {
-  const { query } = useSearchStore();
-  const { filters, updateFilter, resetFilters, setFilters } = useBookFilters();
+  // const { query } = useSearchStore();
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get('search') ?? undefined;
+  const { filters, setFilters } = useBookFilters();
 
   const [sortOption, setSortOption] = useState<BookSearchSort>(
     BookSearchSort.NEWEST
@@ -29,7 +31,7 @@ const RebookMain = () => {
   } = useQuery({
     queryKey: [
       'searchBookList',
-      query,
+      searchQuery,
       sortOption,
       filters.statusFilter,
       filters.minPrice,
@@ -38,7 +40,7 @@ const RebookMain = () => {
     ],
     queryFn: async () => {
       return await getSearchBooks({
-        search: query,
+        search: searchQuery,
         status: filters.statusFilter,
         minPrice: filters.minPrice,
         maxPrice: filters.maxPrice,
@@ -81,8 +83,8 @@ const RebookMain = () => {
             <span className="text-sm text-gray-600">권</span>
           </div>
 
-          {query && (
-            <span className="text-sm text-gray-500">{`'${query}' 검색`}</span>
+          {searchQuery && (
+            <span className="text-sm text-gray-500">{`'${searchQuery}' 검색`}</span>
           )}
         </div>
 

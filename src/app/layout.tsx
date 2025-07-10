@@ -44,7 +44,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-      // className={`${pretendard.variable} font-pretendard flex min-h-screen flex-col`}
+        className={`${pretendard.variable} font-pretendard flex min-h-screen flex-col`}
       >
         <QueryProviders>
           <ModalProvider>
