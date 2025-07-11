@@ -5,6 +5,7 @@ import { twMerge } from 'tailwind-merge';
 import { usePathname } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import { ROUTES } from '@/lib/constants';
+import Footer from '@/components/layout/Footer';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -29,6 +30,8 @@ const Layout = ({ children }: LayoutProps) => {
       >
         {children}
       </div>
+      {/*  푸터 */}
+      <Footer />
     </main>
   );
 };

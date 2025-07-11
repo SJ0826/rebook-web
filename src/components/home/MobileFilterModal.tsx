@@ -54,7 +54,7 @@ const MobileFilterModal = ({
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="fixed right-0 bottom-0 left-0 z-50 max-h-[80vh] overflow-hidden rounded-t-2xl bg-white"
+            className="fixed right-0 bottom-[85px] left-0 z-50 max-h-[80vh] overflow-hidden rounded-t-2xl bg-white"
           >
             {/* 헤더 */}
             <div className="sticky top-0 rounded-t-2xl border-b border-gray-200 bg-white px-4 py-4">
