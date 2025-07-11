@@ -21,7 +21,7 @@ const SortControl = ({
           <button
             key={option.value}
             onClick={() => onSortChange(option.value)}
-            className={`rounded-md px-2 py-2 text-[13px] font-medium transition-all duration-200 ${
+            className={`rounded-md px-1 py-2 text-xs font-medium transition-all duration-200 lg:px-2 lg:text-[13px] ${
               sortOption === option.value
                 ? 'bg-white text-gray-900'
                 : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'

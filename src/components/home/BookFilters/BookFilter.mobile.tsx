@@ -1,22 +1,12 @@
-import { BookSearchSort } from '@/types/books';
 import { Button } from '@/components/ui';
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
-import MobileFilterModal from '@/components/book/MobileFilterModal';
 import { useState } from 'react';
 import { statusOptions } from '@/lib/data/options';
-
-export interface FilterState {
-  searchTerm: string;
-  minPrice?: number;
-  maxPrice?: number;
-  statusFilter?: string[];
-  sortOption: BookSearchSort;
-}
-
-interface BookFiltersProps {
-  filters: FilterState;
-  onFiltersChange: (filters: FilterState) => void;
-}
+import {
+  BookFiltersProps,
+  FilterState,
+} from '@/components/home/BookFilters/types';
+import MobileFilterModal from '@/components/home/MobileFilterModal';
 
 const BookFilterMobile = ({ filters, onFiltersChange }: BookFiltersProps) => {
   const [isOpenFilterModal, setIsOpenFilterModal] = useState(false);
@@ -71,14 +61,38 @@ const BookFilterMobile = ({ filters, onFiltersChange }: BookFiltersProps) => {
     (filters.statusFilter && filters.statusFilter.length > 0);
   return (
     <>
-      {' '}
-      <div className={'lg:hidden'}>
+      <div className={'block lg:hidden'}>
+        {/* 버튼 */}
+        <div className={'flex items-center justify-between gap-4'}>
+          <Button
+            onClick={() => setIsOpenFilterModal((prev) => !prev)}
+            size={'sm'}
+            variant={'line-none'}
+            color={'gray'}
+            className={'flex w-fit items-center gap-2 text-xs'}
+          >
+            <AdjustmentsHorizontalIcon width={14} height={14} />
+          </Button>
+
+          {hasActiveFilters && (
+            <Button
+              variant="line-none"
+              color="gray"
+              size="sm"
+              onClick={handleReset}
+              className="text-xs text-gray-500 hover:text-gray-700 lg:text-sm"
+            >
+              초기화
+            </Button>
+          )}
+        </div>
+
         {/* 활성 필터 표시 */}
         {hasActiveFilters && (
-          <div className="border-t border-gray-200 pt-4">
-            <div className="relative flex flex-wrap gap-2">
+          <div className="pt-4">
+            <div className="scrollbar-hide flex w-screen gap-2 overflow-x-auto pb-2">
               {filters.minPrice && (
-                <span className="bg-primary-100 text-primary-700 inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs">
+                <span className="bg-primary-100 text-primary-700 flex items-center gap-1 rounded-full px-2 py-1 text-xs whitespace-nowrap">
                   최소: {filters.minPrice}원
                   <button
                     onClick={() => {
@@ -92,7 +106,7 @@ const BookFilterMobile = ({ filters, onFiltersChange }: BookFiltersProps) => {
                 </span>
               )}
               {filters.maxPrice && (
-                <span className="bg-primary-100 text-primary-700 inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs">
+                <span className="bg-primary-100 text-primary-700 inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs whitespace-nowrap">
                   최대: {filters.maxPrice}원
                   <button
                     onClick={() => {
@@ -112,7 +126,7 @@ const BookFilterMobile = ({ filters, onFiltersChange }: BookFiltersProps) => {
                 return (
                   <span
                     key={status}
-                    className="bg-primary-100 text-primary-700 inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs"
+                    className="bg-primary-100 text-primary-700 inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs whitespace-nowrap"
                   >
                     {option?.label}
                     <button
@@ -124,29 +138,10 @@ const BookFilterMobile = ({ filters, onFiltersChange }: BookFiltersProps) => {
                   </span>
                 );
               })}
-              {hasActiveFilters && (
-                <Button
-                  variant="line-none"
-                  color="gray"
-                  size="sm"
-                  onClick={handleReset}
-                  className="absolute right-0 text-gray-500 hover:text-gray-700"
-                >
-                  초기화
-                </Button>
-              )}
             </div>
+            <div className="w-4 flex-shrink-0"></div>
           </div>
         )}
-        <Button
-          onClick={() => setIsOpenFilterModal((prev) => !prev)}
-          size={'sm'}
-          variant={'line-none'}
-          color={'gray'}
-          className={'flex w-fit items-center gap-2 text-xs'}
-        >
-          <AdjustmentsHorizontalIcon width={14} height={14} />
-        </Button>
       </div>
       {isOpenFilterModal && (
         <MobileFilterModal

@@ -6,15 +6,15 @@ import { getSearchBooks } from '@/lib/api/books';
 import { BookSearchSort } from '@/types/books';
 import BookCard from '@/components/book/BookCard';
 import Pagination from '@/components/ui/Pagination';
-import BookFilters from '@/components/home/BookFilters';
+
 import useBookFilters from '@/hooks/useBookFilters';
 import SortControl from '@/components/home/SortControl';
 import { useSearchParams } from 'next/navigation';
+import BookFilters from '@/components/home/BookFilters';
 
 const PAGE_SIZE = 8;
 
 const RebookMain = () => {
-  // const { query } = useSearchStore();
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('search') ?? undefined;
   const { filters, setFilters } = useBookFilters();
@@ -69,22 +69,23 @@ const RebookMain = () => {
   return (
     <div className={'mx-auto flex w-full max-w-5xl flex-col gap-2'}>
       {/* 필터 */}
+
       <BookFilters filters={filters} onFiltersChange={handleFiltersChange} />
 
       {/* 검색 결과 및 정렬 */}
-      <div className="mt-3 flex items-center justify-between">
+      <div className="mt-3 flex-wrap items-center justify-between text-xs lg:text-base">
         {/* 검색 결과 */}
         <div className="flex items-center gap-3">
-          <div className="rounded-lg bg-gray-50 px-3 py-2">
-            <span className="text-sm text-gray-600">검색 결과</span>
-            <span className="text-primary-600 ml-2 text-lg font-semibold">
+          <div className="rounded-lg px-3 py-2">
+            <span className="text-gray-600 lg:text-sm">검색 결과</span>
+            <span className="text-primary-600 ml-2 font-semibold lg:text-lg">
               {searchBookList?.totalCount || 0}
             </span>
-            <span className="text-sm text-gray-600">권</span>
+            <span className="text-gray-600 lg:text-sm">권</span>
           </div>
 
           {searchQuery && (
-            <span className="text-sm text-gray-500">{`'${searchQuery}' 검색`}</span>
+            <span className="text-gray-500 lg:text-sm">{`'${searchQuery}' 검색`}</span>
           )}
         </div>
 

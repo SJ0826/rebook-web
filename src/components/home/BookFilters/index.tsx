@@ -1,19 +1,6 @@
-import { BookSearchSort } from '@/types/books';
 import BookFilterDesktop from '@/components/home/BookFilters/BookFilter.desktop';
 import BookFilterMobile from '@/components/home/BookFilters/BookFilter.mobile';
-
-export interface FilterState {
-  searchTerm: string;
-  minPrice?: number;
-  maxPrice?: number;
-  statusFilter?: string[];
-  sortOption: BookSearchSort;
-}
-
-interface BookFiltersProps {
-  filters: FilterState;
-  onFiltersChange: (filters: FilterState) => void;
-}
+import { BookFiltersProps } from '@/components/home/BookFilters/types';
 
 const BookFilters = ({ filters, onFiltersChange }: BookFiltersProps) => {
   const handleReset = () => {
@@ -36,7 +23,11 @@ const BookFilters = ({ filters, onFiltersChange }: BookFiltersProps) => {
       />
 
       {/*  모바일 필터 */}
-      <BookFilterMobile filters={filters} onFiltersChange={onFiltersChange} />
+      <BookFilterMobile
+        filters={filters}
+        onFiltersChange={onFiltersChange}
+        onResetFilters={handleReset}
+      />
     </>
   );
 };

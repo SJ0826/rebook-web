@@ -11,5 +11,5 @@ export interface FilterState {
 export interface BookFiltersProps {
   filters: FilterState;
   onFiltersChange: (filters: FilterState) => void;
-  onResetFilters: () => void;
+  onResetFilters?: () => void;
 }

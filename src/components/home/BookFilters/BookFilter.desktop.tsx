@@ -6,9 +6,11 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button, Checkbox, Input } from '@/components/ui';
 import { useState } from 'react';
-import { BookFiltersProps } from '@/components/home/BookFilters/types';
+import {
+  BookFiltersProps,
+  FilterState,
+} from '@/components/home/BookFilters/types';
 import { statusOptions } from '@/lib/data/options';
-import { FilterState } from '@/components/home/BookFilters/index';
 
 const BookFilterDesktop = ({
   filters,
@@ -66,7 +68,7 @@ const BookFilterDesktop = ({
   };
 
   const handleReset = () => {
-    onResetFilters();
+    if (onResetFilters) onResetFilters();
     setTempMinPrice('');
     setTempMaxPrice('');
   };

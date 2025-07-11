@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { FilterState } from '@/components/home/BookFilters';
 import { Button, Checkbox, Input } from '@/components/ui';
+import { FilterState } from '@/components/home/BookFilters/types';
 
 const MobileFilterModal = ({
   isOpen,
@@ -54,7 +54,7 @@ const MobileFilterModal = ({
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="fixed right-0 bottom-0 left-0 z-50 max-h-[80vh] overflow-y-auto rounded-t-2xl bg-white"
+            className="fixed right-0 bottom-0 left-0 z-50 max-h-[80vh] overflow-hidden rounded-t-2xl bg-white"
           >
             {/* 헤더 */}
             <div className="sticky top-0 rounded-t-2xl border-b border-gray-200 bg-white px-4 py-4">
