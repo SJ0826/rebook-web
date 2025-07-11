@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import BookGrid from '@/components/home/BookGrid';
 import {
   Book,
   BookSaleStatus,
@@ -15,6 +14,7 @@ import {
   sortOptions,
   statusOptions,
 } from '@/lib/data/options';
+import BookGrid from '@/components/bookShelf/BookGrid';
 
 interface BookListSectionProps {
   isActive: boolean;
@@ -90,8 +90,8 @@ const BookListSection = ({
   return (
     <div className="flex flex-col gap-6">
       {/* 필터 */}
-      <div className="flex flex-col md:flex-row justify-start items-start md:items-center gap-4">
-        <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex flex-col items-start justify-start gap-4 md:flex-row md:items-center">
+        <div className="flex flex-col gap-4 md:flex-row">
           <select
             className="select select-bordered"
             value={priceFilter}
@@ -149,7 +149,7 @@ const BookListSection = ({
       <EmptyState isShow={data?.totalCount === 0} />
 
       {/* 페이지네이션 */}
-      <div className="flex justify-center mt-10">
+      <div className="mt-10 flex justify-center">
         <div className="join">
           <button
             className="join-item btn"

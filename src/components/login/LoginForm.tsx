@@ -15,14 +15,14 @@ interface FormData {
 }
 
 const LoginForm = () => {
-  const [formData, setFormData] = useState<FormData>({
-    email: '',
-    password: '',
-  });
   const { mutate: loginMutate } = useLoginMutation();
   const { showToast } = useToast();
   const router = useRouter();
 
+  const [formData, setFormData] = useState<FormData>({
+    email: '',
+    password: '',
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -57,16 +57,16 @@ const LoginForm = () => {
 
   return (
     <div className={'flex items-center justify-center'}>
-      <div className={'flex max-w-100 flex-col pt-30 md:pt-50'}>
+      <div className={'flex max-w-100 flex-col px-5 pt-30 md:pt-50'}>
         <h1
           className={
-            'text-secondary-700 text-center text-3xl font-bold md:text-4xl'
+            'text-secondary-700 flex flex-wrap items-end gap-1 text-center text-3xl font-bold md:text-4xl'
           }
         >
-          <strong>Rebook:</strong>{' '}
+          <strong>Rebook:</strong>
           <span className={'text-xl md:text-2xl'}>다시 읽고 다시 나누다</span>
         </h1>
-        <div className={'mt-2 mb-8 w-100 border-t-[1px] border-dashed'} />
+        <div className={'mt-2 mb-8 border-t-[1px] border-dashed md:w-100'} />
         <form onSubmit={handleSubmit} className={'flex flex-col gap-6'}>
           <Input
             label={'이메일'}
@@ -94,6 +94,7 @@ const LoginForm = () => {
               formData.password.length === 0 ||
               isSubmitting
             }
+            size={'lg'}
             className={'mt-6'}
           >
             {isSubmitting ? '로그인중...' : '로그인'}

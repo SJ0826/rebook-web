@@ -23,7 +23,7 @@ export const verifyEmailAPI = async (
 
 // 이메일 인증 메일 재전송
 export const resendVerificationEmailAPI = async (body: { email: string }) => {
-  const response = await publicAxiosClient.post(`${AUTH}/email/resend`, body);
+  const response = await privateAxiosClient.post(`${AUTH}/email/resend`, body);
   return response.data.data;
 };
 
