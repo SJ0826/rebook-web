@@ -84,7 +84,7 @@ export default function DesktopHeader() {
               icon={<BookOpenIcon />}
             />
             <HeaderButton
-              title={'리북 톡'}
+              title={'리북톡'}
               path={ROUTES.BOOK_REGISTER}
               icon={<ChatBubbleOvalLeftIcon />}
             />

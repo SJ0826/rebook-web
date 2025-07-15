@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useEditBookForm } from '@/app/book/edit/[id]/useEditBookForm';
+import { useEditBookForm } from '@/app/(main)/book/edit/[id]/useEditBookForm';
 
 type BookFormProps = {
   id: number;
@@ -23,13 +23,13 @@ export const BookForm = ({ id }: BookFormProps) => {
       {/*책 정보 등록*/}
       <div className={'flex flex-col gap-10'}>
         <div className={'border-b border-b-1 border-gray-200 pb-3'}>
-          <h2 className={'text-lg md:text-2xl font-semibold'}>
+          <h2 className={'text-lg font-semibold md:text-2xl'}>
             ✏️ 책의 정보를 입력해주세요
           </h2>
         </div>
-        <div className={'flex flex-col md:flex-row gap-6'}>
+        <div className={'flex flex-col gap-6 md:flex-row'}>
           {/* 제목 */}
-          <label className="form-control w-full  items-start">
+          <label className="form-control w-full items-start">
             <span className="label-text min-w-[120px]">책 제목</span>
             <input
               type="text"
@@ -41,7 +41,7 @@ export const BookForm = ({ id }: BookFormProps) => {
             )}
           </label>
           {/* 저자 */}
-          <label className="form-control w-full ">
+          <label className="form-control w-full">
             <span className="label-text min-w-[120px]">저자</span>
             <input
               type="text"
@@ -53,9 +53,9 @@ export const BookForm = ({ id }: BookFormProps) => {
             )}
           </label>
         </div>
-        <div className={'flex flex-col md:flex-row gap-6'}>
+        <div className={'flex flex-col gap-6 md:flex-row'}>
           {/* 출판사 */}
-          <label className="form-control w-full ">
+          <label className="form-control w-full">
             <span className="label-text min-w-[120px]">출판사</span>
             <input
               type="text"
@@ -83,7 +83,7 @@ export const BookForm = ({ id }: BookFormProps) => {
             )}
           </label>
         </div>
-        <div className={'flex flex-col md:flex-row gap-6'}>
+        <div className={'flex flex-col gap-6 md:flex-row'}>
           {/* 책 상태 */}
           <label className="form-control w-full">
             <span className="label-text min-w-[120px]">책 상태</span>
@@ -103,14 +103,14 @@ export const BookForm = ({ id }: BookFormProps) => {
       {/* 책 설명 등록 */}
       <div className={'flex flex-col gap-10'}>
         <div className={'border-b border-b-1 border-gray-200 pb-3'}>
-          <h2 className={'text-lg md:text-2xl font-semibold'}>
+          <h2 className={'text-lg font-semibold md:text-2xl'}>
             💬 책에 대해 설명해주세요.
           </h2>
         </div>
-        <label className="form-control w-full ">
-          <div className={'w-full flex flex-col gap-1'}>
+        <label className="form-control w-full">
+          <div className={'flex w-full flex-col gap-1'}>
             <textarea
-              className="textarea textarea-bordered w-full min-h-[200px]"
+              className="textarea textarea-bordered min-h-[200px] w-full"
               placeholder={
                 '설명을 자세하게 적을수록 거래 성공 확률이 높아져요\n' +
                 '- 책은 어떤 이야기를 가지고 있나요?\n' +
@@ -125,13 +125,13 @@ export const BookForm = ({ id }: BookFormProps) => {
       </div>
       <div className={'flex flex-col gap-10'}>
         <div className={'border-b border-b-1 border-gray-200 pb-3'}>
-          <h2 className={'text-lg md:text-2xl font-semibold'}>
+          <h2 className={'text-lg font-semibold md:text-2xl'}>
             🤳 책의 사진을 올려주세요
           </h2>
         </div>
         {/* 이미지 업로드 */}
-        <label className=" w-full">
-          <div className={'w-full flex flex-col gap-1'}>
+        <label className="w-full">
+          <div className={'flex w-full flex-col gap-1'}>
             <input
               type="file"
               multiple
@@ -145,18 +145,18 @@ export const BookForm = ({ id }: BookFormProps) => {
                 {imageFiles.map((file, index) => (
                   <div
                     key={index}
-                    className="relative w-24 h-24 rounded-lg border p-1 flex items-center justify-center bg-gray-100 shadow-md"
+                    className="relative flex h-24 w-24 items-center justify-center rounded-lg border bg-gray-100 p-1 shadow-md"
                   >
                     <Image
                       width={200}
                       height={200}
                       src={file.imageUrl}
                       alt="책 이미지"
-                      className="w-full h-full object-cover rounded-md pointer-events-none" // 👈 추가
+                      className="pointer-events-none h-full w-full rounded-md object-cover" // 👈 추가
                     />
                     <button
                       type="button"
-                      className="absolute top-0 right-0 bg-red-500 text-white text-xs px-1 py-0.5 rounded-full"
+                      className="absolute top-0 right-0 rounded-full bg-red-500 px-1 py-0.5 text-xs text-white"
                       onClick={() => removeImage(index)}
                     >
                       ✕

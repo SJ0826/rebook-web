@@ -12,17 +12,34 @@ export default async function HomePage() {
   const queryClient = new QueryClient();
 
   const defaultParams = {
-    searchTerm: '',
-    priceFilter: '',
-    statusFilter: '',
+    searchQuery: undefined,
+    minPrice: undefined,
+    maxPrice: undefined,
+    statusFilter: undefined,
     sortOption: BookSearchSort.NEWEST,
     currentPage: 1,
-    limit: 8,
   };
 
   await queryClient.prefetchQuery({
-    queryKey: ['searchBooks', ...Object.values(defaultParams)],
-    queryFn: () => getSearchBooks(defaultParams),
+    queryKey: [
+      'searchBooks',
+      defaultParams.searchQuery,
+      defaultParams.sortOption,
+      defaultParams.statusFilter,
+      defaultParams.minPrice,
+      defaultParams.maxPrice,
+      defaultParams.currentPage,
+    ],
+    queryFn: () =>
+      getSearchBooks({
+        searchQuery: defaultParams.searchQuery,
+        sort: defaultParams.sortOption,
+        status: defaultParams.statusFilter,
+        minPrice: defaultParams.minPrice,
+        maxPrice: defaultParams.maxPrice,
+        page: defaultParams.currentPage,
+        limit: 8,
+      }),
   });
 
   return (

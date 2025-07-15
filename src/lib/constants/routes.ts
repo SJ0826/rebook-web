@@ -1,0 +1,15 @@
+export const ROUTES = {
+  HOME: '/',
+  SEARCH: '/search',
+  BOOK: '/book',
+  SIGNUP: '/signup',
+  LOGIN: '/login',
+  AUTH_VERIFY_EMAIL: '/auth/verify-email',
+  AUTH_SEND_EMAIL: '/auth/send-email',
+  BOOK_REGISTER: '/book/register',
+  BOOK_EDIT: '/book/edit',
+  LIBRARY: '/my-bookshelf',
+  FAVORITES: '/favorites',
+  PROFILE: '/profile',
+  CHAT: '/chat',
+};

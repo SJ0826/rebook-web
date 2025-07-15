@@ -30,7 +30,7 @@ const RebookMain = () => {
     isError: isErrorBookList,
   } = useQuery({
     queryKey: [
-      'searchBookList',
+      'searchBooks',
       searchQuery,
       sortOption,
       filters.statusFilter,
@@ -40,7 +40,7 @@ const RebookMain = () => {
     ],
     queryFn: async () => {
       return await getSearchBooks({
-        search: searchQuery,
+        searchQuery: searchQuery,
         status: filters.statusFilter,
         minPrice: filters.minPrice,
         maxPrice: filters.maxPrice,
@@ -50,6 +50,7 @@ const RebookMain = () => {
       });
     },
     placeholderData: keepPreviousData,
+    staleTime: 10 * 60 * 1000,
   });
 
   // 페이지 변경 시 첫 페이지로 리셋

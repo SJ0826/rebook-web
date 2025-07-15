@@ -11,7 +11,7 @@ interface CommonPageLayoutProps {
  */
 const CommonPageLayout = ({ children }: CommonPageLayoutProps) => {
   return (
-    <div className={'mx-auto flex min-h-screen max-w-7xl px-10'}>
+    <div className={'mx-auto flex min-h-screen w-full max-w-5xl'}>
       {children}
     </div>
   );
