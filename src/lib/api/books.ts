@@ -11,7 +11,7 @@ const BOOKS = '/books';
 
 // 책 목록 조회(검색)
 export const getSearchBooks = async (params: {
-  search?: string;
+  searchQuery?: string;
   status?: string[];
   minPrice?: number;
   maxPrice?: number;

@@ -2,8 +2,17 @@
 
 import React from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { twMerge } from 'tailwind-merge';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+import ImageCarousel from '@/components/ui/ImageCarousel';
+import OrderModal from '@/components/book/OrderModal';
+import BookStatusBadge from '@/components/book/BookStatusBadge';
+import CustomRadioGroup from '@/components/ui/CustomRadioGroup';
+import { Button } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
+import { useModalStack } from '@/hooks/useModalStack';
+import { useBreakpoint } from '@/hooks/useMediaQuery';
 import { useMyProfileQuery } from '@/hooks/mutations/useAuthMutation';
 import {
   deleteBookAPI,
@@ -12,6 +21,8 @@ import {
 } from '@/lib/api/books';
 import { triggerToast, useToast } from '@/lib/contexts/ToastContext';
 import { ROUTES } from '@/lib/constants';
+import { createOrderAPI } from '@/lib/api/orders';
+import { getTimeAgo } from '@/lib/utils/time';
 import { createFavoriteAPI, deleteFavoriteAPI } from '@/lib/api/favorite';
 import { BookSaleStatus } from '@/types/books';
 import {
@@ -23,26 +34,17 @@ import {
   PencilIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
-import { createOrderAPI } from '@/lib/api/orders';
-import { AxiosError } from 'axios';
-import ImageCarousel from '@/components/ui/ImageCarousel';
-import { getTimeAgo } from '@/lib/utils/time';
-import { Button } from '@/components/ui';
-import { useModalStack } from '@/hooks/useModalStack';
-import BookStatusBadge from '@/components/book/BookStatusBadge';
-import CustomRadioGroup from '@/components/ui/CustomRadioGroup';
-import { useBreakpoint } from '@/hooks/useMediaQuery';
-import OrderModal from '@/components/book/OrderModal';
-import { twMerge } from 'tailwind-merge';
 
 export default function BookDetail() {
   const { id } = useParams();
+
   const router = useRouter();
   const { isLoggedIn } = useAuth();
   const { push, clear } = useModalStack();
   const { showToast } = useToast();
   const { data: myProfile, isLoading: isMyProfileLoading } =
     useMyProfileQuery();
+
   const isMobile = useBreakpoint('md');
   const queryClient = useQueryClient();
 
@@ -52,9 +54,10 @@ export default function BookDetail() {
     isError,
     refetch: refetchBook,
   } = useQuery({
-    queryKey: ['bookDetail', id],
+    queryKey: ['bookDetail', Number(id)],
     queryFn: async () => await getBookDetailAPI(Number(id)),
     enabled: !!id,
+    staleTime: 10 * 60 * 1000,
   });
 
   /** 책 삭제 뮤테이션 */
@@ -62,7 +65,7 @@ export default function BookDetail() {
     mutationFn: () => deleteBookAPI(Number(id)),
     onSuccess: () => {
       triggerToast('책이 성공적으로 삭제되었습니다.', 'success');
-      queryClient.invalidateQueries({ queryKey: ['books'] });
+      queryClient.invalidateQueries({ queryKey: ['searchBooks'] });
       router.push('/');
     },
     onError: () => {
@@ -266,12 +269,12 @@ export default function BookDetail() {
 
             <div className="lg:block">
               {!isOwner ? (
-                <div className="flex gap-3">
+                <div className="flex flex-wrap gap-3">
                   <Button
                     size={isMobile ? 'md' : 'lg'}
                     variant={'line-sub'}
                     onClick={handleFavorite}
-                    className={`flex flex-1 items-center gap-2 ${
+                    className={`flex min-w-[180px] flex-1 items-center gap-2 ${
                       book.isFavorite
                         ? 'border-red-500 bg-red-50 text-red-600 hover:bg-red-50'
                         : 'border-gray-300 text-gray-700 hover:border-red-300 hover:bg-red-50 hover:text-red-500'
@@ -283,11 +286,11 @@ export default function BookDetail() {
                   <Button
                     size={isMobile ? 'md' : 'lg'}
                     onClick={handleOrderButton}
-                    className="flex flex-1 items-center justify-center gap-2"
+                    className="flex min-w-[180px] flex-1 items-center justify-center gap-2"
                   >
                     <ChatBubbleLeftIcon className="h-5 w-5" />
                     {book.isOrderRequested
-                      ? '진행 중인 거래 보기'
+                      ? '진행중인 거래 보기'
                       : '거래 제안하기'}
                   </Button>
                 </div>
