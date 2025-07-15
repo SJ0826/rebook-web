@@ -14,11 +14,9 @@ import { triggerToast, useToast } from '@/lib/contexts/ToastContext';
 import { ROUTES } from '@/lib/constants';
 import { createFavoriteAPI, deleteFavoriteAPI } from '@/lib/api/favorite';
 import { BookSaleStatus } from '@/types/books';
+import { HeartIcon as HeartIconSolid } from '@heroicons/react/16/solid';
 import {
-  HeartIcon,
-  HeartIcon as HeartIconSolid,
-} from '@heroicons/react/16/solid';
-import {
+  BookOpenIcon,
   ChatBubbleLeftIcon,
   ChatBubbleOvalLeftIcon,
   ClockIcon,
@@ -175,19 +173,19 @@ export default function BookDetail() {
 
   return (
     <div className="min-h-screen w-full">
-      <div className="flex flex-col gap-6 rounded-lg bg-white p-6 lg:flex-row lg:items-start lg:gap-8">
+      <div className="flex flex-col gap-6 rounded-lg bg-white p-6 lg:flex-row lg:items-start lg:items-stretch lg:gap-8">
         {/* 이미지 섹션 */}
         <div className="lg:w-[370px] lg:flex-shrink-0">
           <ImageCarousel images={book?.bookImages || []} title={book.title} />
         </div>
 
         {/* 책 정보 섹션 */}
-        <div className="flex flex-1 flex-col lg:h-[500px] lg:justify-between">
+        <div className="flex flex-1 flex-col lg:justify-between">
           {/* 상단 정보 그룹 */}
-          <div className="space-y-4">
+          <div className="space-y-4 py-4">
             {/* 제목과 상태 */}
-            <div className="flex items-start gap-3">
-              <h1 className="flex-1 text-2xl font-bold text-gray-900 lg:text-3xl">
+            <div className="flex items-center gap-3">
+              <h1 className="text-2xl font-normal text-gray-900 lg:text-3xl">
                 {book.title}
               </h1>
               <BookStatusBadge status={book.status} />
@@ -195,25 +193,29 @@ export default function BookDetail() {
 
             {/* 가격 */}
             <div>
-              <span className="text-3xl font-bold text-gray-900 lg:text-4xl">
+              <span className="text-3xl font-semibold text-gray-900 lg:text-4xl">
                 {book?.price?.toLocaleString()}원
               </span>
             </div>
 
+            <div
+              className={'h-[1px] w-full border-t border-gray-200 lg:mt-6'}
+            ></div>
+
             {/* 기본 정보 (좋아요, 채팅, 시간) */}
-            <div className="rounded-lg bg-gray-50 p-4">
+            <div className="rounded-lg border border-gray-200 p-4">
               <div className="flex items-center gap-6 text-sm text-gray-700">
                 <div className="flex items-center gap-2">
-                  <HeartIcon width={16} height={16} className="text-red-500" />
+                  <HeartIconOutline
+                    width={16}
+                    height={16}
+                    className="text-red-500"
+                  />
                   <span>좋아요 {book.favoriteCount}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <ChatBubbleOvalLeftIcon
-                    width={16}
-                    height={16}
-                    className="text-blue-500"
-                  />
-                  <span>문의 {book.orderCount}</span>
+                  <ChatBubbleOvalLeftIcon width={16} height={16} />
+                  <span>채팅 {book.orderCount}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <ClockIcon width={16} height={16} className="text-gray-500" />
@@ -224,39 +226,59 @@ export default function BookDetail() {
           </div>
 
           {/* 하단 액션 그룹 */}
-          <div className="space-y-4 lg:mt-6">
-            {/* 판매 상태 변경 (판매자만) */}
-            {isOwner && (
+          <div className="space-y-4">
+            {isOwner ? (
+              // 판매 상태 변경 (판매자만)
               <CustomRadioGroup
                 label="판매 상태"
                 value={book.saleStatus}
                 onChange={(value) => updateSaleStatus(value as BookSaleStatus)}
                 options={saleStatusOptions}
               />
+            ) : (
+              // 판매자 정보
+              <div className="flex items-center gap-4 rounded-lg bg-gray-50 p-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
+                  <span className="text-lg font-semibold text-blue-600">
+                    {book.seller?.name?.charAt(0)}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-lg font-medium text-gray-900">
+                    {book.seller?.name}
+                  </p>
+                  <p className="text-sm text-gray-500">판매자</p>
+                </div>
+              </div>
             )}
 
-            {/* 데스크톱 버튼 (lg 이상에서만 표시) */}
+            {/* 데스크톱 버튼 */}
             <div className="hidden lg:block">
               {!isOwner ? (
                 <div className="flex gap-3">
-                  <button
+                  <Button
+                    size={'lg'}
+                    variant={'line-sub'}
                     onClick={handleFavorite}
-                    className={`rounded-xl border-2 px-6 py-3 font-medium transition-colors ${
+                    className={`flex flex-1 items-center gap-2 ${
                       book.isFavorite
                         ? 'border-red-500 bg-red-50 text-red-600'
                         : 'border-gray-300 text-gray-700 hover:border-red-300 hover:bg-gray-50'
                     }`}
                   >
-                    {book.isFavorite ? '관심 해제' : '관심 등록'}
-                  </button>
-                  <button
+                    <HeartIconOutline className="h-5 w-5" />
+                    {book.isFavorite ? '좋아요' : '좋아요'}
+                  </Button>
+                  <Button
+                    size={'lg'}
                     onClick={handleOrderButton}
-                    className="flex-1 rounded-xl bg-blue-600 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
+                    className="flex flex-1 items-center justify-center gap-2"
                   >
+                    <ChatBubbleLeftIcon className="h-5 w-5" />
                     {book.isOrderRequested
                       ? '진행 중인 거래 보기'
                       : '거래 제안하기'}
-                  </button>
+                  </Button>
                 </div>
               ) : (
                 <div className="flex gap-3">
@@ -297,40 +319,37 @@ export default function BookDetail() {
         </div>
       </div>
 
+      {/*<div*/}
+      {/*  className={'bor h-[1px] w-full border-t border-dashed border-gray-200'}*/}
+      {/*/>*/}
+
       {/* 상품 설명 섹션 */}
-      <div className="mt-6 rounded-lg bg-white p-6">
-        <h2 className="mb-4 text-xl font-bold text-gray-900">상품 정보</h2>
-        <div className="space-y-3">
+      <div className="rounded-lg bg-white p-6">
+        <div
+          className={
+            'mb-4 flex items-center gap-2 border-b border-gray-200 px-2 pb-3'
+          }
+        >
+          <BookOpenIcon width={24} height={24} />
+          <h2 className="text-xl font-semibold text-gray-900">상품 정보</h2>
+        </div>
+
+        <div className="space-y-3 px-4">
           <div className="flex items-center gap-2">
-            <span className="text-gray-600">저자:</span>
+            <div className={'flex items-center gap-1 text-gray-600'}>
+              <span className="">▪︎ 작가:</span>
+            </div>
             <span className="font-medium text-gray-900">{book.author}</span>
           </div>
-          <div>
-            <h3 className="mb-2 text-lg font-semibold text-gray-900">
-              상품 설명
-            </h3>
-            <p className="leading-relaxed whitespace-pre-line text-gray-700">
-              {book.description}
-            </p>
+          <div className="flex items-center gap-2">
+            <div className={'flex items-center gap-1 text-gray-600'}>
+              <span className="">▪︎ 출판사:</span>
+            </div>
+            <span className="font-medium text-gray-900">{book.publisher}</span>
           </div>
-        </div>
-      </div>
-
-      {/* 판매자 정보 섹션 */}
-      <div className="mt-6 rounded-lg bg-white p-6">
-        <h2 className="mb-4 text-xl font-bold text-gray-900">판매자 정보</h2>
-        <div className="flex items-center gap-4 rounded-lg bg-gray-50 p-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
-            <span className="text-lg font-semibold text-blue-600">
-              {book.seller?.name?.charAt(0)}
-            </span>
-          </div>
-          <div>
-            <p className="text-lg font-medium text-gray-900">
-              {book.seller?.name}
-            </p>
-            <p className="text-sm text-gray-500">판매자</p>
-          </div>
+          <p className="pt-2 leading-relaxed whitespace-pre-line text-gray-700">
+            {book.description}
+          </p>
         </div>
       </div>
 
