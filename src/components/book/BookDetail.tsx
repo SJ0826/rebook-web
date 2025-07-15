@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
@@ -14,7 +14,6 @@ import { triggerToast, useToast } from '@/lib/contexts/ToastContext';
 import { ROUTES } from '@/lib/constants';
 import { createFavoriteAPI, deleteFavoriteAPI } from '@/lib/api/favorite';
 import { BookSaleStatus } from '@/types/books';
-import { HeartIcon as HeartIconSolid } from '@heroicons/react/16/solid';
 import {
   BookOpenIcon,
   ChatBubbleLeftIcon,
@@ -26,24 +25,26 @@ import {
 } from '@heroicons/react/24/outline';
 import { createOrderAPI } from '@/lib/api/orders';
 import { AxiosError } from 'axios';
-import OrderModal from '@/components/book/OrderModal';
 import ImageCarousel from '@/components/ui/ImageCarousel';
 import { getTimeAgo } from '@/lib/utils/time';
 import { Button } from '@/components/ui';
 import { useModalStack } from '@/hooks/useModalStack';
 import BookStatusBadge from '@/components/book/BookStatusBadge';
 import CustomRadioGroup from '@/components/ui/CustomRadioGroup';
+import { useBreakpoint } from '@/hooks/useMediaQuery';
+import OrderModal from '@/components/book/OrderModal';
+import { twMerge } from 'tailwind-merge';
 
 export default function BookDetail() {
   const { id } = useParams();
   const router = useRouter();
   const { isLoggedIn } = useAuth();
-  const { push } = useModalStack();
+  const { push, clear } = useModalStack();
   const { showToast } = useToast();
   const { data: myProfile, isLoading: isMyProfileLoading } =
     useMyProfileQuery();
+  const isMobile = useBreakpoint('md');
   const queryClient = useQueryClient();
-  const [showOrderModal, setShowOrderModal] = useState(false);
 
   const {
     data: book,
@@ -105,6 +106,7 @@ export default function BookDetail() {
     mutationFn: createOrderAPI,
     onSuccess: async (res) => {
       router.push(`${ROUTES.CHAT}?id=${res.id}`);
+      clear();
     },
     onError: (error: AxiosError<{ message: string }>) => {
       showToast(
@@ -159,7 +161,17 @@ export default function BookDetail() {
       return;
     }
 
-    setShowOrderModal(true);
+    push({
+      key: '',
+      modal: (
+        <OrderModal
+          onClickCancel={clear}
+          onClickConfirm={() => {
+            createOrderMutate(book.id);
+          }}
+        />
+      ),
+    });
   };
 
   /** 받은 제안 클릭 시 */
@@ -252,25 +264,24 @@ export default function BookDetail() {
               </div>
             )}
 
-            {/* 데스크톱 버튼 */}
-            <div className="hidden lg:block">
+            <div className="lg:block">
               {!isOwner ? (
                 <div className="flex gap-3">
                   <Button
-                    size={'lg'}
+                    size={isMobile ? 'md' : 'lg'}
                     variant={'line-sub'}
                     onClick={handleFavorite}
                     className={`flex flex-1 items-center gap-2 ${
                       book.isFavorite
-                        ? 'border-red-500 bg-red-50 text-red-600'
-                        : 'border-gray-300 text-gray-700 hover:border-red-300 hover:bg-gray-50'
+                        ? 'border-red-500 bg-red-50 text-red-600 hover:bg-red-50'
+                        : 'border-gray-300 text-gray-700 hover:border-red-300 hover:bg-red-50 hover:text-red-500'
                     }`}
                   >
                     <HeartIconOutline className="h-5 w-5" />
-                    {book.isFavorite ? '좋아요' : '좋아요'}
+                    {'좋아요'}
                   </Button>
                   <Button
-                    size={'lg'}
+                    size={isMobile ? 'md' : 'lg'}
                     onClick={handleOrderButton}
                     className="flex flex-1 items-center justify-center gap-2"
                   >
@@ -281,47 +292,62 @@ export default function BookDetail() {
                   </Button>
                 </div>
               ) : (
-                <div className="flex gap-3">
-                  <Button
-                    size="lg"
-                    onClick={handleIncomingOrder}
-                    className="flex flex-1 items-center justify-center gap-2"
+                <div
+                  className={twMerge(
+                    'flex border-t border-dashed border-gray-200',
+                    isMobile ? 'flex-col gap-2 pt-4' : 'gap-3'
+                  )}
+                >
+                  <div className={'flex flex-1'}>
+                    <Button
+                      size={isMobile ? 'md' : 'lg'}
+                      onClick={handleIncomingOrder}
+                      className="flex w-full items-center justify-center gap-2"
+                    >
+                      <ChatBubbleLeftIcon className="h-5 w-5" />
+                      <span>리북톡</span>
+                      <span className="rounded-full bg-white/20 px-2 py-1 text-sm">
+                        {book.orderCount || 0}
+                      </span>
+                    </Button>
+                  </div>
+                  <div
+                    className={twMerge(isMobile ? 'flex gap-2' : 'flex gap-2')}
                   >
-                    <ChatBubbleLeftIcon className="h-5 w-5" />
-                    <span>리북톡</span>
-                    <span className="rounded-full bg-white/20 px-2 py-1 text-sm">
-                      {book.orderCount || 0}
-                    </span>
-                  </Button>
-                  <Button
-                    size="lg"
-                    color="secondary"
-                    onClick={handleEdit}
-                    className="flex items-center gap-2"
-                  >
-                    <PencilIcon className="h-5 w-5" />
-                    수정
-                  </Button>
-                  <Button
-                    size="lg"
-                    color="red"
-                    onClick={handleDelete}
-                    disabled={isDeleting}
-                    className="flex items-center gap-2"
-                  >
-                    <TrashIcon className="h-5 w-5" />
-                    삭제
-                  </Button>
+                    <Button
+                      size={isMobile ? 'md' : 'lg'}
+                      color="gray"
+                      variant={'line-sub'}
+                      onClick={handleEdit}
+                      className={twMerge(
+                        'flex items-center gap-2',
+                        isMobile && 'flex-1'
+                      )}
+                    >
+                      <PencilIcon className="h-5 w-5" />
+                      수정
+                    </Button>
+                    <Button
+                      size={isMobile ? 'md' : 'lg'}
+                      variant={'line-sub'}
+                      color="red"
+                      onClick={handleDelete}
+                      disabled={isDeleting}
+                      className={twMerge(
+                        'flex items-center gap-2',
+                        isMobile && 'flex-1'
+                      )}
+                    >
+                      <TrashIcon className="h-5 w-5" />
+                      삭제
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
           </div>
         </div>
       </div>
-
-      {/*<div*/}
-      {/*  className={'bor h-[1px] w-full border-t border-dashed border-gray-200'}*/}
-      {/*/>*/}
 
       {/* 상품 설명 섹션 */}
       <div className="rounded-lg bg-white p-6">
@@ -352,71 +378,6 @@ export default function BookDetail() {
           </p>
         </div>
       </div>
-
-      {/* 모바일 하단 고정 버튼 */}
-      <div className="fixed right-0 bottom-0 left-0 border-t border-gray-200 bg-white p-4 lg:hidden">
-        <div className="flex gap-3">
-          <button
-            onClick={handleFavorite}
-            className={`flex h-12 w-12 items-center justify-center rounded-full border-2 transition-colors ${
-              book.isFavorite
-                ? 'border-red-500 bg-red-50'
-                : 'border-gray-300 hover:border-red-300'
-            }`}
-          >
-            {book.isFavorite ? (
-              <HeartIconSolid className="h-6 w-6 text-red-500" />
-            ) : (
-              <HeartIconOutline className="h-6 w-6 text-gray-500" />
-            )}
-          </button>
-
-          {!isOwner ? (
-            <button
-              onClick={handleOrderButton}
-              className="flex-1 rounded-xl bg-blue-600 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
-            >
-              {book.isOrderRequested ? '진행 중인 거래 보기' : '거래 제안하기'}
-            </button>
-          ) : (
-            <div className="flex flex-1 gap-2">
-              <button
-                onClick={handleIncomingOrder}
-                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
-              >
-                <ChatBubbleLeftIcon className="h-5 w-5" />
-                <span>제안</span>
-                <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs">
-                  {book.orderCount || 0}
-                </span>
-              </button>
-              <button
-                onClick={handleEdit}
-                className="flex h-12 w-12 items-center justify-center rounded-xl border border-gray-300 transition-colors hover:bg-gray-50"
-              >
-                <PencilIcon className="h-5 w-5 text-gray-600" />
-              </button>
-              <button
-                onClick={handleDelete}
-                disabled={isDeleting}
-                className="flex h-12 w-12 items-center justify-center rounded-xl border border-red-300 transition-colors hover:bg-red-50"
-              >
-                <TrashIcon className="h-5 w-5 text-red-600" />
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {showOrderModal && (
-        <OrderModal
-          onClickCancel={() => setShowOrderModal(false)}
-          onClickConfirm={() => {
-            createOrderMutate(book.id);
-            setShowOrderModal(false);
-          }}
-        />
-      )}
     </div>
   );
 }
