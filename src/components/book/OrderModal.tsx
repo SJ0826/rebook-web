@@ -1,4 +1,5 @@
 import React from 'react';
+import Modal from '@/components/ui/Modal';
 
 interface Props {
   onClickCancel: () => void;
@@ -7,13 +8,13 @@ interface Props {
 
 const OrderModal = ({ onClickCancel, onClickConfirm }: Props) => {
   return (
-    <div className="modal modal-open">
-      <div className="modal-box">
+    <Modal>
+      <div>
         <h3 className="text-lg font-bold">거래를 시작할까요?</h3>
         <p className="py-4">
           이 책에 대해 판매자에게 거래를 제안하고 채팅방을 생성할게요.
         </p>
-        <div className="modal-action">
+        <div>
           <button className="btn btn-outline" onClick={onClickCancel}>
             취소
           </button>
@@ -22,7 +23,7 @@ const OrderModal = ({ onClickCancel, onClickConfirm }: Props) => {
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

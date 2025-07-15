@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import BookStatusBadge from '@/components/book/BookStatusBadge';
 import { useAuth } from '@/hooks/useAuth';
 import { useMyProfileQuery } from '@/hooks/mutations/useAuthMutation';
 import {
@@ -15,29 +14,38 @@ import { triggerToast, useToast } from '@/lib/contexts/ToastContext';
 import { ROUTES } from '@/lib/constants';
 import { createFavoriteAPI, deleteFavoriteAPI } from '@/lib/api/favorite';
 import { BookSaleStatus } from '@/types/books';
-import { HeartIcon as HeartIconSolid } from '@heroicons/react/16/solid';
+import {
+  HeartIcon,
+  HeartIcon as HeartIconSolid,
+} from '@heroicons/react/16/solid';
 import {
   ChatBubbleLeftIcon,
+  ChatBubbleOvalLeftIcon,
+  ClockIcon,
   HeartIcon as HeartIconOutline,
   PencilIcon,
-  StarIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
 import { createOrderAPI } from '@/lib/api/orders';
 import { AxiosError } from 'axios';
 import OrderModal from '@/components/book/OrderModal';
 import ImageCarousel from '@/components/ui/ImageCarousel';
+import { getTimeAgo } from '@/lib/utils/time';
+import { Button } from '@/components/ui';
+import { useModalStack } from '@/hooks/useModalStack';
+import BookStatusBadge from '@/components/book/BookStatusBadge';
+import CustomRadioGroup from '@/components/ui/CustomRadioGroup';
 
 export default function BookDetail() {
   const { id } = useParams();
   const router = useRouter();
   const { isLoggedIn } = useAuth();
+  const { push } = useModalStack();
   const { showToast } = useToast();
   const { data: myProfile, isLoading: isMyProfileLoading } =
     useMyProfileQuery();
   const queryClient = useQueryClient();
   const [showOrderModal, setShowOrderModal] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const {
     data: book,
@@ -159,7 +167,7 @@ export default function BookDetail() {
   /** 받은 제안 클릭 시 */
   const handleIncomingOrder = () => {
     if (book.orderCount === 0) {
-      showToast('아직 제안 받은 거래가 없어요', 'info');
+      showToast('아직 진행중인 거래가 없어요', 'info');
       return;
     }
     router.push(`${ROUTES.BOOK}/${book.id}/chats`);
@@ -167,163 +175,79 @@ export default function BookDetail() {
 
   return (
     <div className="min-h-screen w-full">
-      <div className="flex flex-col gap-2 rounded-lg bg-white p-6 lg:flex-row">
+      <div className="flex flex-col gap-6 rounded-lg bg-white p-6 lg:flex-row lg:items-start lg:gap-8">
         {/* 이미지 섹션 */}
-        <div className="lg:w-[400px]">
+        <div className="lg:w-[370px] lg:flex-shrink-0">
           <ImageCarousel images={book?.bookImages || []} title={book.title} />
         </div>
 
         {/* 책 정보 섹션 */}
-        <div className="p-6 lg:flex-1 lg:px-8">
-          {/* 상태 및 좋아요 */}
-          <div className="mb-4 flex items-center gap-3">
-            <BookStatusBadge status={book?.status || 'NEW'} />
-            <div className="flex items-center gap-1 text-sm text-gray-600">
-              <HeartIconOutline className="h-4 w-4" />
-              <span>{book?.favoriteCount || 0}</span>
+        <div className="flex flex-1 flex-col lg:h-[500px] lg:justify-between">
+          {/* 상단 정보 그룹 */}
+          <div className="space-y-4">
+            {/* 제목과 상태 */}
+            <div className="flex items-start gap-3">
+              <h1 className="flex-1 text-2xl font-bold text-gray-900 lg:text-3xl">
+                {book.title}
+              </h1>
+              <BookStatusBadge status={book.status} />
             </div>
-            {book.saleStatus === 'SOLD' && (
-              <div className="rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800">
-                판매완료
-              </div>
-            )}
-          </div>
 
-          {/* 제목 및 기본 정보 */}
-          <h1 className="mb-2 text-2xl font-semibold text-gray-900 lg:text-3xl">
-            {book.title}
-          </h1>
+            {/* 가격 */}
+            <div>
+              <span className="text-3xl font-bold text-gray-900 lg:text-4xl">
+                {book?.price?.toLocaleString()}원
+              </span>
+            </div>
 
-          {/* 가격 */}
-          <div className="mb-6">
-            <span className="text-3xl font-semibold text-gray-900">
-              {book?.price?.toLocaleString()}원
-            </span>
-          </div>
-
-          {/* 설명 */}
-          <div className="mb-6">
-            <h3 className="mb-2 font-semibold text-gray-900">상품 설명</h3>
-            <p className="text-gray-600">
-              저자: <span className="font-medium">{book.author}</span>
-            </p>
-            <p className="leading-relaxed whitespace-pre-line text-gray-700">
-              {book.description}
-            </p>
-          </div>
-
-          {/* 판매자 정보 */}
-          <div className="mb-6 rounded-lg bg-gray-50 p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100">
-                <span className="font-semibold text-blue-600">
-                  {book.seller?.name?.charAt(0)}
-                </span>
-              </div>
-              <div>
-                <p className="font-medium text-gray-900">{book.seller?.name}</p>
-                <div className="flex items-center gap-1 text-sm text-gray-500">
-                  <StarIcon className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                  <span>4.8</span>
-                  <span>·</span>
-                  <span>거래 24회</span>
+            {/* 기본 정보 (좋아요, 채팅, 시간) */}
+            <div className="rounded-lg bg-gray-50 p-4">
+              <div className="flex items-center gap-6 text-sm text-gray-700">
+                <div className="flex items-center gap-2">
+                  <HeartIcon width={16} height={16} className="text-red-500" />
+                  <span>좋아요 {book.favoriteCount}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <ChatBubbleOvalLeftIcon
+                    width={16}
+                    height={16}
+                    className="text-blue-500"
+                  />
+                  <span>문의 {book.orderCount}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <ClockIcon width={16} height={16} className="text-gray-500" />
+                  <span>{getTimeAgo(book.createdAt)}</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* 판매 상태 드롭다운 (판매자만) */}
-          {isOwner && (
-            <div className="mb-6">
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                판매 상태
-              </label>
-              <select
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          {/* 하단 액션 그룹 */}
+          <div className="space-y-4 lg:mt-6">
+            {/* 판매 상태 변경 (판매자만) */}
+            {isOwner && (
+              <CustomRadioGroup
+                label="판매 상태"
                 value={book.saleStatus}
-                onChange={(e) =>
-                  updateSaleStatus(e.target.value as BookSaleStatus)
-                }
-              >
-                <option value="FOR_SALE">판매중</option>
-                <option value="SOLD">판매 완료</option>
-              </select>
-            </div>
-          )}
+                onChange={(value) => updateSaleStatus(value as BookSaleStatus)}
+                options={saleStatusOptions}
+              />
+            )}
 
-          {/* 하단 고정 버튼 (모바일) */}
-          <div className="fixed right-0 bottom-0 left-0 border-t border-gray-200 bg-white p-4 lg:hidden">
-            <div className="flex gap-3">
-              <button
-                onClick={handleFavorite}
-                className={`flex h-12 w-12 items-center justify-center rounded-full border-2 transition-colors ${
-                  book.isFavorite
-                    ? 'border-red-500 bg-red-50'
-                    : 'border-gray-300 hover:border-red-300'
-                }`}
-              >
-                {book.isFavorite ? (
-                  <HeartIconSolid className="h-6 w-6 text-red-500" />
-                ) : (
-                  <HeartIconOutline className="h-6 w-6 text-gray-500" />
-                )}
-              </button>
-
+            {/* 데스크톱 버튼 (lg 이상에서만 표시) */}
+            <div className="hidden lg:block">
               {!isOwner ? (
-                <button
-                  onClick={handleOrderButton}
-                  className="flex-1 rounded-xl bg-blue-600 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
-                >
-                  {book.isOrderRequested
-                    ? '진행 중인 거래 보기'
-                    : '거래 제안하기'}
-                </button>
-              ) : (
-                <div className="flex flex-1 gap-2">
-                  <button
-                    onClick={handleIncomingOrder}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
-                  >
-                    <ChatBubbleLeftIcon className="h-5 w-5" />
-                    <span>제안</span>
-                    <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs">
-                      {book.orderCount || 0}
-                    </span>
-                  </button>
-                  <button
-                    onClick={handleEdit}
-                    className="flex h-12 w-12 items-center justify-center rounded-xl border border-gray-300 transition-colors hover:bg-gray-50"
-                  >
-                    <PencilIcon className="h-5 w-5 text-gray-600" />
-                  </button>
-                  <button
-                    onClick={handleDelete}
-                    disabled={isDeleting}
-                    className="flex h-12 w-12 items-center justify-center rounded-xl border border-red-300 transition-colors hover:bg-red-50"
-                  >
-                    <TrashIcon className="h-5 w-5 text-red-600" />
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* 데스크톱 버튼 */}
-          <div className="mx-auto hidden max-w-6xl px-4 pb-8 lg:block">
-            <div className="rounded-2xl bg-white p-6 shadow-sm">
-              {!isOwner ? (
-                <div className="flex gap-4">
+                <div className="flex gap-3">
                   <button
                     onClick={handleFavorite}
                     className={`rounded-xl border-2 px-6 py-3 font-medium transition-colors ${
                       book.isFavorite
                         ? 'border-red-500 bg-red-50 text-red-600'
-                        : 'border-gray-300 text-gray-700 hover:border-red-300'
+                        : 'border-gray-300 text-gray-700 hover:border-red-300 hover:bg-gray-50'
                     }`}
                   >
-                    {book.isFavorite
-                      ? '관심 책장에서 제거'
-                      : '관심 책장에 추가'}
+                    {book.isFavorite ? '관심 해제' : '관심 등록'}
                   </button>
                   <button
                     onClick={handleOrderButton}
@@ -335,36 +259,136 @@ export default function BookDetail() {
                   </button>
                 </div>
               ) : (
-                <div className="flex gap-4">
-                  <button
+                <div className="flex gap-3">
+                  <Button
+                    size="lg"
                     onClick={handleIncomingOrder}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
+                    className="flex flex-1 items-center justify-center gap-2"
                   >
                     <ChatBubbleLeftIcon className="h-5 w-5" />
-                    <span>받은 거래 제안</span>
+                    <span>리북톡</span>
                     <span className="rounded-full bg-white/20 px-2 py-1 text-sm">
                       {book.orderCount || 0}
                     </span>
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    size="lg"
+                    color="secondary"
                     onClick={handleEdit}
-                    className="rounded-xl border border-gray-300 px-6 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                    className="flex items-center gap-2"
                   >
-                    수정하기
-                  </button>
-                  <button
+                    <PencilIcon className="h-5 w-5" />
+                    수정
+                  </Button>
+                  <Button
+                    size="lg"
+                    color="red"
                     onClick={handleDelete}
                     disabled={isDeleting}
-                    className="rounded-xl border border-red-300 px-6 py-3 font-medium text-red-600 transition-colors hover:bg-red-50"
+                    className="flex items-center gap-2"
                   >
-                    {isDeleting ? '삭제 중...' : '삭제하기'}
-                  </button>
+                    <TrashIcon className="h-5 w-5" />
+                    삭제
+                  </Button>
                 </div>
               )}
             </div>
           </div>
         </div>
       </div>
+
+      {/* 상품 설명 섹션 */}
+      <div className="mt-6 rounded-lg bg-white p-6">
+        <h2 className="mb-4 text-xl font-bold text-gray-900">상품 정보</h2>
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <span className="text-gray-600">저자:</span>
+            <span className="font-medium text-gray-900">{book.author}</span>
+          </div>
+          <div>
+            <h3 className="mb-2 text-lg font-semibold text-gray-900">
+              상품 설명
+            </h3>
+            <p className="leading-relaxed whitespace-pre-line text-gray-700">
+              {book.description}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* 판매자 정보 섹션 */}
+      <div className="mt-6 rounded-lg bg-white p-6">
+        <h2 className="mb-4 text-xl font-bold text-gray-900">판매자 정보</h2>
+        <div className="flex items-center gap-4 rounded-lg bg-gray-50 p-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
+            <span className="text-lg font-semibold text-blue-600">
+              {book.seller?.name?.charAt(0)}
+            </span>
+          </div>
+          <div>
+            <p className="text-lg font-medium text-gray-900">
+              {book.seller?.name}
+            </p>
+            <p className="text-sm text-gray-500">판매자</p>
+          </div>
+        </div>
+      </div>
+
+      {/* 모바일 하단 고정 버튼 */}
+      <div className="fixed right-0 bottom-0 left-0 border-t border-gray-200 bg-white p-4 lg:hidden">
+        <div className="flex gap-3">
+          <button
+            onClick={handleFavorite}
+            className={`flex h-12 w-12 items-center justify-center rounded-full border-2 transition-colors ${
+              book.isFavorite
+                ? 'border-red-500 bg-red-50'
+                : 'border-gray-300 hover:border-red-300'
+            }`}
+          >
+            {book.isFavorite ? (
+              <HeartIconSolid className="h-6 w-6 text-red-500" />
+            ) : (
+              <HeartIconOutline className="h-6 w-6 text-gray-500" />
+            )}
+          </button>
+
+          {!isOwner ? (
+            <button
+              onClick={handleOrderButton}
+              className="flex-1 rounded-xl bg-blue-600 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
+            >
+              {book.isOrderRequested ? '진행 중인 거래 보기' : '거래 제안하기'}
+            </button>
+          ) : (
+            <div className="flex flex-1 gap-2">
+              <button
+                onClick={handleIncomingOrder}
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
+              >
+                <ChatBubbleLeftIcon className="h-5 w-5" />
+                <span>제안</span>
+                <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs">
+                  {book.orderCount || 0}
+                </span>
+              </button>
+              <button
+                onClick={handleEdit}
+                className="flex h-12 w-12 items-center justify-center rounded-xl border border-gray-300 transition-colors hover:bg-gray-50"
+              >
+                <PencilIcon className="h-5 w-5 text-gray-600" />
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="flex h-12 w-12 items-center justify-center rounded-xl border border-red-300 transition-colors hover:bg-red-50"
+              >
+                <TrashIcon className="h-5 w-5 text-red-600" />
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
       {showOrderModal && (
         <OrderModal
           onClickCancel={() => setShowOrderModal(false)}
@@ -377,3 +401,16 @@ export default function BookDetail() {
     </div>
   );
 }
+
+const saleStatusOptions = [
+  {
+    value: 'FOR_SALE',
+    label: '판매중',
+    description: '구매자가 찾을 수 있어요',
+  },
+  {
+    value: 'SOLD',
+    label: '판매 완료',
+    description: '판매가 완료되어 더 이상 노출되지 않아요',
+  },
+];

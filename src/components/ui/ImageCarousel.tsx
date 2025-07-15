@@ -77,7 +77,7 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
 
   if (images.length === 1) {
     return (
-      <div className="relative aspect-square overflow-hidden rounded-t-2xl lg:aspect-[4/5] lg:rounded-l-2xl lg:rounded-tr-none">
+      <div className="relative aspect-square overflow-hidden rounded-t-2xl lg:aspect-[4/5] lg:rounded-2xl">
         <Image
           src={images[0].imageUrl}
           alt={title}
