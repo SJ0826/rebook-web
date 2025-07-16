@@ -11,6 +11,7 @@ import { uploadImagesAPI } from '@/lib/api/files';
 
 export const useEditBookForm = (bookId: number) => {
   const {
+    control,
     handleSubmit,
     register,
     reset,
@@ -137,6 +138,7 @@ export const useEditBookForm = (bookId: number) => {
   }, [book]);
 
   return {
+    control,
     handleSubmit,
     submitUpdatedBook,
     isLoading,

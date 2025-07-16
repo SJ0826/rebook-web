@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { useEditBookForm } from '@/app/(main)/book/edit/[id]/_hooks';
-import { Select } from '@headlessui/react';
-import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { Controller } from 'react-hook-form';
+import CustomListbox from '@/components/ui/CustomListbox';
 
 type BookFormProps = {
   id: number;
@@ -9,6 +9,7 @@ type BookFormProps = {
 
 export const BookForm = ({ id }: BookFormProps) => {
   const {
+    control,
     handleSubmit,
     onSubmit,
     register,
@@ -19,6 +20,13 @@ export const BookForm = ({ id }: BookFormProps) => {
     isPending,
     resetForm,
   } = useEditBookForm(id);
+
+  const bookStatusOptions = [
+    { value: 'NEW', label: '새 책' },
+    { value: 'LIKE_NEW', label: '거의 새 책' },
+    { value: 'GOOD', label: '양호' },
+    { value: 'ACCEPTABLE', label: '사용감 있음' },
+  ];
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-12">
@@ -85,34 +93,27 @@ export const BookForm = ({ id }: BookFormProps) => {
             )}
           </label>
         </div>
-        <div className={'flex flex-col gap-6 md:flex-row'}>
-          {/* 책 상태 */}
-          <label className="form-control w-full">
-            <span className="label-text min-w-[120px]">책 상태</span>
-            <Select
-              {...register('status', { required: true })}
-            >
-              <Select.Button className="select select-bordered w-full flex items-center justify-between">
-                <span>책 상태를 선택하세요</span>
-                <ChevronDownIcon className="h-5 w-5 text-gray-400" />
-              </Select.Button>
-              <Select.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-lg border border-gray-300 bg-white shadow-lg">
-                <Select.Option value="NEW" className="cursor-pointer px-4 py-3 hover:bg-gray-100">
-                  새 책
-                </Select.Option>
-                <Select.Option value="LIKE_NEW" className="cursor-pointer px-4 py-3 hover:bg-gray-100">
-                  거의 새 책
-                </Select.Option>
-                <Select.Option value="GOOD" className="cursor-pointer px-4 py-3 hover:bg-gray-100">
-                  양호
-                </Select.Option>
-                <Select.Option value="ACCEPTABLE" className="cursor-pointer px-4 py-3 hover:bg-gray-100">
-                  사용감 있음
-                </Select.Option>
-              </Select.Options>
-            </Select>
+        <div>
+          <label className="mb-2 block text-sm font-medium text-gray-700">
+            책 상태
           </label>
-          <div className="form-control w-full" />
+          <Controller
+            name="status"
+            control={control}
+            rules={{ required: '책 상태를 선택해주세요' }}
+            render={({ field }) => (
+              <CustomListbox
+                value={field.value}
+                onChange={field.onChange}
+                options={bookStatusOptions}
+                placeholder="책 상태를 선택해주세요"
+                error={!!errors.status}
+              />
+            )}
+          />
+          {errors.status && (
+            <p className="mt-1 text-sm text-red-600">{errors.status.message}</p>
+          )}
         </div>
       </div>
       {/* 책 설명 등록 */}
