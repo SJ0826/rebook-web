@@ -1,6 +1,6 @@
-import BookFilterDesktop from '@/components/home/BookFilters/BookFilter.desktop';
-import BookFilterMobile from '@/components/home/BookFilters/BookFilter.mobile';
-import { BookFiltersProps } from '@/components/home/BookFilters/types';
+import BookFilterDesktop from '@/app/(main)/(home)/_components/BookFilters/BookFilter.desktop';
+import BookFilterMobile from '@/app/(main)/(home)/_components/BookFilters/BookFilter.mobile';
+import { BookFiltersProps } from '@/app/(main)/(home)/_types';
 
 const BookFilters = ({ filters, onFiltersChange }: BookFiltersProps) => {
   const handleReset = () => {

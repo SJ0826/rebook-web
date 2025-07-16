@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Button, Checkbox, Input } from '@/components/ui';
-import { FilterState } from '@/components/home/BookFilters/types';
+import { FilterState } from '@/app/(main)/(home)/_types';
 
 const MobileFilterModal = ({
   isOpen,

@@ -189,7 +189,10 @@ const ChatDetail = ({
           onClick={() => router.push(`${ROUTES.BOOK}/${book.id}`)}
         >
           <Image
-            src={book?.bookImage?.[0]?.imageUrl ?? '/images/default-book.png'}
+            src={
+              book?.bookImage?.[0]?.imageUrl ??
+              '/images/default-book-detail.png'
+            }
             alt="책 썸네일"
             width={64}
             height={80}

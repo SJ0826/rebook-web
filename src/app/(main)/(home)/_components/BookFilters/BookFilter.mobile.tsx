@@ -2,20 +2,17 @@ import { Button } from '@/components/ui';
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { statusOptions } from '@/lib/data/options';
-import {
-  BookFiltersProps,
-  FilterState,
-} from '@/components/home/BookFilters/types';
-import MobileFilterModal from '@/components/home/MobileFilterModal';
+import { BookFiltersProps, FilterState } from '@/app/(main)/(home)/_types';
+import MobileFilterModal from '@/app/(main)/(home)/_components/BookFilters/MobileFilterModal';
 
 const BookFilterMobile = ({ filters, onFiltersChange }: BookFiltersProps) => {
   const [isOpenFilterModal, setIsOpenFilterModal] = useState(false);
-  const [tempMinPrice, setTempMinPrice] = useState<string>(
-    filters.minPrice?.toString() || ''
-  );
-  const [tempMaxPrice, setTempMaxPrice] = useState<string>(
-    filters.maxPrice?.toString() || ''
-  );
+  // const [tempMinPrice, setTempMinPrice] = useState<string>(
+  //   filters.minPrice?.toString() || ''
+  // );
+  // const [tempMaxPrice, setTempMaxPrice] = useState<string>(
+  //   filters.maxPrice?.toString() || ''
+  // );
 
   const handleFilterChange = (
     key: keyof FilterState,
@@ -44,8 +41,8 @@ const BookFilterMobile = ({ filters, onFiltersChange }: BookFiltersProps) => {
   };
 
   const handleReset = () => {
-    setTempMinPrice('');
-    setTempMaxPrice('');
+    // setTempMinPrice('');
+    // setTempMaxPrice('');
     onFiltersChange({
       searchTerm: '',
       minPrice: undefined,
@@ -96,7 +93,7 @@ const BookFilterMobile = ({ filters, onFiltersChange }: BookFiltersProps) => {
                   최소: {filters.minPrice}원
                   <button
                     onClick={() => {
-                      setTempMinPrice('');
+                      // setTempMinPrice('');
                       handleFilterChange('minPrice', undefined);
                     }}
                     className="hover:text-primary-900"
@@ -110,7 +107,7 @@ const BookFilterMobile = ({ filters, onFiltersChange }: BookFiltersProps) => {
                   최대: {filters.maxPrice}원
                   <button
                     onClick={() => {
-                      setTempMaxPrice('');
+                      // setTempMaxPrice('');
                       handleFilterChange('maxPrice', undefined);
                     }}
                     className="hover:text-primary-900"

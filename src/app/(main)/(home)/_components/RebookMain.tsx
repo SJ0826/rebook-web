@@ -1,16 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import BookFilters from '@/app/(main)/(home)/_components/BookFilters';
+import SortControl from '@/app/(main)/(home)/_components/BookFilters/SortControl';
+import BookCard from '@/app/(main)/(home)/_components/BookCard';
+import Pagination from '@/components/ui/Pagination';
 import { getSearchBooks } from '@/lib/api/books';
 import { BookSearchSort } from '@/types/books';
-import BookCard from '@/components/book/BookCard';
-import Pagination from '@/components/ui/Pagination';
-
-import useBookFilters from '@/hooks/useBookFilters';
-import SortControl from '@/components/home/SortControl';
-import { useSearchParams } from 'next/navigation';
-import BookFilters from '@/components/home/BookFilters';
+import { useBookFilters } from '@/app/(main)/(home)/_hooks';
 
 const PAGE_SIZE = 8;
 

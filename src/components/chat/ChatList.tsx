@@ -42,7 +42,7 @@ const ChatList = ({
                 <img
                   src={
                     room.book.bookImage[0]?.imageUrl ??
-                    '/images/default-book.png'
+                    '/images/default-book-detail.png'
                   }
                   alt="책 이미지"
                   className="h-12 w-12 rounded"

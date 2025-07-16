@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'rebook-assets.s3.ap-northeast-2.amazonaws.com',
         port: '',
-        pathname: '/upload/book/**',
+        pathname: '/upload/book-detail/**',
       },
       {
         protocol: 'https',

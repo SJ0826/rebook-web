@@ -6,11 +6,9 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button, Checkbox, Input } from '@/components/ui';
 import { useState } from 'react';
-import {
-  BookFiltersProps,
-  FilterState,
-} from '@/components/home/BookFilters/types';
+
 import { statusOptions } from '@/lib/data/options';
+import { BookFiltersProps, FilterState } from '@/app/(main)/(home)/_types';
 
 const BookFilterDesktop = ({
   filters,

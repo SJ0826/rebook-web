@@ -1,8 +1,8 @@
 import { BookSearchSort } from '@/types/books';
 import { useState } from 'react';
-import { FilterState } from '@/components/home/BookFilters';
+import { FilterState } from '@/app/(main)/(home)/_types';
 
-const useBookFilters = () => {
+export const useBookFilters = () => {
   const [filters, setFilters] = useState<FilterState>({
     searchTerm: '', // 실제로는 사용하지 않음 (헤더에서 관리)
     minPrice: undefined,
@@ -35,5 +35,3 @@ const useBookFilters = () => {
     setFilters,
   };
 };
-
-export default useBookFilters;

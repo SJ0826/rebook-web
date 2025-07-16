@@ -1,5 +1,5 @@
 import React from 'react';
-import IncomingOrderChats from '@/components/book/IncomingOrderChats';
+import IncomingOrderChats from '@/app/(main)/book/[id]/_components/IncomingOrderChats';
 
 const Page = () => {
   return <IncomingOrderChats />;
