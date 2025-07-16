@@ -20,7 +20,7 @@ const VerifyEmailNotification = () => {
     onSuccess: () => {
       showToast('입력하신 이메일로 인증 메일을 다시 보냈어요.', 'success');
     },
-    onError: (error) => {
+    onError: () => {
       // showToast(error.message, 'error');
     },
   });
