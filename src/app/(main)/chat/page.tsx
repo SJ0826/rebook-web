@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ChatPage from '@/components/chat/ChatPage';
 
 const Page = () => {
-  return <ChatPage />;
+  return (
+    <Suspense fallback={<p>...loading</p>}>
+      <ChatPage />
+    </Suspense>
+  );
 };
 
 export default Page;
