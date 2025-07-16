@@ -1,5 +1,4 @@
 import React from 'react';
-import RebookMain from '@/components/home/RebookMain';
 import {
   dehydrate,
   HydrationBoundary,
@@ -7,6 +6,7 @@ import {
 } from '@tanstack/react-query';
 import { BookSearchSort } from '@/types/books';
 import { getSearchBooks } from '@/lib/api/books';
+import RebookMain from '@/app/(main)/(home)/_components/RebookMain';
 
 export default async function HomePage() {
   const queryClient = new QueryClient();

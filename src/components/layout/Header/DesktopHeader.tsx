@@ -3,17 +3,17 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   BookOpenIcon,
   BuildingStorefrontIcon,
   ChatBubbleOvalLeftIcon,
 } from '@heroicons/react/24/outline';
+import HeaderButton from '@/components/layout/Header/HeaderButton';
 import { Input } from '@/components/ui';
-import HeaderButton from '@/components/home/HeaderButton';
 import { ROUTES } from '@/lib/constants';
-import logoImage from '@public/images/logo.png';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { setRecentSearch } from '@/lib/utils/recentSearch';
+import logoImage from '@public/images/logo.png';
 
 export default function DesktopHeader() {
   const pathname = usePathname();
@@ -75,7 +75,7 @@ export default function DesktopHeader() {
           <nav className="flex items-center gap-4">
             <HeaderButton
               title={'판매하기'}
-              path={ROUTES.BOOK}
+              path={ROUTES.BOOK_REGISTER}
               icon={<BuildingStorefrontIcon />}
             />
             <HeaderButton

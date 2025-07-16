@@ -6,8 +6,6 @@ import { twMerge } from 'tailwind-merge';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import ImageCarousel from '@/components/ui/ImageCarousel';
-import OrderModal from '@/components/book/OrderModal';
-import BookStatusBadge from '@/components/book/BookStatusBadge';
 import CustomRadioGroup from '@/components/ui/CustomRadioGroup';
 import { Button } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
@@ -34,6 +32,8 @@ import {
   PencilIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
+import OrderModal from '@/app/(main)/book/[id]/_components/OrderModal';
+import BookStatusBadge from '@/app/(main)/book/[id]/_components/BookStatusBadge';
 
 export default function BookDetail() {
   const { id } = useParams();
@@ -297,8 +297,10 @@ export default function BookDetail() {
               ) : (
                 <div
                   className={twMerge(
-                    'flex border-t border-dashed border-gray-200',
-                    isMobile ? 'flex-col gap-2 pt-4' : 'gap-3'
+                    'flex',
+                    isMobile
+                      ? 'flex-col gap-2 border-t border-dashed border-gray-200 pt-4'
+                      : 'gap-3'
                   )}
                 >
                   <div className={'flex flex-1'}>

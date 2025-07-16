@@ -1,5 +1,7 @@
 import Image from 'next/image';
-import { useEditBookForm } from '@/app/(main)/book/edit/[id]/useEditBookForm';
+import { useEditBookForm } from '@/app/(main)/book/edit/[id]/_hooks';
+import { Select } from '@headlessui/react';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
 
 type BookFormProps = {
   id: number;
@@ -87,15 +89,28 @@ export const BookForm = ({ id }: BookFormProps) => {
           {/* 책 상태 */}
           <label className="form-control w-full">
             <span className="label-text min-w-[120px]">책 상태</span>
-            <select
-              className="select select-bordered w-full"
+            <Select
               {...register('status', { required: true })}
             >
-              <option value="NEW">새 책</option>
-              <option value="LIKE_NEW">거의 새 책</option>
-              <option value="GOOD">양호</option>
-              <option value="ACCEPTABLE">사용감 있음</option>
-            </select>
+              <Select.Button className="select select-bordered w-full flex items-center justify-between">
+                <span>책 상태를 선택하세요</span>
+                <ChevronDownIcon className="h-5 w-5 text-gray-400" />
+              </Select.Button>
+              <Select.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-lg border border-gray-300 bg-white shadow-lg">
+                <Select.Option value="NEW" className="cursor-pointer px-4 py-3 hover:bg-gray-100">
+                  새 책
+                </Select.Option>
+                <Select.Option value="LIKE_NEW" className="cursor-pointer px-4 py-3 hover:bg-gray-100">
+                  거의 새 책
+                </Select.Option>
+                <Select.Option value="GOOD" className="cursor-pointer px-4 py-3 hover:bg-gray-100">
+                  양호
+                </Select.Option>
+                <Select.Option value="ACCEPTABLE" className="cursor-pointer px-4 py-3 hover:bg-gray-100">
+                  사용감 있음
+                </Select.Option>
+              </Select.Options>
+            </Select>
           </label>
           <div className="form-control w-full" />
         </div>

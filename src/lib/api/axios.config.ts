@@ -38,6 +38,7 @@ export const setupInterceptors = (axiosInstance: AxiosInstance) => {
           try {
             const newTokens = await refreshTokenAPI();
             useAuthStore.getState().setAccessToken(newTokens.accessToken);
+            useAuthStore.getState().setIsLoggedIn(true);
 
             if (originalRequest && originalRequest.headers) {
               originalRequest.headers.Authorization = `Bearer ${newTokens.accessToken}`;

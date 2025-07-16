@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { BookForm } from '@/app/(main)/book/edit/[id]/BookForm';
+import { BookForm } from '@/app/(main)/book/edit/[id]/_components/BookForm';
 
 export default function EditBookPage() {
   const { id } = useParams();

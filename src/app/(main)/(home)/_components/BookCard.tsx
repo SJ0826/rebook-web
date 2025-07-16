@@ -7,7 +7,7 @@ import { HeartIcon } from '@heroicons/react/16/solid';
 import { Book, BookSaleStatus } from '@/types/books';
 import { ROUTES } from '@/lib/constants';
 import { getTimeAgo } from '@/lib/utils/time';
-import BookStatusBadge from '@/components/book/BookStatusBadge';
+import BookStatusBadge from '@/app/(main)/book/[id]/_components/BookStatusBadge';
 
 interface BookCardProps {
   book: Book;

@@ -14,6 +14,7 @@ import { BookStatus, CreateBookDto } from '@/types/books';
 
 export const useBookForm = () => {
   const {
+    control,
     register,
     handleSubmit,
     reset,
@@ -109,6 +110,7 @@ export const useBookForm = () => {
   };
 
   return {
+    control,
     register,
     handleSubmit,
     errors,

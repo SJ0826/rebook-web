@@ -1,4 +1,4 @@
-import BookForm from '@/app/(main)/book/register/BookForm';
+import BookForm from '@/app/(main)/book/register/_components/BookForm';
 
 export default function BookRegisterPage() {
   return (

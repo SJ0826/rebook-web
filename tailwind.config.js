@@ -3,7 +3,7 @@ import scrollbarHide from 'tailwind-scrollbar-hide';
 
 module.exports = {
   content: [
-    './components/**/*.{js,ts,jsx,tsx}',
+    './_components/**/*.{js,ts,jsx,tsx}',
     './lib/**/*.{js,ts,jsx,tsx}',
     './src/**/*.{js,ts,jsx,tsx}',
     './app/**/*.{js,ts,jsx,tsx}',
