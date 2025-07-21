@@ -8,7 +8,7 @@ export const ROUTES = {
   AUTH_SEND_EMAIL: '/auth/send-email',
   BOOK_REGISTER: '/book/register',
   BOOK_EDIT: '/book/edit',
-  MY_BOOKSHELF: '/my-bookshelf',
+  MY_BOOKSTORE: '/my-bookstore',
   FAVORITES: '/favorites',
   PROFILE: '/profile',
   CHAT: '/chat',

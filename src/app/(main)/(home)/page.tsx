@@ -7,6 +7,7 @@ import {
 import { BookSearchSort } from '@/types/books';
 import { getSearchBooks } from '@/lib/api/books';
 import RebookMain from '@/app/(main)/(home)/_components/RebookMain';
+import CommonPageLayout from '@/components/layout/CommonPageLayout';
 
 export default async function HomePage() {
   const queryClient = new QueryClient();
@@ -44,9 +45,9 @@ export default async function HomePage() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className={'px-2 md:px-10'}>
+      <CommonPageLayout>
         <RebookMain />
-      </div>
+      </CommonPageLayout>
     </HydrationBoundary>
   );
 }

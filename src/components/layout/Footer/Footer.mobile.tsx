@@ -28,7 +28,7 @@ const FooterMobile = () => {
     },
     {
       name: '내서점',
-      href: ROUTES.MY_BOOKSHELF,
+      href: ROUTES.MY_BOOKSTORE,
       icon: BookOpenIcon,
       activeIcon: BookOpenSolidIcon,
     },
@@ -47,7 +47,7 @@ const FooterMobile = () => {
     },
     {
       name: '마이페이지',
-      href: ROUTES.MY_BOOKSHELF,
+      href: ROUTES.MY_BOOKSTORE,
       icon: UserIcon,
       activeIcon: UserSolidIcon,
     },

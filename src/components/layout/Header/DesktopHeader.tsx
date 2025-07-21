@@ -80,7 +80,7 @@ export default function DesktopHeader() {
             />
             <HeaderButton
               title={'내 서점'}
-              path={ROUTES.BOOK_REGISTER}
+              path={ROUTES.MY_BOOKSTORE}
               icon={<BookOpenIcon />}
             />
             <HeaderButton
