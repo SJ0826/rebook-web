@@ -8,16 +8,9 @@ import {
   BookSearchSort,
   BookStatus,
 } from '@/types/books';
-import {
-  priceOption,
-  saleStatusOptions,
-  sortOptions,
-  statusOptions,
-} from '@/lib/data/options';
-import BookGrid from '@/components/bookShelf/BookGrid';
+import BookGrid from '@/app/(main)/my-bookstore/_components/BookGrid';
 
 interface BookListSectionProps {
-  isActive: boolean;
   fetchBooks: (params: {
     status?: BookStatus;
     saleStatus?: BookSaleStatus;
@@ -32,16 +25,15 @@ interface BookListSectionProps {
     totalPages: number;
   }>;
   queryKeyBase: string;
-  EmptyState: React.FC<{ isShow: boolean }>;
+  // EmptyState: React.FC<{ isShow: boolean }>;
 }
 
 const PAGE_SIZE = 8;
 
 const BookListSection = ({
-  isActive,
   fetchBooks,
   queryKeyBase,
-  EmptyState,
+  // EmptyState,
 }: BookListSectionProps) => {
   const [priceFilter, setPriceFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState<BookStatus | ''>('');
@@ -85,68 +77,66 @@ const BookListSection = ({
     },
   });
 
-  if (!isActive) return null;
-
   return (
     <div className="flex flex-col gap-6">
-      {/* 필터 */}
-      <div className="flex flex-col items-start justify-start gap-4 md:flex-row md:items-center">
-        <div className="flex flex-col gap-4 md:flex-row">
-          <select
-            className="select select-bordered"
-            value={priceFilter}
-            onChange={(e) => setPriceFilter(e.target.value)}
-          >
-            {priceOption.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+      {/*/!* 필터 *!/*/}
+      {/*<div className="flex flex-col items-start justify-start gap-4 md:flex-row md:items-center">*/}
+      {/*  <div className="flex flex-col gap-4 md:flex-row">*/}
+      {/*    <select*/}
+      {/*      className="select select-bordered"*/}
+      {/*      value={priceFilter}*/}
+      {/*      onChange={(e) => setPriceFilter(e.target.value)}*/}
+      {/*    >*/}
+      {/*      {priceOption.map((opt) => (*/}
+      {/*        <option key={opt.value} value={opt.value}>*/}
+      {/*          {opt.label}*/}
+      {/*        </option>*/}
+      {/*      ))}*/}
+      {/*    </select>*/}
 
-          <select
-            className="select select-bordered"
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as BookStatus | '')}
-          >
-            {statusOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+      {/*    <select*/}
+      {/*      className="select select-bordered"*/}
+      {/*      value={statusFilter}*/}
+      {/*      onChange={(e) => setStatusFilter(e.target.value as BookStatus | '')}*/}
+      {/*    >*/}
+      {/*      {statusOptions.map((opt) => (*/}
+      {/*        <option key={opt.value} value={opt.value}>*/}
+      {/*          {opt.label}*/}
+      {/*        </option>*/}
+      {/*      ))}*/}
+      {/*    </select>*/}
 
-          <select
-            className="select select-bordered"
-            value={saleStatusFilter}
-            onChange={(e) =>
-              setSaleStatusFilter(e.target.value as BookSaleStatus | '')
-            }
-          >
-            {saleStatusOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+      {/*    <select*/}
+      {/*      className="select select-bordered"*/}
+      {/*      value={saleStatusFilter}*/}
+      {/*      onChange={(e) =>*/}
+      {/*        setSaleStatusFilter(e.target.value as BookSaleStatus | '')*/}
+      {/*      }*/}
+      {/*    >*/}
+      {/*      {saleStatusOptions.map((opt) => (*/}
+      {/*        <option key={opt.value} value={opt.value}>*/}
+      {/*          {opt.label}*/}
+      {/*        </option>*/}
+      {/*      ))}*/}
+      {/*    </select>*/}
 
-          <select
-            className="select select-bordered"
-            value={sortOption}
-            onChange={(e) => setSortOption(e.target.value as BookSearchSort)}
-          >
-            {sortOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+      {/*    <select*/}
+      {/*      className="select select-bordered"*/}
+      {/*      value={sortOption}*/}
+      {/*      onChange={(e) => setSortOption(e.target.value as BookSearchSort)}*/}
+      {/*    >*/}
+      {/*      {sortOptions.map((opt) => (*/}
+      {/*        <option key={opt.value} value={opt.value}>*/}
+      {/*          {opt.label}*/}
+      {/*        </option>*/}
+      {/*      ))}*/}
+      {/*    </select>*/}
+      {/*  </div>*/}
+      {/*</div>*/}
 
       {/* 책 리스트 */}
       <BookGrid books={data?.books ?? []} />
-      <EmptyState isShow={data?.totalCount === 0} />
+      {/*<EmptyState isShow={data?.totalCount === 0} />*/}
 
       {/* 페이지네이션 */}
       <div className="mt-10 flex justify-center">

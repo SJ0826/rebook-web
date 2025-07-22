@@ -1,11 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  ArrowLeftEndOnRectangleIcon,
-  PencilIcon,
-  PencilSquareIcon,
-} from '@heroicons/react/24/outline';
+import { PencilIcon } from '@heroicons/react/24/outline';
 import {
   useMyProfileMutation,
   useMyProfileQuery,
@@ -14,25 +10,19 @@ import { uploadImagesAPI } from '@/lib/api/files';
 import { useToast } from '@/lib/contexts/ToastContext';
 import { twMerge } from 'tailwind-merge';
 import EditNameModal from '@/components/bookShelf/EditNameModal';
-import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
-import { ROUTES } from '@/lib/constants';
-import LogoutConfirmModal from '@/components/common/LogoutConfirmModal';
 import ChangePasswordModal from '@/components/bookShelf/ChangePasswordModal';
 import Image from 'next/image';
-import { Button } from '@/components/ui';
 
 const ProfileCard = () => {
   const { data: profileData } = useMyProfileQuery();
   const { mutate: updateProfileMutate } = useMyProfileMutation();
+
   const { showToast } = useToast();
-  const { logout } = useAuth();
+
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const router = useRouter();
 
   const [showEditNameModal, setShowEditNameModal] = useState(false);
   const [currentImageUrl, setCurrentImageUrl] = useState(profileData?.imageUrl);
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
   //  이미지 업로드 및 수정 처리
@@ -58,7 +48,7 @@ const ProfileCard = () => {
   }, [profileData?.imageUrl]);
 
   return (
-    <div className={'flex flex-col items-start md:max-w-[296px]'}>
+    <div className={'flex flex-col items-start'}>
       {/*  프로필 이미지 */}
       <div className="relative">
         {currentImageUrl && (
@@ -98,29 +88,6 @@ const ProfileCard = () => {
         <span className="text-center text-lg text-gray-500">
           {profileData?.email}
         </span>
-      </div>
-
-      <div className={'flex w-full gap-2'}>
-        <Button variant={'line-sub'} color={'gray'} className={'flex-1'}>
-          <PencilSquareIcon width={16} className={'mr-2'} />
-          프로필 수정
-        </Button>
-        <Button
-          variant={'line-sub'}
-          color={'gray'}
-          className={'flex-1'}
-          onClick={() => setShowLogoutModal(true)}
-        >
-          <ArrowLeftEndOnRectangleIcon width={16} className={'mr-2'} />
-          <p>로그아웃</p>
-        </Button>
-      </div>
-
-      <div className={'my-4 flex w-full flex-col items-end'}>
-        <div className={'h-[1px] w-full border-t border-gray-200'} />
-        <Button variant={'line-none'} className={'px-1 text-sm text-gray-500'}>
-          회원 탈퇴하기
-        </Button>
       </div>
 
       {/*<div className="flex w-full items-center justify-between">*/}
@@ -198,17 +165,6 @@ const ProfileCard = () => {
         currentName={profileData?.name ?? ''}
         onClose={() => setShowEditNameModal(false)}
       />
-
-      {/* 로그아웃 모달 */}
-      {showLogoutModal && (
-        <LogoutConfirmModal
-          onConfirm={() => {
-            logout();
-            router.push(ROUTES.HOME);
-          }}
-          onCancel={() => setShowLogoutModal(false)}
-        />
-      )}
 
       {/* 비밀번호 변경 모달 */}
       {showChangePasswordModal && (

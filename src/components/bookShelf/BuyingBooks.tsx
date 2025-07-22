@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import emptyImage from '@public/images/empty.png';
 import { ROUTES } from '@/lib/constants';
-import BookListSection from '@/components/bookShelf/BookListSection';
+import BookListSection from '@/app/(main)/my-bookstore/_components/BookListSection';
 import { getBuyingBooks } from '@/lib/api/my';
 
 const BuyingBooks = ({ isActive }: { isActive: boolean }) => {
@@ -23,8 +23,8 @@ const EmptyBuyingBooks = ({ isShow }: { isShow: boolean }) => {
   const router = useRouter();
   if (!isShow) return null;
   return (
-    <div className="flex flex-col items-center justify-center text-center py-20 px-4 space-y-6">
-      <div className="relative w-40 h-40">
+    <div className="flex flex-col items-center justify-center space-y-6 px-4 py-20 text-center">
+      <div className="relative h-40 w-40">
         <Image
           src={emptyImage}
           alt="ReBook Logo"
@@ -42,7 +42,7 @@ const EmptyBuyingBooks = ({ isShow }: { isShow: boolean }) => {
       </p>
       <button
         onClick={() => router.push(ROUTES.HOME)}
-        className="px-6 py-3 bg-yellow-400 text-black font-semibold rounded-xl shadow hover:bg-yellow-300 transition"
+        className="rounded-xl bg-yellow-400 px-6 py-3 font-semibold text-black shadow transition hover:bg-yellow-300"
       >
         책 보러가기
       </button>
