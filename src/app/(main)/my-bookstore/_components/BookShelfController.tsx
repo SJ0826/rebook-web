@@ -2,22 +2,49 @@ import React from 'react';
 import { twMerge } from 'tailwind-merge';
 import { BookshelfType } from '@/app/(main)/my-bookstore/_type';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { useQuery } from '@tanstack/react-query';
+import { getBookStoreSummary } from '@/lib/api/my';
 
 interface BookShelfControllerProps {
   activeTab: BookshelfType;
   setActiveTab: React.Dispatch<React.SetStateAction<BookshelfType>>;
 }
-const bookShelfList: { label: string; key: BookshelfType }[] = [
-  { label: '판매 책장', key: 'sellingBooks' },
-  { label: '구매 책장', key: 'buyingBooks' },
-  { label: '좋아요 책장', key: 'favoriteBooks' },
-];
 
+interface BookStoreSummary {
+  sellingBooksCount: number;
+  buyingBooksCount: number;
+  favoriteBooksCount: number;
+}
+
+const bookShelfList: {
+  label: string;
+  key: BookshelfType;
+  countKey: keyof BookStoreSummary;
+}[] = [
+  { label: '판매 책장', key: 'sellingBooks', countKey: 'sellingBooksCount' },
+  { label: '구매 책장', key: 'buyingBooks', countKey: 'buyingBooksCount' },
+  {
+    label: '좋아요 책장',
+    key: 'favoriteBooks',
+    countKey: 'favoriteBooksCount',
+  },
+];
 const BookShelfController = ({
   activeTab,
   setActiveTab,
 }: BookShelfControllerProps) => {
   const isDesktop = useMediaQuery('(min-width: 768px)');
+
+  const { data: bookStoreSummary } = useQuery({
+    queryKey: ['bookStoreSummary'],
+    queryFn: getBookStoreSummary,
+    select: (data) => data,
+  });
+
+  if (!bookStoreSummary) {
+    return <div>loading...</div>;
+  }
+
   return (
     <>
       <div className={'my-4 h-[1px] w-full border-t border-gray-200'} />
@@ -29,13 +56,27 @@ const BookShelfController = ({
               key={bookShelf.key}
               onClick={() => setActiveTab(bookShelf.key)}
               className={twMerge(
-                'p-2 pl-6 text-lg font-semibold transition hover:cursor-pointer',
-                activeTab === bookShelf.key
-                  ? 'text-black underline underline-offset-4'
-                  : 'text-gray-400'
+                'flex items-center p-2 pl-6 text-lg font-semibold transition hover:cursor-pointer'
               )}
             >
-              {bookShelf.label}
+              <span
+                className={twMerge(
+                  activeTab === bookShelf.key
+                    ? 'text-black underline underline-offset-4'
+                    : 'text-gray-400'
+                )}
+              >
+                {bookShelf.label}
+              </span>
+
+              <span
+                className={twMerge(
+                  'ml-1',
+                  activeTab === bookShelf.key ? 'text-black' : 'text-gray-400'
+                )}
+              >
+                ({bookStoreSummary[bookShelf.countKey]})
+              </span>
             </li>
           ))}
         </ul>

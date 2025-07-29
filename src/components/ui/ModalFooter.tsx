@@ -14,10 +14,19 @@ const ModalFooter = ({
 }) => {
   return (
     <div className={'flex justify-end gap-3 p-4'}>
-      <Button onClick={onClickSubButton} color={'gray'} variant={'line-sub'}>
+      <Button
+        onClick={onClickSubButton}
+        color={'gray'}
+        size={'lg'}
+        variant={'line-sub'}
+      >
         {subButtonText}
       </Button>
-      <Button className="btn btn-primary" onClick={onClickMainButton}>
+      <Button
+        className="btn btn-primary"
+        size={'lg'}
+        onClick={onClickMainButton}
+      >
         {mainButtonText}
       </Button>
     </div>

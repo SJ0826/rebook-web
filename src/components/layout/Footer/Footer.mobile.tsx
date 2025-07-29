@@ -47,7 +47,7 @@ const FooterMobile = () => {
     },
     {
       name: '마이페이지',
-      href: ROUTES.MY_BOOKSTORE,
+      href: ROUTES.ACCOUNT,
       icon: UserIcon,
       activeIcon: UserSolidIcon,
     },

@@ -12,4 +12,5 @@ export const ROUTES = {
   FAVORITES: '/favorites',
   PROFILE: '/profile',
   CHAT: '/chat',
+  ACCOUNT: '/account',
 };

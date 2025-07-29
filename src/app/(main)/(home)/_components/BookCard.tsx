@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { HeartIcon } from '@heroicons/react/16/solid';
 import { Book, BookSaleStatus } from '@/types/books';
 import { ROUTES } from '@/lib/constants';
@@ -16,7 +16,6 @@ interface BookCardProps {
 
 const BookCard = ({ book }: BookCardProps) => {
   const router = useRouter();
-  const pathname = usePathname();
   const isSold = book.saleStatus === BookSaleStatus.SOLD;
   return (
     <div

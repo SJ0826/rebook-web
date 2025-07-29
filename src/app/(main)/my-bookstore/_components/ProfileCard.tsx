@@ -1,18 +1,11 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  useMyProfileMutation,
-  useMyProfileQuery,
-} from '@/hooks/mutations/useAuthMutation';
-import { uploadImagesAPI } from '@/lib/api/files';
+import React from 'react';
+import { useMyProfileQuery } from '@/hooks/mutations/useAuthMutation';
 import { useToast } from '@/lib/contexts/ToastContext';
 import Image from 'next/image';
 import { Button } from '@/components/ui';
-import {
-  ArrowLeftEndOnRectangleIcon,
-  PencilSquareIcon,
-} from '@heroicons/react/24/outline';
+import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { ROUTES } from '@/lib/constants';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
@@ -21,34 +14,12 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 const ProfileCard = () => {
   const { data: profileData } = useMyProfileQuery();
-  const { mutate: updateProfileMutate } = useMyProfileMutation();
 
   const { logout } = useAuth();
   const router = useRouter();
   const { clear } = useModalStack();
   const { showToast } = useToast();
   const isDesktop = useMediaQuery('(min-width: 768px)');
-
-  const [currentImageUrl, setCurrentImageUrl] = useState(profileData?.imageUrl);
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // 📌 이미지 업로드 및 수정 처리
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-
-    try {
-      const { files: uploaded } = await uploadImagesAPI(Array.from(files));
-      const newUrl = uploaded[0].imageUrl;
-      setCurrentImageUrl(newUrl);
-
-      updateProfileMutate({ imageUrl: newUrl });
-      showToast('프로필 이미지가 변경되었습니다.', 'success');
-    } catch {
-      showToast('이미지 업로드에 실패했습니다.', 'error');
-    }
-  };
 
   // 📌 로그아웃 핸들러
   const handleLogout = async () => {
@@ -58,11 +29,6 @@ const ProfileCard = () => {
     showToast('로그아웃에 성공했습니다', 'success');
   };
 
-  // 📌 프로필 이미지 동기화
-  useEffect(() => {
-    setCurrentImageUrl(profileData?.imageUrl);
-  }, [profileData?.imageUrl]);
-
   return (
     <div
       className={
@@ -71,24 +37,15 @@ const ProfileCard = () => {
     >
       {/*  프로필 이미지 */}
       <div className="relative">
-        {currentImageUrl && (
+        {profileData?.imageUrl && (
           <Image
-            src={currentImageUrl}
+            src={profileData?.imageUrl}
             alt="프로필 사진"
             width={100}
             height={100}
             className="rounded-full object-cover md:w-[296px]"
           />
         )}
-
-        {/* 파일 선택 input (숨김) */}
-        <input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          onChange={handleImageChange}
-          className="hidden"
-        />
       </div>
 
       {/*  유저 정보  */}
@@ -103,24 +60,34 @@ const ProfileCard = () => {
 
       {/* 액션 버튼 */}
       <div className={'flex w-full gap-2 px-2 md:flex-col md:px-0'}>
+        {/*<Button*/}
+        {/*  variant={'line-sub'}*/}
+        {/*  color={'gray'}*/}
+        {/*  size={isDesktop ? 'md' : 'sm'}*/}
+        {/*  className={'flex-1'}*/}
+        {/*>*/}
+        {/*  <PencilSquareIcon width={16} className={'mr-2'} />*/}
+        {/*  프로필 수정*/}
+        {/*</Button>*/}
+        {/*<Button*/}
+        {/*  variant={'line-sub'}*/}
+        {/*  color={'gray'}*/}
+        {/*  size={isDesktop ? 'md' : 'sm'}*/}
+        {/*  className={'flex-1'}*/}
+        {/*  onClick={handleLogout}*/}
+        {/*>*/}
+        {/*  <ArrowLeftEndOnRectangleIcon width={16} className={'mr-2'} />*/}
+        {/*  <p>로그아웃</p>*/}
+        {/*</Button>*/}
         <Button
           variant={'line-sub'}
           color={'gray'}
           size={isDesktop ? 'md' : 'sm'}
           className={'flex-1'}
+          onClick={() => router.push(ROUTES.ACCOUNT)}
         >
           <PencilSquareIcon width={16} className={'mr-2'} />
-          프로필 수정
-        </Button>
-        <Button
-          variant={'line-sub'}
-          color={'gray'}
-          size={isDesktop ? 'md' : 'sm'}
-          className={'flex-1'}
-          onClick={handleLogout}
-        >
-          <ArrowLeftEndOnRectangleIcon width={16} className={'mr-2'} />
-          <p>로그아웃</p>
+          마이 페이지
         </Button>
       </div>
 

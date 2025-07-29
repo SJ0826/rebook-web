@@ -54,7 +54,7 @@ export const updateMyProfile = async (
 
 //
 // ──────────────────────────────────────────────────────────────
-//   📚 책장 관련 API
+//   📚 서점 관련 API
 // ──────────────────────────────────────────────────────────────
 //
 
@@ -79,5 +79,11 @@ export const getFavoriteBooks = async (
   params: GetBookListParams
 ): Promise<SearchSellingBookResponse> => {
   const res = await privateAxiosClient.get(`${MY}/books/favorite`, { params });
+  return res.data.data;
+};
+
+/** 서점 책장 요약 조회 */
+export const getBookStoreSummary = async () => {
+  const res = await privateAxiosClient.get(`${MY}/summary`);
   return res.data.data;
 };
