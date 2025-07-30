@@ -46,7 +46,7 @@ const FooterMobile = () => {
       activeIcon: ChatBubbleOvalLeftSolidIcon,
     },
     {
-      name: '마이페이지',
+      name: '계정관리',
       href: ROUTES.ACCOUNT,
       icon: UserIcon,
       activeIcon: UserSolidIcon,
@@ -57,8 +57,7 @@ const FooterMobile = () => {
     <nav className="fixed right-0 bottom-0 left-0 z-50 border-t border-gray-200 bg-white lg:hidden">
       <div className="flex items-center justify-around py-2">
         {navItems.map((item) => {
-          const isActive =
-            pathname === item.href || pathname.startsWith(item.href);
+          const isActive = pathname === item.href || pathname === item.href;
           const IconComponent = isActive ? item.activeIcon : item.icon;
 
           if (item.isSpecial) {
@@ -72,8 +71,6 @@ const FooterMobile = () => {
                   <div className="bg-secondary-600 rounded-full p-2 text-white shadow-lg">
                     <IconComponent className="h-6 w-6" />
                   </div>
-                  {/* 판매하기 알림 점  */}
-                  {/* <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div> */}
                 </div>
                 <span className="text-secondary-600 mt-1 text-xs font-medium">
                   {item.name}

@@ -1,14 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useToast } from '@/lib/contexts/ToastContext';
-import { validatePassword } from '@/lib/utils/validation';
+
 import { useMutation } from '@tanstack/react-query';
 import { changePasswordAPI } from '@/lib/api/auth';
 import Modal from '@/components/ui/Modal';
 import { useModalStack } from '@/hooks/useModalStack';
 import { Input } from '@/components/ui';
 import ModalFooter from '@/components/ui/ModalFooter';
+import { validatePassword } from '@/lib/utils/validation';
+import { useToast } from '@/lib/contexts/ToastContext';
 
 const ChangePasswordModal = () => {
   const [currentPassword, setCurrentPassword] = useState('');

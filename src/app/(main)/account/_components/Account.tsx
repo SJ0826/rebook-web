@@ -2,15 +2,16 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui';
-import { useMyProfileQuery } from '@/hooks/mutations/useAuthMutation';
-import { useToast } from '@/lib/contexts/ToastContext';
-import { useModalStack } from '@/hooks/useModalStack';
 import ChangePasswordModal from '@/app/(main)/account/_components/ChangePasswordModal';
+import EditNameModal from '@/app/(main)/account/_components/EditNameModal';
+import { useMyProfileQuery } from '@/hooks/mutations/useAuthMutation';
+import { useModalStack } from '@/hooks/useModalStack';
+import { useToast } from '@/lib/contexts/ToastContext';
 import { ROUTES } from '@/lib/constants';
 import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
-import EditNameModal from '@/app/(main)/account/_components/EditNameModal';
+import WithdrawalModal from '@/app/(main)/account/_components/WithdrawalModal';
 
 const Account = () => {
   const router = useRouter();
@@ -61,7 +62,7 @@ const Account = () => {
       <div className={'flex w-full flex-col gap-4'}>
         <Button
           onClick={() => {
-            push({ key: '', modal: <EditNameModal /> });
+            push({ key: 'EditNameModal', modal: <EditNameModal /> });
           }}
           variant={'line-sub'}
           size={'lg'}
@@ -94,6 +95,9 @@ const Account = () => {
           <span>로그아웃</span>
         </Button>
         <Button
+          onClick={() =>
+            push({ key: 'WithdrawalModal', modal: <WithdrawalModal /> })
+          }
           variant={'line-sub'}
           size={'lg'}
           color={'gray'}

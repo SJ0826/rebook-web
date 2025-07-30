@@ -1,19 +1,17 @@
 'use client';
 
 import React from 'react';
-import { useMyProfileQuery } from '@/hooks/mutations/useAuthMutation';
 import Image from 'next/image';
-import { Button } from '@/components/ui';
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
-import { ROUTES } from '@/lib/constants';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui';
+import { useMyProfileQuery } from '@/hooks/mutations/useAuthMutation';
+import { ROUTES } from '@/lib/constants';
+import { KeyIcon } from '@heroicons/react/24/outline';
 
 const ProfileCard = () => {
   const { data: profileData } = useMyProfileQuery();
 
   const router = useRouter();
-  const isDesktop = useMediaQuery('(min-width: 768px)');
 
   return (
     <div
@@ -45,16 +43,15 @@ const ProfileCard = () => {
       </div>
 
       {/* 액션 버튼 */}
-      <div className={'flex w-full gap-2 px-2 md:flex-col md:px-0'}>
+      <div className={'flex md:w-full'}>
         <Button
           variant={'line-sub'}
           color={'gray'}
-          size={isDesktop ? 'md' : 'sm'}
-          className={'flex-1'}
+          className={'md:flex-1'}
           onClick={() => router.push(ROUTES.ACCOUNT)}
         >
-          <PencilSquareIcon width={16} className={'mr-2'} />
-          마이 페이지
+          <KeyIcon width={16} className={'mr-2'} />
+          계정관리
         </Button>
       </div>
 
