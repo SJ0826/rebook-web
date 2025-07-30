@@ -2,32 +2,18 @@
 
 import React from 'react';
 import { useMyProfileQuery } from '@/hooks/mutations/useAuthMutation';
-import { useToast } from '@/lib/contexts/ToastContext';
 import Image from 'next/image';
 import { Button } from '@/components/ui';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { ROUTES } from '@/lib/constants';
-import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
-import { useModalStack } from '@/hooks/useModalStack';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { useRouter } from 'next/navigation';
 
 const ProfileCard = () => {
   const { data: profileData } = useMyProfileQuery();
 
-  const { logout } = useAuth();
   const router = useRouter();
-  const { clear } = useModalStack();
-  const { showToast } = useToast();
   const isDesktop = useMediaQuery('(min-width: 768px)');
-
-  // 📌 로그아웃 핸들러
-  const handleLogout = async () => {
-    logout();
-    clear();
-    router.push(ROUTES.HOME);
-    showToast('로그아웃에 성공했습니다', 'success');
-  };
 
   return (
     <div
@@ -60,25 +46,6 @@ const ProfileCard = () => {
 
       {/* 액션 버튼 */}
       <div className={'flex w-full gap-2 px-2 md:flex-col md:px-0'}>
-        {/*<Button*/}
-        {/*  variant={'line-sub'}*/}
-        {/*  color={'gray'}*/}
-        {/*  size={isDesktop ? 'md' : 'sm'}*/}
-        {/*  className={'flex-1'}*/}
-        {/*>*/}
-        {/*  <PencilSquareIcon width={16} className={'mr-2'} />*/}
-        {/*  프로필 수정*/}
-        {/*</Button>*/}
-        {/*<Button*/}
-        {/*  variant={'line-sub'}*/}
-        {/*  color={'gray'}*/}
-        {/*  size={isDesktop ? 'md' : 'sm'}*/}
-        {/*  className={'flex-1'}*/}
-        {/*  onClick={handleLogout}*/}
-        {/*>*/}
-        {/*  <ArrowLeftEndOnRectangleIcon width={16} className={'mr-2'} />*/}
-        {/*  <p>로그아웃</p>*/}
-        {/*</Button>*/}
         <Button
           variant={'line-sub'}
           color={'gray'}
@@ -97,13 +64,6 @@ const ProfileCard = () => {
       {/*  currentName={profileData?.name ?? ''}*/}
       {/*  onClose={() => setShowEditNameModal(false)}*/}
       {/*/>*/}
-
-      {/*/!* 비밀번호 변경 모달 *!/*/}
-      {/*{showChangePasswordModal && (*/}
-      {/*  <ChangePasswordModal*/}
-      {/*    onClose={() => setShowChangePasswordModal(false)}*/}
-      {/*  />*/}
-      {/*)}*/}
     </div>
   );
 };

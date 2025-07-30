@@ -18,7 +18,7 @@ const ChangePasswordModal = () => {
   const { showToast } = useToast();
   const { clear } = useModalStack();
 
-  const { mutate: changePassword, isPending } = useMutation({
+  const { mutate: changePassword } = useMutation({
     mutationFn: changePasswordAPI,
   });
 
@@ -58,9 +58,6 @@ const ChangePasswordModal = () => {
   };
 
   return (
-    // <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50">
-    //   <div className="z-[110] w-96 rounded-lg bg-white p-6 shadow-lg">
-    //     <h3 className="mb-4 text-lg font-semibold">비밀번호 변경</h3>
     <Modal
       hasHeader
       title={'비밀번호를 변경해주세요'}
@@ -71,7 +68,7 @@ const ChangePasswordModal = () => {
           onClickMainButton={handleSubmit}
         />
       }
-      size={'w-[480px]'}
+      size={'w-[580px]'}
     >
       <div className={'flex flex-col gap-6 px-4'}>
         <Input
@@ -84,22 +81,6 @@ const ChangePasswordModal = () => {
           onClear={() => setCurrentPassword('')}
         />
 
-        {/*<PasswordInput*/}
-        {/*  label="현재 비밀번호"*/}
-        {/*  value={currentPassword}*/}
-        {/*  onChange={setCurrentPassword}*/}
-        {/*  placeholder="현재 비밀번호를 입력해주세요"*/}
-        {/*/>*/}
-
-        {/*<PasswordInput*/}
-        {/*  label="새 비밀번호"*/}
-        {/*  value={newPassword}*/}
-        {/*  onChange={(val) => {*/}
-        {/*    setNewPassword(val);*/}
-        {/*    if (passwordError) setPasswordError('');*/}
-        {/*  }}*/}
-        {/*  placeholder="새로운 비밀번호를 입력해주세요"*/}
-        {/*/>*/}
         <Input
           label={'새 비밀번호'}
           type="password"
@@ -113,13 +94,6 @@ const ChangePasswordModal = () => {
           <p className="mt-1 text-sm text-red-500">{passwordError}</p>
         )}
 
-        {/*<PasswordInput*/}
-        {/*  label="새 비밀번호 확인"*/}
-        {/*  value={confirmPassword}*/}
-        {/*  onChange={setConfirmPassword}*/}
-        {/*  placeholder="새로운 비밀번호를 다시 입력해주세요"*/}
-        {/*/>*/}
-
         <Input
           label="새 비밀번호 확인"
           type="password"
@@ -129,19 +103,6 @@ const ChangePasswordModal = () => {
           clearable
           onClear={() => setConfirmPassword('')}
         />
-
-        {/*<div className="mt-6 flex justify-end gap-2">*/}
-        {/*  <button className="btn btn-sm btn-outline" onClick={clear}>*/}
-        {/*    취소*/}
-        {/*  </button>*/}
-        {/*  <button*/}
-        {/*    className="btn btn-sm btn-primary"*/}
-        {/*    onClick={handleSubmit}*/}
-        {/*    disabled={isPending}*/}
-        {/*  >*/}
-        {/*    저장*/}
-        {/*  </button>*/}
-        {/*</div>*/}
       </div>
     </Modal>
   );

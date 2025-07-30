@@ -75,12 +75,12 @@ const CustomInput = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <Field className={className}>
-        <div className="flex w-full flex-wrap items-start">
+        <div className="flex w-full flex-col items-start sm:flex-row sm:items-center">
           {label && (
             <Label
               htmlFor={props.id}
               className={twMerge(
-                'mb-1 block min-w-20 text-base font-medium text-gray-700',
+                'mb-1 block min-w-[120px] font-semibold text-gray-700',
                 hasError && 'text-red-600'
               )}
             >
