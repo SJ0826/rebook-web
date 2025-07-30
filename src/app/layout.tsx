@@ -47,9 +47,9 @@ export default function RootLayout({
         className={`${pretendard.variable} font-pretendard flex min-h-screen flex-col`}
       >
         <QueryProviders>
-          <ModalProvider>
-            <ToastProvider>{children}</ToastProvider>
-          </ModalProvider>
+          <ToastProvider>
+            <ModalProvider>{children}</ModalProvider>
+          </ToastProvider>
         </QueryProviders>
       </body>
     </html>

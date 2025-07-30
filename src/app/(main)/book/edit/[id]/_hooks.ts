@@ -12,12 +12,12 @@ import { uploadImagesAPI } from '@/lib/api/files';
 export const useEditBookForm = (bookId: number) => {
   const {
     control,
+    watch,
     handleSubmit,
     register,
     reset,
     formState: { errors },
   } = useForm<CreateBookDto>();
-
   const queryClient = useQueryClient();
   const [imageFiles, setImageFiles] = useState<
     { uuid: string; imageUrl: string }[]
@@ -124,21 +124,21 @@ export const useEditBookForm = (bookId: number) => {
         description,
         imageUuids: bookImages || [],
       });
-    }
 
-    if (book?.bookImages) {
-      const formatted = book.bookImages.map(
-        (img: { uuid: string; imageUrl: string }) => ({
-          uuid: img.uuid,
-          imageUrl: img.imageUrl,
-        })
-      );
-      setImageFiles(formatted);
+      if (bookImages) {
+        const formatted = bookImages.map(
+          (img: { uuid: string; imageUrl: string }) => ({
+            uuid: img.uuid,
+            imageUrl: img.imageUrl,
+          })
+        );
+        setImageFiles(formatted);
+      }
     }
   }, [book]);
-
   return {
     control,
+    watch,
     handleSubmit,
     submitUpdatedBook,
     isLoading,

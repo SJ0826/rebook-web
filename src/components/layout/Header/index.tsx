@@ -3,9 +3,11 @@
 import React, { useEffect, useState } from 'react';
 import DesktopHeader from '@/components/layout/Header/DesktopHeader';
 import MobileHeader from '@/components/layout/Header/MobileHeader';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 const Header = () => {
   const [isMounted, setIsMounted] = useState(false);
+  const isDesktop = useMediaQuery('(min-width: 768px)');
 
   useEffect(() => {
     setIsMounted(true);
@@ -13,15 +15,7 @@ const Header = () => {
 
   if (!isMounted) return null;
 
-  return (
-    <>
-      {/* 데스크톱 헤더*/}
-      <DesktopHeader />
-
-      {/* 모바일 헤더 */}
-      <MobileHeader />
-    </>
-  );
+  return <>{isDesktop ? <DesktopHeader /> : <MobileHeader />}</>;
 };
 
 export default Header;

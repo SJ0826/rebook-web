@@ -58,9 +58,7 @@ const Modal = ({ hasHeader, title, size, children, footer }: IProps) => {
             {/* 헤더 */}
             {hasHeader && (
               <div className="flex items-center justify-between border-b border-gray-200 px-6 py-6">
-                <h2 className="text-xl font-semibold text-gray-800 md:text-2xl">
-                  {title}
-                </h2>
+                <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
                 <Button
                   onClick={() => {
                     clear();

@@ -80,12 +80,12 @@ export default function DesktopHeader() {
             />
             <HeaderButton
               title={'내 서점'}
-              path={ROUTES.BOOK_REGISTER}
+              path={ROUTES.MY_BOOKSTORE}
               icon={<BookOpenIcon />}
             />
             <HeaderButton
               title={'리북톡'}
-              path={ROUTES.BOOK_REGISTER}
+              path={ROUTES.CHAT}
               icon={<ChatBubbleOvalLeftIcon />}
             />
           </nav>

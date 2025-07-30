@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import {
   dehydrate,
   HydrationBoundary,
@@ -7,6 +7,7 @@ import {
 import { BookSearchSort } from '@/types/books';
 import { getSearchBooks } from '@/lib/api/books';
 import RebookMain from '@/app/(main)/(home)/_components/RebookMain';
+import CommonPageLayout from '@/components/layout/CommonPageLayout';
 
 export default async function HomePage() {
   const queryClient = new QueryClient();
@@ -43,12 +44,10 @@ export default async function HomePage() {
   });
 
   return (
-    <Suspense fallback={<p>Loading...</p>}>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <div className={'px-2 md:px-10'}>
-          <RebookMain />
-        </div>
-      </HydrationBoundary>
-    </Suspense>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <CommonPageLayout>
+        <RebookMain />
+      </CommonPageLayout>
+    </HydrationBoundary>
   );
 }

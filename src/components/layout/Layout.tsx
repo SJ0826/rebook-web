@@ -11,14 +11,14 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-const grayColorPages = [ROUTES.SIGNUP, ROUTES.LOGIN];
+const grayColorPages = [ROUTES.SIGNUP, ROUTES.LOGIN, ROUTES.ACCOUNT];
 
 const Layout = ({ children }: LayoutProps) => {
   const pathname = usePathname();
   const isGray = grayColorPages.includes(pathname);
 
   return (
-    <main className={twMerge('flex min-h-screen flex-col pt-12 lg:pt-34')}>
+    <main className={twMerge('flex min-h-screen flex-col pt-11 lg:pt-33')}>
       {/* 상단 네비게이션 */}
       <Header />
       {/* 메인 콘텐츠 영역 */}
