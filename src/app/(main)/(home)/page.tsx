@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import {
   dehydrate,
   HydrationBoundary,
@@ -44,10 +44,12 @@ export default async function HomePage() {
   });
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <CommonPageLayout>
-        <RebookMain />
-      </CommonPageLayout>
-    </HydrationBoundary>
+    <Suspense fallback={<div>Loading...</div>}>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <CommonPageLayout>
+          <RebookMain />
+        </CommonPageLayout>
+      </HydrationBoundary>
+    </Suspense>
   );
 }
