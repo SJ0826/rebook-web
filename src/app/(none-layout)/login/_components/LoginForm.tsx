@@ -42,7 +42,10 @@ const LoginForm = () => {
     loginMutate(
       { email: formData.email, password: formData.password },
       {
-        onSuccess: () => router.push(ROUTES.HOME),
+        onSuccess: () => {
+          console.log('login success');
+          router.push(ROUTES.HOME);
+        },
         onError: (error) => {
           if (axios.isAxiosError(error)) {
             showToast(error.response?.data?.message, 'error');
