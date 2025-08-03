@@ -1,10 +1,13 @@
 import React, { Suspense } from 'react';
-import ChatPage from '@/components/chat/ChatPage';
+import ChatPage from '@/app/(main)/chat/_components/ChatPage';
+import CommonPageLayout from '@/components/layout/CommonPageLayout';
 
 const Page = () => {
   return (
     <Suspense fallback={<p>...loading</p>}>
-      <ChatPage />
+      <CommonPageLayout>
+        <ChatPage />
+      </CommonPageLayout>
     </Suspense>
   );
 };

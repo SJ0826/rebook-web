@@ -47,7 +47,7 @@ const BookShelfController = ({
 
   return (
     <>
-      <div className={'my-4 h-[1px] w-full border-t border-gray-200'} />
+      <div className={'mb-4 h-[1px] w-full border-t border-gray-200'} />
 
       {isDesktop ? (
         <ul className={'flex flex-col gap-4'}>

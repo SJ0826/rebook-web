@@ -16,7 +16,7 @@ const ProfileCard = () => {
   return (
     <div
       className={
-        'mt-6 flex w-full flex-col items-center md:mt-0 md:items-start'
+        'flex w-full flex-col items-center bg-gray-50 py-6 md:mt-0 md:items-start md:bg-white'
       }
     >
       {/*  프로필 이미지 */}
@@ -47,20 +47,13 @@ const ProfileCard = () => {
         <Button
           variant={'line-sub'}
           color={'gray'}
-          className={'md:flex-1'}
+          className={'bg-white md:flex-1'}
           onClick={() => router.push(ROUTES.ACCOUNT)}
         >
           <KeyIcon width={16} className={'mr-2'} />
           계정관리
         </Button>
       </div>
-
-      {/*/!* 이름 변경 모달 *!/*/}
-      {/*<EditNameModal*/}
-      {/*  showEditModal={showEditNameModal}*/}
-      {/*  currentName={profileData?.name ?? ''}*/}
-      {/*  onClose={() => setShowEditNameModal(false)}*/}
-      {/*/>*/}
     </div>
   );
 };

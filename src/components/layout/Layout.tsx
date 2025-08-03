@@ -16,22 +16,28 @@ const grayColorPages = [ROUTES.SIGNUP, ROUTES.LOGIN, ROUTES.ACCOUNT];
 const Layout = ({ children }: LayoutProps) => {
   const pathname = usePathname();
   const isGray = grayColorPages.includes(pathname);
+  const isChat = pathname.includes(ROUTES.CHAT);
 
   return (
-    <main className={twMerge('flex min-h-screen flex-col pt-11 lg:pt-33')}>
+    <main className={twMerge('flex h-screen flex-col pt-11 lg:pt-33')}>
       {/* 상단 네비게이션 */}
       <Header />
-      {/* 메인 콘텐츠 영역 */}
-      <div
-        className={twMerge(
-          'flex flex-1 flex-col pb-60',
-          isGray && 'bg-gray-50'
-        )}
-      >
-        {children}
+
+      {/* 스크롤 영역 */}
+      <div className={twMerge('flex flex-1 flex-col overflow-y-auto')}>
+        {/* 메인 콘텐츠 영역 */}
+        <div
+          className={twMerge(
+            'flex flex-1 flex-col pb-60',
+            isGray && 'bg-gray-50',
+            isChat && 'pb-0'
+          )}
+        >
+          {children}
+        </div>
+        {/*  푸터 */}
+        <Footer />
       </div>
-      {/*  푸터 */}
-      <Footer />
     </main>
   );
 };
