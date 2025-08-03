@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { noAuthRoutes } from '@/lib/data/noAuthRoutes';
-import { ROUTES } from '@/lib/constants';
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -10,11 +9,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const refreshToken = request.cookies.get('refreshToken')?.value;
+  // const refreshToken = request.cookies.get('refreshToken')?.value;
   // 토큰 없음 -> 로그인 페이지로 리다이렉트
-  if (!refreshToken) {
-    return NextResponse.redirect(new URL(ROUTES.LOGIN, request.nextUrl.origin));
-  }
+  // if (!refreshToken) {
+  //   return NextResponse.redirect(new URL(ROUTES.LOGIN, request.nextUrl.origin));
+  // }
 
   return NextResponse.next();
 }
