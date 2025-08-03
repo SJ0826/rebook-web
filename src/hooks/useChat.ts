@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { ChatMessage } from '@/types/chat';
 import { getChatMessages } from '@/lib/api/chat';
 import { useAuth } from '@/hooks/useAuth';
+import { ChatMessage } from '@/app/(main)/chat/_types';
 
 export function useChat(chatRoomId: number | null) {
   const PAGE_SIZE = 20;
