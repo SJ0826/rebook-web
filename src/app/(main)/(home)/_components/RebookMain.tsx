@@ -17,7 +17,7 @@ const RebookMain = () => {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('search') ?? undefined;
   const { filters, setFilters } = useBookFilters();
-  console.log('vercel test');
+
   const [sortOption, setSortOption] = useState<BookSearchSort>(
     BookSearchSort.NEWEST
   );
