@@ -7,16 +7,19 @@ import React, {
   useState,
 } from 'react';
 import { useChat } from '@/hooks/useChat';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getMyProfile } from '@/lib/api/my';
+import { useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/lib/contexts/ToastContext';
 import { formatKoreanTime } from '@/lib/utils/time';
-import { BookSummary } from '@/types/chat';
+
 import { convertBookSaleStatus } from '@/lib/utils/convert';
 import Image from 'next/image';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { ROUTES } from '@/lib/constants';
-import { useRouter } from 'next/navigation';
+import { BookSummary } from '@/app/(main)/chat/_types';
+import { useMyProfileQuery } from '@/hooks/mutations/useAuthMutation';
+import Link from 'next/link';
+import { Button, Input } from '@/components/ui';
+import { ArrowUturnLeftIcon } from '@heroicons/react/16/solid';
 
 const ChatDetail = ({
   selectedRoomId,
@@ -27,7 +30,6 @@ const ChatDetail = ({
   setSelectedRoomId: Dispatch<SetStateAction<number | null>>;
   book?: BookSummary;
 }) => {
-  const router = useRouter();
   const scrollRef = useRef<HTMLDivElement>(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
   const topSentinelRef = useRef<HTMLDivElement>(null);
@@ -36,6 +38,7 @@ const ChatDetail = ({
   const { showToast } = useToast();
   const { messages, sendMessage, loadMoreMessages, hasMore } =
     useChat(selectedRoomId);
+  const { data: myProfile } = useMyProfileQuery();
   const queryClient = useQueryClient();
 
   const [currentMessage, setCurrentMessage] = useState('');
@@ -43,24 +46,19 @@ const ChatDetail = ({
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 내 정보 조회
-  const { data: myProfile } = useQuery({
-    queryKey: ['myData'],
-    queryFn: getMyProfile,
-  });
   const isMyBubble = (senderId: number) => myProfile?.id === senderId;
 
-  // 스크롤을 맨 아래로 이동시키는 함수
+  // 📌 스크롤을 맨 아래로 이동시키는 함수
   const scrollToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
     if (lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView({
         behavior,
-        block: 'end',
+        block: 'center',
       });
     }
   }, []);
 
-  // 메세지 전송 핸들러
+  // 📌 메세지 전송 핸들러
   const handleSubmitMessage = async () => {
     const message = currentMessage.trim();
     if (!message || isSubmitting) return;
@@ -78,6 +76,7 @@ const ChatDetail = ({
     }
   };
 
+  // 📌 메세지 전송 키보드 핸들러
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
       e.preventDefault();
@@ -99,7 +98,7 @@ const ChatDetail = ({
     }
   };
 
-  // 메시지가 변경되었을 때 스크롤 처리
+  // 📌 메시지가 변경되었을 때 스크롤 처리
   useEffect(() => {
     if (!messages) return;
 
@@ -121,7 +120,7 @@ const ChatDetail = ({
     messagesLengthRef.current = messages.length;
   }, [messages, shouldScrollToBottom, scrollToBottom, isFirstLoad]);
 
-  // 채팅방이 변경되었을 때 초기화
+  // 📌 채팅방이 변경되었을 때 초기화
   useEffect(() => {
     if (selectedRoomId !== null) {
       setIsFirstLoad(true);
@@ -130,7 +129,7 @@ const ChatDetail = ({
     }
   }, [selectedRoomId]);
 
-  // 스크롤 감지 후 과거 메세지 호출
+  // 📌 스크롤 감지 후 과거 메세지 호출
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
@@ -171,69 +170,79 @@ const ChatDetail = ({
     );
   }
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col pb-20 md:pb-0">
       {!isDesktop && (
-        <div className="border-base-300 bg-base-200 flex items-center border-b p-4">
-          <button
+        <div className="flex items-center border-b border-gray-300 p-4">
+          <Button
             onClick={() => setSelectedRoomId(null)}
-            className="btn btn-sm btn-outline"
+            variant={'line-sub'}
+            color={'secondary'}
+            className={'flex w-fit items-center gap-2'}
           >
-            채팅 목록으로
-          </button>
+            <ArrowUturnLeftIcon width={16} height={16} />
+            <span>채팅 목록으로</span>
+          </Button>
         </div>
       )}
       {/* 책 요약 정보 */}
-      <section className="sticky top-0 z-10 bg-white px-4 py-6 pb-2">
-        <div
-          className="border-base-300 flex cursor-pointer items-center gap-4 border-b bg-white p-4 shadow-md"
-          onClick={() => router.push(`${ROUTES.BOOK}/${book.id}`)}
-        >
-          <Image
-            src={
-              book?.bookImage?.[0]?.imageUrl ??
-              '/images/default-book-detail.png'
-            }
-            alt="책 썸네일"
-            width={64}
-            height={80}
-            className="h-20 w-16 rounded-md object-cover"
-          />
-          <div>
-            <div className="text-lg font-semibold">{book?.title}</div>
-            <div className="text-base-content/70 text-sm">
-              ₩ {book?.price?.toLocaleString()} ·{' '}
-              {convertBookSaleStatus(book?.saleStatus)}
+      <section className="sticky top-0 z-10 bg-white px-4 py-2">
+        <Link href={`${ROUTES.BOOK}/${book.id}`}>
+          <div className="flex cursor-pointer items-center gap-4 bg-white p-2 shadow-md">
+            <Image
+              src={
+                book?.bookImage?.[0]?.imageUrl ??
+                '/images/default-book-detail.png'
+              }
+              alt="책 썸네일"
+              width={50}
+              height={50}
+              className="rounded-md object-cover"
+            />
+            <div>
+              <div className="text-lg font-semibold">{book?.title}</div>
+              <div className="text-sm">
+                ₩ {book?.price?.toLocaleString()} ·{' '}
+                {convertBookSaleStatus(book?.saleStatus)}
+              </div>
             </div>
           </div>
-        </div>
+        </Link>
       </section>
 
       {/* 채팅 메시지 리스트 */}
       <section
         ref={scrollRef}
-        className="bg-base-100 min-h-0 flex-1 overflow-y-auto px-4 py-2"
+        className="flex-1 overflow-y-auto bg-white px-4 py-2"
       >
         <div ref={topSentinelRef} />
         {messages?.map((msg, index) => {
           const isLastMessage = index === messages.length - 1;
           return (
-            <div key={msg.id} ref={isLastMessage ? lastMessageRef : undefined}>
+            <div
+              key={msg.id}
+              ref={isLastMessage ? lastMessageRef : undefined}
+              className="px-4 py-2"
+            >
               {isMyBubble(msg.senderId) ? (
-                <div className="chat chat-end">
-                  <div className="chat-bubble bg-warning text-warning-content">
-                    {msg.content}
-                  </div>
-                  <div className="chat-footer">
-                    {formatKoreanTime(msg.createdAt)}
+                <div className="flex w-full justify-end">
+                  <div className="max-w-xs text-right">
+                    <div className="bg-primary-400 inline-block rounded-lg px-4 py-2 text-white shadow-md">
+                      {msg.content}
+                    </div>
+                    <div className="text-secondary-500 mt-1 text-xs">
+                      {formatKoreanTime(msg.createdAt)}
+                    </div>
                   </div>
                 </div>
               ) : (
-                <div className="chat chat-start">
-                  <div className="chat-bubble bg-base-200 text-base-content">
-                    {msg.content}
-                  </div>
-                  <div className="chat-footer">
-                    {formatKoreanTime(msg.createdAt)}
+                <div className="flex w-full justify-start">
+                  <div className="max-w-xs text-left">
+                    <div className="bg-secondary-200 text-secondary-800 inline-block rounded-lg px-4 py-2 shadow-md">
+                      {msg.content}
+                    </div>
+                    <div className="text-secondary-500 mt-1 text-xs">
+                      {formatKoreanTime(msg.createdAt)}
+                    </div>
                   </div>
                 </div>
               )}
@@ -243,22 +252,21 @@ const ChatDetail = ({
       </section>
 
       {/* 입력창 */}
-      <section className="border-base-300 bg-base-200 flex h-[73px] items-center gap-2 border-t p-4">
-        <input
+      <section className="flex h-[73px] items-center gap-2 border-t border-gray-300 bg-white p-4">
+        <Input
           type="text"
           value={currentMessage}
           onChange={(e) => setCurrentMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="메시지를 입력하세요"
-          className="input input-bordered bg-base-100 flex-1"
+          className={'flex-1'}
         />
-        <button
-          className="btn btn-warning text-white"
+        <Button
           onClick={handleSubmitMessage}
           disabled={isSubmitting || !currentMessage.trim()}
         >
           전송
-        </button>
+        </Button>
       </section>
     </div>
   );

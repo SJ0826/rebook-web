@@ -106,6 +106,7 @@ const Account = () => {
           <span>회원탈퇴</span>
         </Button>
       </div>
+      {/*<Toast text={'test'} type={'error'} />*/}
     </div>
   );
 };

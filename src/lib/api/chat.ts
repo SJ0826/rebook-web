@@ -1,6 +1,6 @@
 import { privateAxiosClient } from '@/lib/api/axios.client';
 import { ApiResponse } from '@/types/commons';
-import { ChatListItem, ChatMessage } from '@/types/chat';
+import { ChatListItem, ChatMessage } from '@/app/(main)/chat/_types';
 
 const CHAT = '/chat';
 

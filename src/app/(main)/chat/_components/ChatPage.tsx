@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import ChatDetail from '@/components/chat/ChatDetail';
+import ChatDetail from '@/app/(main)/chat/_components/ChatDetail';
 import { getChatList, updateLastReadTime } from '@/lib/api/chat';
 import { useToast } from '@/lib/contexts/ToastContext';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import ChatList from '@/components/chat/ChatList';
+import ChatList from '@/app/(main)/chat/_components/ChatList';
 import { useSearchParams } from 'next/navigation';
 
 export default function ChatPage() {
@@ -18,7 +18,7 @@ export default function ChatPage() {
   const bookId = Number(searchParams.get('bookId'));
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
-  // 채팅 목록 조회
+  // 📌 채팅 목록 조회
   const {
     data: chatList,
     isError: isChatListError,
@@ -44,7 +44,7 @@ export default function ChatPage() {
     },
   });
 
-  // 마지막으로 읽은 날짜 업데이트
+  // 📌 마지막으로 읽은 날짜 업데이트
   const { mutate: updateLastReadTimeMutate } = useMutation({
     mutationFn: async (selectedRoomId: number) => {
       const response = await updateLastReadTime(selectedRoomId);
@@ -72,7 +72,7 @@ export default function ChatPage() {
   }, [refetchChatList, selectedRoomId, updateLastReadTimeMutate]);
 
   return (
-    <div className="bg-base-100 text-base-content mx-4 -mb-19 flex max-h-[calc(100vh-65px)] flex-1 overflow-hidden md:mx-0">
+    <div className="flex h-full w-full md:mx-0 md:h-[560px] md:py-3">
       {/* ✅ 채팅 목록 */}
       <ChatList
         selectedRoomId={selectedRoomId}

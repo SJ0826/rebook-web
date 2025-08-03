@@ -28,16 +28,6 @@ const MyBookStore = () => {
             activeTab={activeTab}
             setActiveTab={setActiveTab}
           />
-
-          {/*<div className={'my-4 flex w-full flex-col items-end'}>*/}
-          {/*  <div className={'h-[1px] w-full'} />*/}
-          {/*  <Button*/}
-          {/*    variant={'line-none'}*/}
-          {/*    className={'px-1 text-sm text-gray-500'}*/}
-          {/*  >*/}
-          {/*    회원 탈퇴하기*/}
-          {/*  </Button>*/}
-          {/*</div>*/}
         </div>
 
         {/* ✅ 오른쪽 책장 컴포넌트 */}

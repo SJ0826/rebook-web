@@ -40,7 +40,7 @@ const FooterMobile = () => {
       isSpecial: true, // 특별한 스타일링
     },
     {
-      name: '채팅',
+      name: '리북톡',
       href: ROUTES.CHAT,
       icon: ChatBubbleOvalLeftIcon,
       activeIcon: ChatBubbleOvalLeftSolidIcon,
