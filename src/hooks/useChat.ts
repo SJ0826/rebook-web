@@ -49,6 +49,7 @@ export function useChat(chatRoomId: number | null) {
 
       socketRef.current.on('connect', () => {
         console.log('✅ 소켓 연결 성공!');
+        console.log('🔌 연결 상태:', socketRef.current?.connected);
         socketRef.current?.emit('joinRoom', { chatRoomId });
       });
 
