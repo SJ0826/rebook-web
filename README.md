@@ -36,7 +36,7 @@ ReBook은 중고 책 거래를 위한 웹 애플리케이션입니다.
 
 ## 🔗 데모 링크
 
-📦 [👉 프론트엔드 데모 보러가기](https://main.d2nh4o8zioz2s8.amplifyapp.com/)
+📦 [👉 프론트엔드 데모 보러가기](https://rebook-v2.d2nh4o8zioz2s8.amplifyapp.com//)
 
 > 백엔드는 AWS EC2 + PostgreSQL 기반 NestJS 서버와 연결되어 있습니다.
 
