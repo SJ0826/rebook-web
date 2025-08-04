@@ -40,6 +40,26 @@ export function useChat(chatRoomId: number | null) {
     console.log('🌐 서버 URL:', process.env.NEXT_PUBLIC_SOCKET_URL);
     console.log('🔑 토큰 존재:', !!accessToken);
 
+    if (accessToken) {
+      console.log('🎫 토큰 앞 10자리:', accessToken.substring(0, 10) + '...');
+
+      // JWT 토큰 파싱해서 만료시간 확인
+      try {
+        const tokenParts = accessToken.split('.');
+        if (tokenParts.length === 3) {
+          const payload = JSON.parse(atob(tokenParts[1]));
+          console.log(
+            '⏰ 토큰 만료시간:',
+            new Date(payload.exp * 1000).toISOString()
+          );
+          console.log('🕐 현재 시간:', new Date().toISOString());
+          console.log('✅ 토큰 유효:', payload.exp * 1000 > Date.now());
+        }
+      } catch (e) {
+        console.error('❌ 토큰 파싱 실패:', e);
+      }
+    }
+
     socketRef.current = io(process.env.NEXT_PUBLIC_SOCKET_URL!, {
       withCredentials: true,
       auth: { token: accessToken },
