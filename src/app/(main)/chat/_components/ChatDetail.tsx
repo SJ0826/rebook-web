@@ -212,7 +212,7 @@ const ChatDetail = ({
       {/* 채팅 메시지 리스트 */}
       <section
         ref={scrollRef}
-        className="flex-1 overflow-y-auto bg-white px-4 py-2"
+        className="flex-1 overflow-y-auto bg-white px-4 py-2 pb-[85px] md:pb-2"
       >
         <div ref={topSentinelRef} />
         {messages?.map((msg, index) => {
@@ -252,7 +252,7 @@ const ChatDetail = ({
       </section>
 
       {/* 입력창 */}
-      <section className="flex h-[73px] items-center gap-2 border-t border-gray-300 bg-white p-4">
+      <section className="fixed right-0 bottom-[85px] left-0 z-20 flex h-[73px] items-center gap-2 border-t border-gray-300 bg-white p-4 md:sticky md:right-auto md:left-auto">
         <Input
           type="text"
           value={currentMessage}

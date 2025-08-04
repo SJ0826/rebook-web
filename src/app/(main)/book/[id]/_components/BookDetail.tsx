@@ -54,7 +54,7 @@ export default function BookDetail() {
     isError,
     refetch: refetchBook,
   } = useQuery({
-    queryKey: ['bookDetail', Number(id)],
+    queryKey: ['bookDetail', Number(id), isLoggedIn],
     queryFn: async () => await getBookDetailAPI(Number(id)),
     enabled: !!id,
     staleTime: 10 * 60 * 1000,
@@ -185,7 +185,7 @@ export default function BookDetail() {
     }
     router.push(`${ROUTES.BOOK}/${book.id}/chats`);
   };
-
+  console.log(book);
   return (
     <div className="min-h-screen w-full">
       <div className="flex flex-col gap-6 rounded-lg bg-white p-6 lg:flex-row lg:items-start lg:items-stretch lg:gap-8">

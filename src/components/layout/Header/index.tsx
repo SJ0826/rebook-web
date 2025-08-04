@@ -7,7 +7,7 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 const Header = () => {
   const [isMounted, setIsMounted] = useState(false);
-  const isDesktop = useMediaQuery('(min-width: 768px)');
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
 
   useEffect(() => {
     setIsMounted(true);

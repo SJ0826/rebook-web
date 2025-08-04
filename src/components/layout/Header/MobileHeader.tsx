@@ -11,7 +11,7 @@ const MobileHeader = () => {
   return (
     <header
       className={
-        'fixed top-0 z-50 flex w-full flex-1 justify-between border-b border-gray-200 bg-white px-4 py-3 lg:hidden'
+        '3xl:hidden fixed top-0 z-50 flex w-full flex-1 justify-between border-b border-gray-200 bg-white px-4 py-3'
       }
     >
       {/* 로고 */}
