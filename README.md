@@ -43,8 +43,9 @@ ReBook은 중고 책 거래를 위한 웹 애플리케이션입니다.
 
 
 ## ✅ 개발 포인트 및 회고
-* useQuery, useMutation, queryClient.invalidateQueries 등 TanStack Query의 CRUD 패턴 학습
-* 모바일 최적화 + 다양한 디바이스에서의 반응형 UI 테스트
-* WebSocket 연결 최적화 (404, reconnect 대응)
-* 인증 흐름 정립: SSR 환경에서 쿠키 접근 대응 학습
-*  [[네트워크] RefreshToken을 왜 쿠키에 저장해야할까?](https://sj0826.github.io/network/network-RefreshToken%EC%9D%84-%EC%99%9C-%EC%BF%A0%ED%82%A4%EC%97%90-%EC%A0%80%EC%9E%A5%ED%95%B4%EC%95%BC%ED%95%A0%EA%B9%8C/)
+• 서버 컴포넌트 환경에서 prefetchQuery 활용으로 페이지 로딩 성능 최적화
+• 웹 폰트 로딩 최적화 및 UI 구조 개선으로 LCP 및 Lighthouse 점수 향상
+• WebSocket 기반 1:1 실시간 채팅 시스템 구현
+• Refresh Token HttpOnly Cookie 저장으로 XSS 보안 강화
+• EC2 + Nginx + SSL/TLS 인증서로 HTTPS 보안 통신 구축
+* [[네트워크] RefreshToken을 왜 쿠키에 저장해야할까?](https://sj0826.github.io/network/network-RefreshToken%EC%9D%84-%EC%99%9C-%EC%BF%A0%ED%82%A4%EC%97%90-%EC%A0%80%EC%9E%A5%ED%95%B4%EC%95%BC%ED%95%A0%EA%B9%8C/)
