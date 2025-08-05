@@ -42,7 +42,7 @@ ReBook은 중고 책 거래를 위한 웹 애플리케이션입니다.
 
 
 
-✅ 개발 포인트 및 회고
+## ✅ 개발 포인트 및 회고
 * useQuery, useMutation, queryClient.invalidateQueries 등 TanStack Query의 CRUD 패턴 학습
 * 모바일 최적화 + 다양한 디바이스에서의 반응형 UI 테스트
 * WebSocket 연결 최적화 (404, reconnect 대응)
