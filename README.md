@@ -54,13 +54,13 @@ Re-Book은 중고 책 거래를 간편하게 할 수 있는 플랫폼입니다. 
 
 **🖥️ 데스크탑** 
 
-<img src="./public/images/main-desktop.png" alt="" width="500" />
+<img src="./public/images/main-desktop.png" alt="" width="500" style="border: #0a0a0a; border-radius: 5px; border-width: 5px; border-style: solid;" />
 
 <br />
 
 **📱모바일**
 
-<img src="./public/images/main-mobile.png" alt="" width="200" />
+<img src="./public/images/main-mobile.png" alt="" width="200" style="border: #0a0a0a; border-radius: 5px; border-width: 5px; border-style: solid;"  />
 
 - 등록된 책 목록 조회
 - 실시간 검색 및 필터링
@@ -69,13 +69,13 @@ Re-Book은 중고 책 거래를 간편하게 할 수 있는 플랫폼입니다. 
 ### 책 상세 페이지
 **🖥️ 데스크탑**
 
-<img src="./public/images/detail-desktop.png" alt="" width="500" />
+<img src="./public/images/detail-desktop.png" alt="" width="500" style="border: #0a0a0a; border-radius: 5px; border-width: 5px; border-style: solid;"  />
 
 <br />
 
 **📱모바일**
 
-<img src="./public/images/detail-mobile.png" alt="" width="200" />
+<img src="./public/images/detail-mobile.png" alt="" width="200" style="border: #0a0a0a; border-radius: 5px; border-width: 5px; border-style: solid;"  />
 
 - 상세 정보 및 이미지 캐러셀
 - 판매자와의 채팅 시작
@@ -84,13 +84,13 @@ Re-Book은 중고 책 거래를 간편하게 할 수 있는 플랫폼입니다. 
 ### 실시간 채팅
 **🖥️ 데스크탑**
 
-<img src="./public/images/chat-desktop.png" alt="" width="500" />
+<img src="./public/images/chat-desktop.png" alt="" width="500" style="border: #0a0a0a; border-radius: 5px; border-width: 5px; border-style: solid;"  />
 
 <br />
 
 **📱모바일**
 
-<img src="./public/images/chat-mobile.png" alt="" width="200" />
+<img src="./public/images/chat-mobile.png" alt="" width="200" style="border: #0a0a0a; border-radius: 5px; border-width: 5px; border-style: solid;"  />
 
 - 실시간 메시지 송수신
 - 읽음 상태 표시
