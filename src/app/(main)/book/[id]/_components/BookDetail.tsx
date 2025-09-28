@@ -3,11 +3,23 @@
 import React from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  BookOpenIcon,
+  ChatBubbleLeftIcon,
+  ChatBubbleOvalLeftIcon,
+  ClockIcon,
+  HeartIcon as HeartIconOutline,
+  PencilIcon,
+  TrashIcon,
+} from '@heroicons/react/24/outline';
+
 import ImageCarousel from '@/components/ui/ImageCarousel';
 import CustomRadioGroup from '@/components/ui/CustomRadioGroup';
 import { Button } from '@/components/ui';
+import OrderModal from '@/app/(main)/book/[id]/_components/OrderModal';
+import BookStatusBadge from '@/app/(main)/book/[id]/_components/BookStatusBadge';
 import { useAuth } from '@/hooks/useAuth';
 import { useModalStack } from '@/hooks/useModalStack';
 import { useBreakpoint } from '@/hooks/useMediaQuery';
@@ -23,17 +35,6 @@ import { createOrderAPI } from '@/lib/api/orders';
 import { getTimeAgo } from '@/lib/utils/time';
 import { createFavoriteAPI, deleteFavoriteAPI } from '@/lib/api/favorite';
 import { BookSaleStatus } from '@/types/books';
-import {
-  BookOpenIcon,
-  ChatBubbleLeftIcon,
-  ChatBubbleOvalLeftIcon,
-  ClockIcon,
-  HeartIcon as HeartIconOutline,
-  PencilIcon,
-  TrashIcon,
-} from '@heroicons/react/24/outline';
-import OrderModal from '@/app/(main)/book/[id]/_components/OrderModal';
-import BookStatusBadge from '@/app/(main)/book/[id]/_components/BookStatusBadge';
 
 export default function BookDetail() {
   const { id } = useParams();
@@ -116,6 +117,10 @@ export default function BookDetail() {
         error.response?.data?.message ?? '거래 생성에 실패했습니다',
         'error'
       );
+
+      if (error.code === '401') {
+        router.push(ROUTES.LOGIN);
+      }
     },
   });
 
@@ -159,6 +164,12 @@ export default function BookDetail() {
 
   /** 거래 요청 하기 / 진행중인 거래 보기 클릭 시 */
   const handleOrderButton = () => {
+    if (!isLoggedIn) {
+      router.push(ROUTES.LOGIN);
+      showToast('로그인이 필요한 서비스입니다.');
+      return;
+    }
+
     if (book.isOrderRequested) {
       router.push('/chat?bookId=' + book.id);
       return;
@@ -185,7 +196,7 @@ export default function BookDetail() {
     }
     router.push(`${ROUTES.BOOK}/${book.id}/chats`);
   };
-  console.log(book);
+
   return (
     <div className="min-h-screen w-full">
       <div className="flex flex-col gap-6 rounded-lg bg-white p-6 lg:flex-row lg:items-start lg:items-stretch lg:gap-8">

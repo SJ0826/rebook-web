@@ -21,13 +21,15 @@ export const useLoginMutation = () => {
 };
 
 export const useMyProfileQuery = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, accessToken } = useAuth();
+
   return useQuery({
-    queryKey: ['myProfile'],
+    queryKey: ['myProfile', isLoggedIn, accessToken],
     queryFn: async () => {
+      if (!isLoggedIn || !accessToken) return null;
       return await getMyProfile();
     },
-    enabled: isLoggedIn,
+    enabled: isLoggedIn && !!accessToken,
   });
 };
 

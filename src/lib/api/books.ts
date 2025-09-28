@@ -41,7 +41,7 @@ export const getSearchBooks = async (params: {
 
 // 책 상세 조회
 export const getBookDetailAPI = async (bookId: number): Promise<BookDetail> => {
-  const response = await privateAxiosClient.get(`${BOOKS}/${bookId}`, {});
+  const response = await publicAxiosClient.get(`${BOOKS}/${bookId}`, {});
   return response.data.data;
 };
 
