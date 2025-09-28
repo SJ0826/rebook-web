@@ -8,6 +8,8 @@ Re-Book은 중고 책 거래를 간편하게 할 수 있는 플랫폼입니다. 
 
 **[📌 라이브 데모 보기](https://rebook-v2.d2nh4o8zioz2s8.amplifyapp.com//)**
 
+<br />
+
 ## 🛠 기술 스택
 
 ### Frontend
@@ -26,6 +28,7 @@ Re-Book은 중고 책 거래를 간편하게 할 수 있는 플랫폼입니다. 
 - **File Storage**: AWS S3 + CloudFront
 - **Hosting**: AWS Amplify (Frontend), AWS EC2 (Backend)
 
+<br />
 
 ## ✨ 주요 기능
 
@@ -45,6 +48,23 @@ Re-Book은 중고 책 거래를 간편하게 할 수 있는 플랫폼입니다. 
 - **반응형 디자인**: 모바일/태블릿/데스크탑 완벽 대응
 - **Progressive UI**: 로딩 상태, 에러 핸들링
 - **직관적 인터페이스**: 사용자 중심의 UX/UI 설계
+
+<br />
+
+
+## 📊 기술적 주요 구현 사항
+
+- **반응형 디자인**: useMediaQuery 훅 활용, 데스크톱/모바일 컴포넌트 분리 설계
+- **인증 시스템 고도화**: JWT + HttpOnly Refresh Token, Axios 인터셉터 자동 갱신, 401 에러 핸들링
+- **실시간 통신 안정성**: Socket.IO 연결 상태 모니터링, 토큰 만료 감지, 3초/5초 지연 재연결 로직
+- **효율적인 상태 관리**: TanStack Query(서버 상태) + Zustand(클라이언트 상태) 역할 분리
+- **멀티미디어 처리**: AWS S3 멀티파트 업로드, CloudFront CDN 연동, 이미지 최적화
+
+### 📝 기술 블로그
+- **[RefreshToken을 왜 쿠키에 저장해야할까?](https://sj0826.github.io/network/network-RefreshToken%EC%9D%84-%EC%99%9C-%EC%BF%A0%ED%82%A4%EC%97%90-%EC%A0%80%EC%9E%A5%ED%95%B4%EC%95%BC%ED%95%A0%EA%B9%8C/)**
+- **[Tanstack Query의 HydrationBoundary를 이용해 초기 렌더링 속도 감축하기](https://sj0826.github.io/nextjs/nextjs-TanStack-Query%EB%A1%9C-SSR-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%B2%98%EB%A6%AC%ED%95%98%EA%B8%B0-(with-HydrationBoundary)/#-%EC%9E%A5%EC%A0%90-%EC%9A%94%EC%95%BD)**
+
+<br />
 
 ## 🎨 화면 구성
 
@@ -96,6 +116,7 @@ Re-Book은 중고 책 거래를 간편하게 할 수 있는 플랫폼입니다. 
 - 읽음 상태 표시
 - 채팅방 목록 관리
 
+<br />
 
 ## 🏗 프로젝트 구조
 
@@ -120,18 +141,6 @@ src/
 │   └── utils/          # 헬퍼 함수
 └── types/              # TypeScript 타입 정의
 ```
-
-## 📊 기술적 주요 구현 사항
-
-- **반응형 디자인**: useMediaQuery 훅 활용, 데스크톱/모바일 컴포넌트 분리 설계
-- **인증 시스템 고도화**: JWT + HttpOnly Refresh Token, Axios 인터셉터 자동 갱신, 401 에러 핸들링
-- **실시간 통신 안정성**: Socket.IO 연결 상태 모니터링, 토큰 만료 감지, 3초/5초 지연 재연결 로직
-- **효율적인 상태 관리**: TanStack Query(서버 상태) + Zustand(클라이언트 상태) 역할 분리
-- **멀티미디어 처리**: AWS S3 멀티파트 업로드, CloudFront CDN 연동, 이미지 최적화
-
-### 📝 기술 블로그
-- **[RefreshToken을 왜 쿠키에 저장해야할까?](https://sj0826.github.io/network/network-RefreshToken%EC%9D%84-%EC%99%9C-%EC%BF%A0%ED%82%A4%EC%97%90-%EC%A0%80%EC%9E%A5%ED%95%B4%EC%95%BC%ED%95%A0%EA%B9%8C/)**
-- **[Tanstack Query의 HydrationBoundary를 이용해 초기 렌더링 속도 감축하기](https://sj0826.github.io/nextjs/nextjs-TanStack-Query%EB%A1%9C-SSR-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%B2%98%EB%A6%AC%ED%95%98%EA%B8%B0-(with-HydrationBoundary)/#-%EC%9E%A5%EC%A0%90-%EC%9A%94%EC%95%BD)**
 
 
 ---
