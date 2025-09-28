@@ -89,7 +89,7 @@ const CustomInput = forwardRef<HTMLInputElement, InputProps>(
             </Label>
           )}
 
-          <>
+          <div className={'flex-col'}>
             <div className="relative w-full">
               <Input
                 ref={handleRef}
@@ -136,7 +136,7 @@ const CustomInput = forwardRef<HTMLInputElement, InputProps>(
                 {error}
               </p>
             )}
-          </>
+          </div>
         </div>
       </Field>
     );
