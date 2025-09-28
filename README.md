@@ -130,7 +130,8 @@ src/
 - **멀티미디어 처리**: AWS S3 멀티파트 업로드, CloudFront CDN 연동, 이미지 최적화
 
 ### 📝 기술 블로그
-- **[[네트워크] RefreshToken을 왜 쿠키에 저장해야할까?](https://sj0826.github.io/network/network-RefreshToken%EC%9D%84-%EC%99%9C-%EC%BF%A0%ED%82%A4%EC%97%90-%EC%A0%80%EC%9E%A5%ED%95%B4%EC%95%BC%ED%95%A0%EA%B9%8C/)**
+- **[RefreshToken을 왜 쿠키에 저장해야할까?](https://sj0826.github.io/network/network-RefreshToken%EC%9D%84-%EC%99%9C-%EC%BF%A0%ED%82%A4%EC%97%90-%EC%A0%80%EC%9E%A5%ED%95%B4%EC%95%BC%ED%95%A0%EA%B9%8C/)**
+- **[Tanstack Query의 HydrationBoundary를 이용해 초기 렌더링 속도 감축하기](https://sj0826.github.io/nextjs/nextjs-TanStack-Query%EB%A1%9C-SSR-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%B2%98%EB%A6%AC%ED%95%98%EA%B8%B0-(with-HydrationBoundary)/#-%EC%9E%A5%EC%A0%90-%EC%9A%94%EC%95%BD)**
 
 
 ---
